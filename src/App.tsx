@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import CodeMirror from '@/components/editor/CodeMirror'
+import Playground from '@/components/playground/Playground'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
       <header>
-        <CodeMirror />
+        <Playground />
       </header>
     </div>
   )
