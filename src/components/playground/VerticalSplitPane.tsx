@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 
 enum ActionKind {
     SETCONTAINERW = 'SETCONTAINERW',
-    SETDELTA = 'SETDELTA',
     SETISMOUSEDOWN = 'SETISMOUSEDOWN',
     SETINITIALL = 'SETINITIALL',
     SETLEFTW = 'SETLEFTW',
@@ -31,7 +30,6 @@ type Action = BooleanAction | NumberAction
 
 interface State {
 	containerW: number,
-	delta: number,
 	isMouseDown: boolean,
 	initialL: number,
 	leftW: number,
@@ -41,7 +39,6 @@ interface State {
 
 const initialState: State = {
 	containerW: 0,
-	delta: 0,
 	initialL: 0,
 	isMouseDown: false,
 	leftW: 0,
@@ -55,11 +52,6 @@ function reducer(state: State, action: Action) {
             return {
                 ...state,
                 containerW: action.payload
-            }
-        case ActionKind.SETDELTA :
-            return {
-                ...state,
-                delta: action.payload
             }
         case ActionKind.SETINITIALL :
             return {
@@ -97,7 +89,6 @@ function VerticalSplitPane(props: Props) {
     const [
         {
             mousePos,
-            delta,
             isMouseDown,
             containerW,
             initialL,
@@ -109,15 +100,77 @@ function VerticalSplitPane(props: Props) {
 
     const containerRef = useRef<HTMLElement>(null)
 
+    const handleMouseDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        dispatch({
+            type: ActionKind.SETMOUSEPOS,
+            payload: e.clientX,
+        })
+
+        dispatch({ 
+            type: ActionKind.SETINITIALL,
+            payload: leftW,
+        })
+
+        dispatch({ 
+            type: ActionKind.SETISMOUSEDOWN,
+            payload: true,
+        })
+        
+        function handleMouseMove(e: MouseEvent) {
+            const delta = mousePos - e.clientX
+			const updatedLeftW = 
+				initialL - delta <= minWidth ?
+					minWidth
+				: initialL - delta >= containerW - splitterWidth - minWidth ?
+					containerW - splitterWidth - minWidth
+				:
+					initialL - delta
+				
+			const updatedRightW = containerW - updatedLeftW - splitterWidth
+
+            dispatch({
+                type: ActionKind.SETLEFTW,
+                payload: updatedLeftW,
+            })
+    
+            dispatch({ 
+                type: ActionKind.SETRIGHTW,
+                payload: updatedRightW,
+            })
+        }
+
+        function handleMouseUp() {
+            dispatch({ 
+                type: ActionKind.SETISMOUSEDOWN,
+                payload: false,
+            })
+            window.removeEventListener('mousemove', handleMouseMove)
+            window.removeEventListener('mouseup', handleMouseUp)
+        }
+
+        window.addEventListener('mousemove', handleMouseMove)
+        window.addEventListener('mouseup', handleMouseUp)
+    }
+
     useEffect(() => {
         const initialContainerW = containerRef?.current?.clientWidth
+        
         if (typeof initialContainerW === 'number') {
             const initialLeftW = (initialContainerW - splitterWidth)/2
             const initialRightW = (initialContainerW - splitterWidth)/2
             
-            dispatch({ type: ActionKind.SETCONTAINERW, payload: initialContainerW})
-            dispatch({ type: ActionKind.SETLEFTW, payload: initialLeftW})
-            dispatch({ type: ActionKind.SETRIGHTW, payload: initialRightW})
+            dispatch({ 
+                type: ActionKind.SETCONTAINERW, 
+                payload: initialContainerW 
+            })
+            dispatch({ 
+                type: ActionKind.SETLEFTW, 
+                payload: initialLeftW < minWidth ? minWidth : initialLeftW
+            })
+            dispatch({ 
+                type: ActionKind.SETRIGHTW, 
+                payload: initialRightW < minWidth ? minWidth : initialRightW
+            })
         }
     }, [])
 
@@ -133,6 +186,7 @@ function VerticalSplitPane(props: Props) {
 
             </Pane>
             <Splitter
+                onMouseDown={handleMouseDown}
                 style={{
                     width: `${splitterWidth}px`
                 }}
