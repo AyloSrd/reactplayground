@@ -1,4 +1,5 @@
 import Editor from '@/components/editor/Editor'
+import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import { useState, useCallback } from 'react'
 
 function Playground() {
@@ -6,9 +7,12 @@ function Playground() {
         console.log(e.detail)
     }, [])
     return (
-        <Editor
-            onEditorChange={handleTextChange}
-        />
+        <>
+            <VerticalSplitPane />
+            <Editor
+                onEditorChange={handleTextChange}
+            />
+        </>
   )
 }
 
