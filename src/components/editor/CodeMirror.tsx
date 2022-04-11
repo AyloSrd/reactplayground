@@ -3,7 +3,8 @@ import { defaultOptions } from '@/tools/codemirror-tools';
 import { useCreateEvento } from 'evento-react'
 import { Controlled } from 'react-codemirror2'
 import { memo, useCallback } from 'react'
-import * as codemirror from 'codemirror';
+import * as codemirror from 'codemirror'
+import styled from 'styled-components'
 
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/css/css'
@@ -31,22 +32,31 @@ function CodeMirror(props: Props) {
     const evento = useCreateEvento(props)
 
     const handleBeforeChange = useCallback((
-        editor: codemirror.Editor, 
-        data: codemirror.EditorChange, 
+        editor: codemirror.Editor,
+        data: codemirror.EditorChange,
         value: string
     ) => {
         evento('textChange', value)
     }, [props])
 
     return (
-        <div>
+        <Container>
             <Controlled
                 onBeforeChange={handleBeforeChange}
                 options={options}
                 value={text}
             />
-        </div>
+        </Container>
     )
 }
+
+const Container = styled.div`
+    height: 100%;
+
+    .CodeMirror {
+        max-height: 100%;
+    }
+}
+`
 
 export default memo(CodeMirror)

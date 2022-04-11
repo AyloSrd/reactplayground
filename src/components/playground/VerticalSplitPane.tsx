@@ -1,3 +1,5 @@
+import usePreviousValue from '@/hooks/playground/usePreviosValue'
+import useWindowSize from '@/hooks/playground/useWindowSize'
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -100,7 +102,14 @@ function VerticalSplitPane(props: Props) {
     ] = useReducer(reducer, initialState)
 
     const containerRef = useRef<HTMLElement>(null)
+    console.log('containerW', containerW)
+    console.log('rightW', rightW)
+    console.log('leftW', leftW)
+    console.log('ref', containerRef?.current?.clientWidth)
 
+    const { width: windowW } = useWindowSize()
+
+    const prevWindowW = usePreviousValue<number | undefined>(windowW)
     const handleMouseDown = (e: React.PointerEvent<HTMLDivElement>) => {
         dispatch({
             type: ActionKind.SETMOUSEPOS,
@@ -116,6 +125,7 @@ function VerticalSplitPane(props: Props) {
             type: ActionKind.SETISMOUSEDOWN,
             payload: true,
         })
+        console.log(mousePos)
 
         function handleMouseMove(e: MouseEvent) {
             const delta = mousePos - e.clientX
@@ -174,6 +184,38 @@ function VerticalSplitPane(props: Props) {
             })
         }
     }, [])
+
+    useEffect(() => {
+        const currContainerW = containerRef?.current?.clientWidth
+
+        if (
+            typeof windowW !== 'number'
+            || typeof prevWindowW !== 'number'
+            || typeof currContainerW !== 'number'
+            || windowW === prevWindowW
+        ) {
+            return
+        }
+
+        const leftRatio = leftW / (leftW + rightW - splitterWidth/2)
+        const tempLevtW = currContainerW * leftRatio - splitterWidth/2
+
+        dispatch({
+            type: ActionKind.SETCONTAINERW,
+            payload: currContainerW
+        })
+
+        dispatch({
+            type: ActionKind.SETLEFTW,
+            payload: tempLevtW
+        })
+
+        dispatch({
+            type: ActionKind.SETRIGHTW,
+            payload: currContainerW - tempLevtW - splitterWidth/2
+        })
+
+	}, [containerW, prevWindowW, leftW, rightW, windowW])
 
     return (
         <Container
