@@ -4,7 +4,7 @@ import styled from 'styled-components'
 interface Props {
     leftPaneChild?: React.ReactChild,
     minWidth?: number,
-    rightPaneChild?: React.ReactChild, 
+    rightPaneChild?: React.ReactChild,
     splitterWidth?: number,
 }
 
@@ -35,7 +35,7 @@ interface State {
 	initialL: number,
 	leftW: number,
     mousePos: number,
-	rightW: number 
+	rightW: number
 }
 
 const initialState: State = {
@@ -46,7 +46,7 @@ const initialState: State = {
     mousePos: 0,
 	rightW: 0
 }
-  
+
 function reducer(state: State, action: Action) {
     switch (action.type) {
         case ActionKind.SETCONTAINERW :
@@ -95,7 +95,7 @@ function VerticalSplitPane(props: Props) {
             initialL,
             leftW,
             rightW,
-        }, 
+        },
         dispatch
     ] = useReducer(reducer, initialState)
 
@@ -107,41 +107,41 @@ function VerticalSplitPane(props: Props) {
             payload: e.clientX,
         })
 
-        dispatch({ 
+        dispatch({
             type: ActionKind.SETINITIALL,
             payload: leftW,
         })
 
-        dispatch({ 
+        dispatch({
             type: ActionKind.SETISMOUSEDOWN,
             payload: true,
         })
-        
+
         function handleMouseMove(e: MouseEvent) {
             const delta = mousePos - e.clientX
-			const updatedLeftW = 
+			const updatedLeftW =
 				initialL - delta <= minWidth ?
 					minWidth
 				: initialL - delta >= containerW - splitterWidth - minWidth ?
 					containerW - splitterWidth - minWidth
 				:
 					initialL - delta
-				
+
 			const updatedRightW = containerW - updatedLeftW - splitterWidth
 
             dispatch({
                 type: ActionKind.SETLEFTW,
                 payload: updatedLeftW,
             })
-    
-            dispatch({ 
+
+            dispatch({
                 type: ActionKind.SETRIGHTW,
                 payload: updatedRightW,
             })
         }
 
         function handleMouseUp() {
-            dispatch({ 
+            dispatch({
                 type: ActionKind.SETISMOUSEDOWN,
                 payload: false,
             })
@@ -155,21 +155,21 @@ function VerticalSplitPane(props: Props) {
 
     useEffect(() => {
         const initialContainerW = containerRef?.current?.clientWidth
-        
+
         if (typeof initialContainerW === 'number') {
             const initialLeftW = (initialContainerW - splitterWidth)/2
             const initialRightW = (initialContainerW - splitterWidth)/2
-            
-            dispatch({ 
-                type: ActionKind.SETCONTAINERW, 
-                payload: initialContainerW 
+
+            dispatch({
+                type: ActionKind.SETCONTAINERW,
+                payload: initialContainerW
             })
-            dispatch({ 
-                type: ActionKind.SETLEFTW, 
+            dispatch({
+                type: ActionKind.SETLEFTW,
                 payload: initialLeftW < minWidth ? minWidth : initialLeftW
             })
-            dispatch({ 
-                type: ActionKind.SETRIGHTW, 
+            dispatch({
+                type: ActionKind.SETRIGHTW,
                 payload: initialRightW < minWidth ? minWidth : initialRightW
             })
         }
@@ -203,13 +203,13 @@ const Container = styled.section`
     width: 100%;
     display: flex;
     border: 1px solid black;
-    
+
     &.diableSelect, &.disableSelect * {
-        user-select: none; /* supported by Chrome and Opera */
-		-webkit-user-select: none; /* Safari */
-		-khtml-user-select: none; /* Konqueror HTML */
-		-moz-user-select: none; /* Firefox */
-		-ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
 		cursor: col-resize;
     }
 `
