@@ -6,9 +6,7 @@ function App() {
 
   return (
     <div>
-      <header>
         <Playground />
-      </header>
     </div>
   )
 }

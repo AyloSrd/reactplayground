@@ -2,9 +2,10 @@ import React, { memo, useCallback, useEffect, useReducer, useRef, useState } fro
 import styled from 'styled-components'
 
 interface Props {
+    leftPaneChild?: React.ReactChild,
     minWidth?: number,
+    rightPaneChild?: React.ReactChild, 
     splitterWidth?: number,
-    children?: React.ReactChild | React.ReactChild[], 
 }
 
 enum ActionKind {
@@ -84,7 +85,7 @@ function reducer(state: State, action: Action) {
 }
 
 function VerticalSplitPane(props: Props) {
-    const { minWidth = 30, splitterWidth = 4 } = props
+    const { leftPaneChild = null, minWidth = 30, splitterWidth = 4, rightPaneChild = null } = props
 
     const [
         {
@@ -176,37 +177,41 @@ function VerticalSplitPane(props: Props) {
 
     return (
         <Container
+            className={isMouseDown ? 'disableSelect' : ''}
             ref={containerRef}
         >
             <Pane
-                style={{
-                    width: `${leftW}px`
-                }}
+                style={{ width: `${leftW}px` }}
             >
-
+                { leftPaneChild }
             </Pane>
             <Splitter
                 onMouseDown={handleMouseDown}
-                style={{
-                    width: `${splitterWidth}px`
-                }}
+                style={{ width: `${splitterWidth}px` }}
             />
             <Pane
-                style={{
-                    width: `${rightW}px`
-                }}
+                style={{ width: `${rightW}px` }}
             >
-
+                { rightPaneChild }
             </Pane>
         </Container>
     )
 }
 
 const Container = styled.section`
-    height: 300px;
+    height: 100%;
     width: 100%;
     display: flex;
     border: 1px solid black;
+    
+    &.diableSelect, &.disableSelect * {
+        user-select: none; /* supported by Chrome and Opera */
+		-webkit-user-select: none; /* Safari */
+		-khtml-user-select: none; /* Konqueror HTML */
+		-moz-user-select: none; /* Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+		cursor: col-resize;
+    }
 `
 
 const Pane = styled.div`

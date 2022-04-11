@@ -11,7 +11,7 @@ function Tabs(props: Props) {
         <>
             {            
                 tabs.map(tab => (
-                    <Tab tab={tab}/>
+                    <Tab key={tab} tab={tab}/>
                 ))
             }
         </>
