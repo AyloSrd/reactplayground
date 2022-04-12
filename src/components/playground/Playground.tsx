@@ -1,5 +1,6 @@
 import Editor from '@/components/editor/Editor'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
+import{ unpkgPathPlugin } from '@/tools/esbuild-tools'
 import * as esbuild from 'esbuild-wasm'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
@@ -25,12 +26,16 @@ function Playground() {
 
         console.log(ref.current)
 
-        const transpiled = await ref.current.transform('const Test = () => <div>test</div>', {
-            loader: 'jsx',
-            target: 'es2015'
-        })
+        const bundle = await ref.current.build({
+            entryPoints: ['index.js'],
+            bundle: true,
+            write: false,
+            plugins: [unpkgPathPlugin()],
+            // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
+            define: window.defineHack,
+          });
 
-        console.log('transpiled', transpiled)
+        console.log('bundle', bundle)
     }
 
     useEffect(() => {
