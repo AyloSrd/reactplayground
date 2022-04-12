@@ -52,9 +52,16 @@ function CodeMirror(props: Props) {
 
 const Container = styled.div`
     height: 100%;
+    width: 100%;
 
-    .CodeMirror {
-        max-height: 100%;
+    .react-codemirror2 {
+        width: 100%;
+        height: 100%;
+    }
+
+    .CodeMirror {;
+        width: 100%;
+        height: 100%;
     }
 }
 `

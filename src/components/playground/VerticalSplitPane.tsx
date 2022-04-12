@@ -102,10 +102,6 @@ function VerticalSplitPane(props: Props) {
     ] = useReducer(reducer, initialState)
 
     const containerRef = useRef<HTMLElement>(null)
-    console.log('containerW', containerW)
-    console.log('rightW', rightW)
-    console.log('leftW', leftW)
-    console.log('ref', containerRef?.current?.clientWidth)
 
     const { width: windowW } = useWindowSize()
 
