@@ -27,7 +27,7 @@ function Playground() {
         console.log(ref.current)
 
         const bundle = await ref.current.build({
-            entryPoints: ['index.js'],
+            entryPoints: ['App.jsx'],
             bundle: true,
             write: false,
             plugins: [unpkgPathPlugin()],
