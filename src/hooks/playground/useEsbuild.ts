@@ -25,7 +25,6 @@ export const ENTRY_POINT_JSX = 'App.jsx'
 
 const AppdefaultContent = `
 import React, { useState } from 'react'
-import { test } from './Counter.jsx'
 console.log(test)
 `.trim()
 
