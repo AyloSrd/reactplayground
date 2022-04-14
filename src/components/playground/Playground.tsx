@@ -1,7 +1,6 @@
 import Editor from '@/components/editor/Editor'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
-import{ unpkgPathPlugin } from '@/tools/esbuild-tools'
-import * as esbuild from 'esbuild-wasm'
+import useEsbuild from '@/hooks/playground/useEsbuild'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -10,37 +9,21 @@ function Playground() {
         console.log(e.detail)
     }, [])
 
-    const ref = useRef<any>()
+    const {
+        addFile,
+        bundleJSXText,
+        createBundle,
+        deleteFile,
+        editFileContent,
+        editFileName,
+        vfs,
+    } = useEsbuild()
 
-    const startService = async () => {
-        ref.current = await esbuild.startService({
-            worker: true,
-            wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm'
-        })
-    }
-
-    const handleClick = async () => {
-        if (!ref.current) {
-            return
-        }
-
-        console.log(ref.current)
-
-        const bundle = await ref.current.build({
-            entryPoints: ['App.jsx'],
-            bundle: true,
-            write: false,
-            plugins: [unpkgPathPlugin()],
-            // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
-            define: window.defineHack,
-          });
-
-        console.log('bundle', bundle)
-    }
+    const handleClick = () => createBundle()
 
     useEffect(() => {
-        startService()
-    }, [])
+        console.log(bundleJSXText)
+    }, [bundleJSXText])
 
     return (
         <Page>

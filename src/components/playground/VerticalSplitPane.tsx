@@ -11,21 +11,21 @@ interface Props {
 }
 
 enum ActionKind {
-    SETCONTAINERW = 'SETCONTAINERW',
-    SETISMOUSEDOWN = 'SETISMOUSEDOWN',
-    SETINITIALL = 'SETINITIALL',
-    SETLEFTW = 'SETLEFTW',
-    SETMOUSEPOS = 'SETMOUSEPOS',
-    SETRIGHTW = 'SETRIGHW',
+    SET_CONTAINER_W = 'SET_CONTAINER_W',
+    SET_IS_MOUSE_DOWN = 'SET_IS_MOUSE_DOWN',
+    SET_INITIAL_L = 'SET_INITIAL_L',
+    SET_LEFT_W = 'SET_LEFT_W',
+    SET_MOUSE_POS = 'SET_MOUSE_POS',
+    SET_RIGHT_W = 'SET_RIGHT_W',
 }
 
 interface BooleanAction {
-    type: ActionKind.SETISMOUSEDOWN,
+    type: ActionKind.SET_IS_MOUSE_DOWN,
     payload: boolean
 }
 
 interface NumberAction {
-    type: Exclude<ActionKind, ActionKind.SETISMOUSEDOWN>,
+    type: Exclude<ActionKind, ActionKind.SET_IS_MOUSE_DOWN>,
     payload: number
 }
 
@@ -51,32 +51,32 @@ const initialState: State = {
 
 function reducer(state: State, action: Action) {
     switch (action.type) {
-        case ActionKind.SETCONTAINERW :
+        case ActionKind.SET_CONTAINER_W :
             return {
                 ...state,
                 containerW: action.payload
             }
-        case ActionKind.SETINITIALL :
+        case ActionKind.SET_INITIAL_L :
             return {
                 ...state,
                 initialL: action.payload
             }
-        case ActionKind.SETISMOUSEDOWN :
+        case ActionKind.SET_IS_MOUSE_DOWN :
             return {
                 ...state,
                 isMouseDown: action.payload
             }
-        case ActionKind.SETLEFTW :
+        case ActionKind.SET_LEFT_W :
             return {
                 ...state,
                 leftW: action.payload
             }
-        case ActionKind.SETMOUSEPOS :
+        case ActionKind.SET_MOUSE_POS :
             return {
                 ...state,
                 mousePos: action.payload
             }
-        case ActionKind.SETRIGHTW :
+        case ActionKind.SET_RIGHT_W :
             return {
                 ...state,
                 rightW: action.payload
@@ -108,20 +108,19 @@ function VerticalSplitPane(props: Props) {
     const prevWindowW = usePreviousValue<number | undefined>(windowW)
     const handleMouseDown = (e: React.PointerEvent<HTMLDivElement>) => {
         dispatch({
-            type: ActionKind.SETMOUSEPOS,
+            type: ActionKind.SET_MOUSE_POS,
             payload: e.clientX,
         })
 
         dispatch({
-            type: ActionKind.SETINITIALL,
+            type: ActionKind.SET_INITIAL_L,
             payload: leftW,
         })
 
         dispatch({
-            type: ActionKind.SETISMOUSEDOWN,
+            type: ActionKind.SET_IS_MOUSE_DOWN,
             payload: true,
         })
-        console.log(mousePos)
 
         function handleMouseMove(e: MouseEvent) {
             const delta = mousePos - e.clientX
@@ -136,19 +135,19 @@ function VerticalSplitPane(props: Props) {
 			const updatedRightW = containerW - updatedLeftW - splitterWidth
 
             dispatch({
-                type: ActionKind.SETLEFTW,
+                type: ActionKind.SET_LEFT_W,
                 payload: updatedLeftW,
             })
 
             dispatch({
-                type: ActionKind.SETRIGHTW,
+                type: ActionKind.SET_RIGHT_W,
                 payload: updatedRightW,
             })
         }
 
         function handleMouseUp() {
             dispatch({
-                type: ActionKind.SETISMOUSEDOWN,
+                type: ActionKind.SET_IS_MOUSE_DOWN,
                 payload: false,
             })
             window.removeEventListener('mousemove', handleMouseMove)
@@ -167,15 +166,15 @@ function VerticalSplitPane(props: Props) {
             const initialRightW = (initialContainerW - splitterWidth)/2
 
             dispatch({
-                type: ActionKind.SETCONTAINERW,
+                type: ActionKind.SET_CONTAINER_W,
                 payload: initialContainerW
             })
             dispatch({
-                type: ActionKind.SETLEFTW,
+                type: ActionKind.SET_LEFT_W,
                 payload: initialLeftW < minWidth ? minWidth : initialLeftW
             })
             dispatch({
-                type: ActionKind.SETRIGHTW,
+                type: ActionKind.SET_RIGHT_W,
                 payload: initialRightW < minWidth ? minWidth : initialRightW
             })
         }
@@ -197,17 +196,17 @@ function VerticalSplitPane(props: Props) {
         const tempLevtW = currContainerW * leftRatio - splitterWidth/2
 
         dispatch({
-            type: ActionKind.SETCONTAINERW,
+            type: ActionKind.SET_CONTAINER_W,
             payload: currContainerW
         })
 
         dispatch({
-            type: ActionKind.SETLEFTW,
+            type: ActionKind.SET_LEFT_W,
             payload: tempLevtW
         })
 
         dispatch({
-            type: ActionKind.SETRIGHTW,
+            type: ActionKind.SET_RIGHT_W,
             payload: currContainerW - tempLevtW - splitterWidth/2
         })
 
