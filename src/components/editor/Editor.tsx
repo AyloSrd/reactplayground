@@ -5,7 +5,7 @@ import { memo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-    curr
+    currentTab: string,
     onEditorChange: (e: CustomEvent<string>) => void,
     tabs: string[]
 }
