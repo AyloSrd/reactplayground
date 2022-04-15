@@ -1,14 +1,11 @@
 import Editor from '@/components/editor/Editor'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
+import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 function Playground() {
-    const handleTextChange = useCallback((e: CustomEvent<string>) => {
-        console.log(e.detail)
-    }, [])
-
     const {
         addFile,
         bundleJSXText,
@@ -16,8 +13,17 @@ function Playground() {
         deleteFile,
         editFileContent,
         editFileName,
-        vfs,
+        files: {
+            fileList,
+            filesById
+        },
     } = useEsbuild()
+
+    const [currentTab, setCurrentTab] = useState(ENTRY_POINT_JSX)
+
+    const handleTextChange = useCallback((e: CustomEvent<string>) => {
+        console.log(e.detail)
+    }, [])
 
     const handleClick = () => createBundle()
 
@@ -32,6 +38,7 @@ function Playground() {
                 leftPaneChild={
                     <Editor
                         onEditorChange={handleTextChange}
+                        tabs={fileList}
                     />
                 }
             />

@@ -9,13 +9,19 @@ function Tab(props: Props) {
     const { tab } = props
     const [ name, type ] = tab.split('.')
 
-    const [tempName, setTempName] = useState('')
+    const [tempName, setTempName] = useState<string>('yo')
+
+    const handleBlur = useCallback(() => {
+        setTempName('')
+        console.log('blur')
+    }, [])
 
     const handleTabClick = useCallback(() => {
         console.log('select tab', name)
     }, [tab])
 
     const handleDoubleClick = useCallback(() => {
+        setTempName(name)
         console.log('dBclick')
     }, [])
 
@@ -27,13 +33,21 @@ function Tab(props: Props) {
         <TabContainer>
             <span  onClick={handleTabClick}>
                 <span onDoubleClick={handleDoubleClick}>
-                    <span>
-                        <form>
-                            <input 
-                                type="text"
-                            />
-                        </form>
-                    </span>
+                    {
+                        tempName.length ?
+                            <span>
+                                <form
+                                    onBlur={handleBlur}
+                                >
+                                    <input
+                                        type="text"
+                                        value={tempName}
+                                    />
+                                </form>
+                            </span>
+                        :
+                            null
+                    }
                     <span>
                         {name}
                     </span>

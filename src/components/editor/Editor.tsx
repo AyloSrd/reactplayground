@@ -5,10 +5,13 @@ import { memo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
 interface Props {
+    curr
     onEditorChange: (e: CustomEvent<string>) => void,
+    tabs: string[]
 }
 
 function Editor(props: Props) {
+    const { tabs } = props
     const [ text, setText ] = useState('yo')
 
     const evento = useCreateEvento(props)
@@ -23,7 +26,7 @@ function Editor(props: Props) {
 
     return (
         <Container>
-            <Tabs tabs={['App.jsx', 'Child.jsx']} />
+            <Tabs tabs={tabs} />
             <CodeMirror
                 language='jsx'
                 onTextChange={handleTextChange}

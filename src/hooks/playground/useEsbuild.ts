@@ -1,10 +1,8 @@
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
+import localforage from 'localforage'
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 
-interface VFS {
-    [key: string]: string
-}
 
 enum ActionKind {
     ADD_FILE = 'ADD_FILE',
@@ -21,55 +19,102 @@ interface Action {
     },
 }
 
+interface VFS {
+    [key: string]: string
+}
+
+interface State {
+    fileList: string[],
+    vfs: VFS
+}
+
 export const ENTRY_POINT_JSX = 'App.jsx'
 
 const AppdefaultContent = `
 import React, { useState } from 'react'
-console.log(test)
+import styled from 'styled-components'
+console.log(React)
 `.trim()
 
-const initialState: VFS = {
-    [ENTRY_POINT_JSX]: AppdefaultContent
+const initialState: State = {
+    fileList: ['App.js'],
+    vfs : {
+        [ENTRY_POINT_JSX]: AppdefaultContent
+    }
 }
 
-function reducer(state: VFS, action: Action) {
+function reducer(state: State, action: Action): State {
     switch (action.type) {
         case ActionKind.ADD_FILE :
+            if (
+                action.payload.target === ENTRY_POINT_JSX
+                || state.fileList.includes(action.payload.target)
+            ) {
+                return state
+            }
             return {
-                ...state,
-                [action.payload.target]: action.payload.content
+                fileList: [ ...state.fileList, action.payload.target ],
+                vfs: {
+                    ...state.vfs,
+                    [action.payload.target]: action.payload.content
+                }
             }
 
         case ActionKind.DELETE_FILE :
             if (action.payload.target === ENTRY_POINT_JSX) {
                 return state
             }
-            const deleteState = { ...state }
-            delete deleteState[action.payload.target]
-            return deleteState
+            const deleteList = [...state.fileList].filter(f => f !== action.payload.target)
+            const deleteVfs = { ...state.vfs }
+            delete deleteVfs[action.payload.target]
+            return {
+                fileList: deleteList,
+                vfs: deleteVfs
+            }
 
         case ActionKind.EDIT_FILE_CONTENT :
-            const editContentState = { ...state }
-            editContentState[action.payload.target] = action.payload.content
-            return editContentState
-
-        case ActionKind.EDIT_FILE_NAME :
-            if (action.payload.target === ENTRY_POINT_JSX) {
+            if (!state.vfs[action.payload.target]) {
                 return state
             }
-            const editedFileContent = state[action.payload.target]
-            const editedNameState = { ...state }
-            delete editedNameState[action.payload.target]
-            editedNameState[action.payload.content] = editedFileContent
-            return editedNameState
+            const editContentVfs = { ...state.vfs }
+            editContentVfs[action.payload.target] = action.payload.content
+            return {
+                fileList: [...state.fileList],
+                vfs: editContentVfs
+            }
+
+        case ActionKind.EDIT_FILE_NAME :
+            if (
+                action.payload.target === ENTRY_POINT_JSX
+                || !state.fileList.includes(action.payload.target)
+                || !state.vfs[action.payload.target]
+            ) {
+                return state
+            }
+
+            const indexOfEditedFile = state.fileList.indexOf(action.payload.target)
+            const editedNameFileList = [...state.fileList]
+            const editedFileContent = state.vfs[action.payload.target]
+            const editedNameVfs = { ...state.vfs }
+            editedNameFileList[indexOfEditedFile] = action.payload.content
+            delete editedNameVfs[action.payload.target]
+            editedNameVfs[action.payload.content] = editedFileContent
+            return {
+                fileList: editedNameFileList,
+                vfs: editedNameVfs
+            }
 
         default:
             throw new Error()
     }
 }
 
+const fileCache = localforage.createInstance({
+    name: 'filecache',
+  })
+
 export default function useEsbuild() {
-    const [vfs, dispatch] = useReducer(reducer, initialState)
+    const [{ vfs, fileList }, dispatch] = useReducer(reducer, initialState)
 
     const [bundleJSXText, setBundleJSXText] = useState<string>('')
 
@@ -114,58 +159,69 @@ export default function useEsbuild() {
         return {
           name: 'unpkg-path-plugin',
           setup(build: esbuild.PluginBuild) {
-            build.onResolve({ filter: /.*/ }, async (args: any) => {
-              console.log('onResolve', args)
-              if (args.path === ENTRY_POINT_JSX) {
-                return { path: args.path, namespace: 'a' }
-              }
-
-              if (args.path.startsWith('./') && vfs[args.path.substring(2)]) {
-                  return {
-                      namespace: 'a',
-                      path: args.path.substring(2)
-                  }
-              }
-
-              if (args.path.includes('./') || args.path.includes('../')) {
-                return {
-                  namespace: 'a',
-                  path: new URL(
-                    args.path,
-                    'https://unpkg.com' + args.resolveDir + '/'
-                  ).href,
+                build.onResolve({ filter: /.*/ }, async (args: any) => {
+                console.log('onResolve', args)
+                if (args.path === ENTRY_POINT_JSX) {
+                    return { path: args.path, namespace: 'a' }
                 }
-              }
 
-              return {
-                namespace: 'a',
-                path: `https://unpkg.com/${args.path}`,
-              }
-            })
+                if (args.path.startsWith('./') && vfs[args.path.substring(2)]) {
+                    return {
+                        namespace: 'a',
+                        path: args.path.substring(2)
+                    }
+                }
+
+                if (args.path.includes('./') || args.path.includes('../')) {
+                    return {
+                    namespace: 'a',
+                    path: new URL(
+                        args.path,
+                        'https://unpkg.com' + args.resolveDir + '/'
+                    ).href,
+                    }
+                }
+
+                return {
+                    namespace: 'a',
+                    path: `https://unpkg.com/${args.path}`,
+                }
+                })
 
             build.onLoad({ filter: /.*/ }, async (args: any) => {
               console.log('onLoad', args)
 
-              if (args.path === ENTRY_POINT_JSX) {
-                return {
-                  loader: 'jsx',
-                  contents: vfs[ENTRY_POINT_JSX],
-                }
-              }
-
-              if (vfs[args.path]) {
-                  return {
+                if (args.path === ENTRY_POINT_JSX) {
+                    return {
                     loader: 'jsx',
-                    contents: vfs[args.path],
-                  }
+                    contents: vfs[ENTRY_POINT_JSX],
+                    }
                 }
 
-              const { data, request } = await axios.get(args.path)
-              return {
-                loader: 'jsx',
-                contents: data,
-                resolveDir: new URL('./', request.responseURL).pathname,
-              }
+                if (vfs[args.path]) {
+                    return {
+                        loader: 'jsx',
+                        contents: vfs[args.path],
+                    }
+                }
+
+                const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
+
+                if (cached) {
+                    return cached
+                }
+
+                const { data, request } = await axios.get(args.path)
+
+                const result: esbuild.OnLoadResult = {
+                    loader: 'jsx',
+                    contents: data,
+                    resolveDir: new URL('./', request.responseURL).pathname,
+                }
+
+                await fileCache.setItem(args.path, result)
+
+                return result
             })
           },
         }
@@ -175,8 +231,6 @@ export default function useEsbuild() {
         if (!esbuildRef.current) {
             return
         }
-
-        console.log(esbuildRef.current)
 
         const bundle = await esbuildRef.current.build({
             entryPoints: ['App.jsx'],
@@ -201,6 +255,9 @@ export default function useEsbuild() {
         deleteFile,
         editFileContent,
         editFileName,
-        vfs,
+        files: {
+            fileList,
+            filesById: vfs
+        },
     }
 }
