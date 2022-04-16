@@ -1,7 +1,12 @@
-import { memo, useCallback, useState } from 'react'
+import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
+import { useCreateEvento } from 'evento-react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
+    onDelete: (e: CustomEvent<string>) => void,
+    onEdit: (e: CustomEvent<{current: string, next: string}>) => void,
+    onSelect: (e: CustomEvent<string>) => void,
     tab: string
 }
 
@@ -9,54 +14,78 @@ function Tab(props: Props) {
     const { tab } = props
     const [ name, type ] = tab.split('.')
 
-    const [tempName, setTempName] = useState<string>('yo')
+    const [tempName, setTempName] = useState<null | string>(null)
 
-    const handleBlur = useCallback(() => {
-        setTempName('')
-        console.log('blur')
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const evento = useCreateEvento(props)
+
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLFormElement>) => {
+        setTempName(e.target.value)
     }, [])
 
     const handleTabClick = useCallback(() => {
-        console.log('select tab', name)
+        evento('select', tab)
     }, [tab])
+
+    const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
+        e?.preventDefault()
+        if (`${tempName}.${type}` === ENTRY_POINT_JSX) {
+            return new Promise(resolve => resolve(true))
+        }
+        return evento('edit', { current: tab, next: `${tempName}.${type}`})
+    }, [tab, tempName])
+
+    const handleBlur = useCallback(() => {
+        handleSubmit().then(res => {
+            if (res) {
+                setTempName(null)
+            }
+        })
+    }, [])
 
     const handleDoubleClick = useCallback(() => {
         setTempName(name)
-        console.log('dBclick')
     }, [])
 
-    const handleXCkick = useCallback(() => {
-        console.log('delete', name)
-    },[name])
+    const handleDeleteCkick = useCallback(() => {
+        evento('delete', tab)
+    }, [tab])
+
+    useEffect(() => {
+      inputRef.current?.focus()
+    }, [tempName])
 
     return (
         <TabContainer>
             <span  onClick={handleTabClick}>
-                <span onDoubleClick={handleDoubleClick}>
-                    {
-                        tempName.length ?
+                {
+                    typeof tempName === 'string' ?
+                        <span>
                             <span>
                                 <form
                                     onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    onSubmit={handleSubmit}
                                 >
                                     <input
+                                        ref={inputRef}
                                         type="text"
                                         value={tempName}
                                     />
                                 </form>
                             </span>
-                        :
-                            null
-                    }
-                    <span>
-                        {name}
-                    </span>
-                    <span>
-                        .{type}
-                    </span>
-                </span>
+                            <span>
+                                .{type}
+                            </span>
+                        </span>
+                    :
+                        <span onDoubleClick={handleDoubleClick}>
+                            {tab}
+                        </span>
+                }
             </span>
-            <span onClick={handleXCkick}>
+            <span onClick={handleDeleteCkick}>
                 x
             </span>
         </TabContainer>

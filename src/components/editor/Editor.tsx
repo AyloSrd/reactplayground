@@ -1,5 +1,5 @@
 import CodeMirror from '@/components/editor/CodeMirror'
-import Tabs from '@/components/editor/Tabs'
+import TabsContainer from '@/components/editor/TabsContainer'
 import { useCreateEvento } from 'evento-react'
 import { memo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
@@ -26,7 +26,7 @@ function Editor(props: Props) {
 
     return (
         <Container>
-            <Tabs tabs={tabs} />
+            <TabsContainer tabs={tabs} />
             <CodeMirror
                 language='jsx'
                 onTextChange={handleTextChange}
