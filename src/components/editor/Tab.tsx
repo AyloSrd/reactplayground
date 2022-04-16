@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
+    currentTab: string,
     onDelete: (e: CustomEvent<string>) => void,
     onEdit: (e: CustomEvent<{current: string, next: string}>) => void,
     onSelect: (e: CustomEvent<string>) => void,

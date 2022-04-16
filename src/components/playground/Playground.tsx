@@ -13,13 +13,8 @@ function Playground() {
         deleteFile,
         editFileContent,
         editFileName,
-        files: {
-            fileList,
-            filesById
-        },
+        files
     } = useEsbuild()
-
-    const [currentTab, setCurrentTab] = useState(ENTRY_POINT_JSX)
 
     const handleTextChange = useCallback((e: CustomEvent<string>) => {
         console.log(e.detail)
@@ -37,8 +32,8 @@ function Playground() {
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor
-                        onEditorChange={handleTextChange}
-                        tabs={fileList}
+                        files={files}
+                        onTextEditorChange={handleTextChange}
                     />
                 }
             />
