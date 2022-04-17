@@ -21,7 +21,7 @@ function Tab(props: Props) {
 
     const evento = useCreateEvento(props)
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setTempName(e.target.value)
     }, [])
 
@@ -57,6 +57,12 @@ function Tab(props: Props) {
       inputRef.current?.focus()
     }, [tempName])
 
+    useEffect(() => {
+        if (tab !== ENTRY_POINT_JSX) {
+            setTempName(name)
+        }
+    }, [])
+
     return (
         <TabContainer>
             <span  onClick={handleTabClick}>
@@ -66,10 +72,10 @@ function Tab(props: Props) {
                             <span>
                                 <form
                                     onBlur={handleBlur}
-                                    onChange={handleChange}
                                     onSubmit={handleSubmit}
-                                >
+                                    >
                                     <input
+                                        onChange={handleChange}
                                         ref={inputRef}
                                         type="text"
                                         value={tempName}

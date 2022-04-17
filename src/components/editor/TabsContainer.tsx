@@ -47,7 +47,7 @@ function TabsContainer(props: Props) {
                     />
                 ))
             }
-            <button>
+            <button onClick={handleAddClick}>
                 +
             </button>
         </>

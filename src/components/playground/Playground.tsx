@@ -3,6 +3,7 @@ import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { generatePayload } from '@/tools/eidtor.tools'
 import styled from 'styled-components'
 
 function Playground() {
@@ -20,6 +21,18 @@ function Playground() {
         console.log(e.detail)
     }, [])
 
+    const handleAddFile = useCallback((e: CustomEvent<string>) => {
+        addFile(generatePayload(e.detail))
+    }, [])
+
+    const handleDeleteFile = useCallback((e: CustomEvent<string>) => {
+        deleteFile(generatePayload(e.detail))
+    }, [])
+
+    const handleEditFileName = useCallback(({ detail: { current, next }}: CustomEvent<{ current: string, next: string }>) => {
+        editFileName(generatePayload(current, next))
+    }, [])
+
     const handleClick = () => createBundle()
 
     useEffect(() => {
@@ -32,6 +45,9 @@ function Playground() {
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor
+                        onAddFile={handleAddFile}
+                        onDeleteFile={handleDeleteFile}
+                        onEditFileName={handleEditFileName}
                         files={files}
                         onTextEditorChange={handleTextChange}
                     />

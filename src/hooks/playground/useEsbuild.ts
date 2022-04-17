@@ -37,7 +37,7 @@ console.log(React)
 `.trim()
 
 const initialState: State = {
-    fileList: ['App.js'],
+    fileList: [ENTRY_POINT_JSX],
     vfs : {
         [ENTRY_POINT_JSX]: AppdefaultContent
     }
