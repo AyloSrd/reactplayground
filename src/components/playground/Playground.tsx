@@ -29,7 +29,9 @@ function Playground() {
         deleteFile(generatePayload(e.detail))
     }, [])
 
-    const handleEditFileName = useCallback(({ detail: { current, next }}: CustomEvent<{ current: string, next: string }>) => {
+    const handleEditFileName = useCallback((
+        { detail: { current, next }}: CustomEvent<{ current: string, next: string }>
+    ) => {
         editFileName(generatePayload(current, next))
     }, [])
 

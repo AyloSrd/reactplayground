@@ -84,10 +84,14 @@ function reducer(state: State, action: Action): State {
             }
 
         case ActionKind.EDIT_FILE_NAME :
+            console.log('', action.payload.target === ENTRY_POINT_JSX)
+            console.log('!state.fileList.includes(action.payload.target)', !state.fileList.includes(action.payload.target))
+            console.log('!state.vfs[action.payload.target]', !state.vfs[action.payload.target])
+            console.log('vfs[action.payload.target]', state, action.payload.target)
             if (
                 action.payload.target === ENTRY_POINT_JSX
                 || !state.fileList.includes(action.payload.target)
-                || !state.vfs[action.payload.target]
+                || typeof state.vfs[action.payload.target] !== 'string'
             ) {
                 return state
             }

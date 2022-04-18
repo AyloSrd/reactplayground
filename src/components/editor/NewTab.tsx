@@ -6,12 +6,12 @@ import styled from 'styled-components'
 interface Props {
     currentTab: string,
     onDelete: (e: CustomEvent<string>) => void,
-    onEdit: (e: CustomEvent<{current: string, next: string}>) => void,
+    ongit NewNameSubmit: (e: CustomEvent<{current: string, next: string}>) => void,
     onSelect: (e: CustomEvent<string>) => void,
     tab: string
 }
 
-function Tab(props: Props) {
+function NewTab(props: Props) {
     const { tab } = props
     const [ name, type ] = tab.split('.')
 
@@ -48,13 +48,6 @@ function Tab(props: Props) {
     const handleBlur = useCallback(() => {
         handleSubmit()
     }, [handleSubmit])
-
-    const handleDoubleClick = useCallback(() => {
-        if (isEntryPoint) {
-            return
-        }
-        setTempName(name)
-    }, [])
 
     const handleDeleteCkick = useCallback(() => {
         if (isEntryPoint) {
@@ -114,4 +107,4 @@ const TabContainer = styled.article`
     cursor: pointer;
 `
 
-export default memo(Tab)
+export default memo(NewTab)
