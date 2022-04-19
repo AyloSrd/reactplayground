@@ -52,7 +52,7 @@ function TabInput(props: Props) {
     }, [])
 
     return (
-        <span>
+        <Container>
             <form
                 onBlur={handleBlur}
                 onSubmit={handleSubmit}
@@ -70,8 +70,12 @@ function TabInput(props: Props) {
             <DeleteButton
                 onClick={handleDeleteClick}
             />
-        </span>
+        </Container>
     )
 }
+
+const Container = styled.span`
+    position: relative;
+`
 
 export default memo(TabInput)

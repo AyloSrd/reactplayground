@@ -2,7 +2,7 @@ import { defaultOptions } from '@/tools/codemirror-tools';
 
 import { useCreateEvento } from 'evento-react'
 import { Controlled } from 'react-codemirror2'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import * as codemirror from 'codemirror'
 import styled from 'styled-components'
 
@@ -24,6 +24,10 @@ interface Props {
 function CodeMirror(props: Props) {
     const { language, text } = props
 
+    const [hasMounted, setHasMounted] = useState<boolean>(false)
+
+    const editorRef = useRef<codemirror.Editor>(null)
+
     const options = {
         ...defaultOptions,
         mode: language
@@ -39,12 +43,19 @@ function CodeMirror(props: Props) {
         evento('textChange', value)
     }, [props])
 
+    useEffect(() => {
+        setHasMounted(true)
+        console.log(editorRef)
+        editorRef?.current.editor.focus()
+    }, [])
+
     return (
         <Container>
             <Controlled
                 onBeforeChange={handleBeforeChange}
                 options={options}
-                value={text}
+                ref={editorRef}
+                value={hasMounted ? text : ""}
             />
         </Container>
     )

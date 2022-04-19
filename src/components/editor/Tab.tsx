@@ -38,15 +38,19 @@ function Tab(props: Props) {
     }, [tab])
 
     return (
-        <span>
+        <Container>
             <span  onClick={handleTabClick}>
                 <span onDoubleClick={handleDoubleClick}>
                     {tab}
                 </span>
             </span>
             <DeleteButton onClick={handleDeleteCkick} />
-        </span>
+        </Container>
     )
 }
+
+const Container = styled.span`
+    position: relative;
+`
 
 export default memo(Tab)

@@ -26,12 +26,9 @@ function TabsContainer(props: Props) {
         setNewTab(generateNewTabName(tabs))
     }, [])
 
-    const handleNewTabAdd = useCallback(() => {
-        if (typeof newTab !== 'string') {
-            return
-        }
+    const handleNewTabAdd = useCallback((e: CustomEvent<{ current: string; next: string }>) => {
 
-        evento('tabCreate', newTab)
+        evento('tabCreate', e.detail.next)
             .then(res => {
                 if (res) {
                     setNewTab(null)

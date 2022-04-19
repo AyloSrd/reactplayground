@@ -28,9 +28,9 @@ function Editor(props: Props) {
         setText(e.detail)
     }, [])
 
-    const handleTabCreate = useCallback(() => {
-        evento('addFile', generateNewTabName(tabs))
-    }, [tabs])
+    const handleTabCreate = useCallback((e: CustomEvent<string>) => {
+        evento('addFile', e.detail)
+    }, [])
 
     const handleTabDelete = useCallback((e: CustomEvent<string>) => {
         evento('deleteFile', e.detail)
