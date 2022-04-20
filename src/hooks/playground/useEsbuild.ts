@@ -156,7 +156,7 @@ export default function useEsbuild() {
         })
     }, [])
 
-    const unpkgPathPlugin = useCallback((vfs) => {
+    const unpkgPathPlugin = useCallback((vfs: VFS) => {
         return {
           name: 'unpkg-path-plugin',
           setup(build: esbuild.PluginBuild) {
@@ -229,7 +229,7 @@ export default function useEsbuild() {
         }
     }, [])
 
-    const createBundle = useCallback(async (vfs)=> {
+    const createBundle = useCallback(async (vfs: VFS)=> {
         if (!esbuildRef.current) {
             return
         }

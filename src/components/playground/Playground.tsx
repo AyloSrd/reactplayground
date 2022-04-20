@@ -44,9 +44,7 @@ function Playground() {
 
     const handleClick = () => createBundle(files.filesById)
 
-    useEffect(() => {
-        console.log(bundleJSXText)
-    }, [bundleJSXText])
+    console.log(bundleJSXText)
 
     return (
         <Page>
