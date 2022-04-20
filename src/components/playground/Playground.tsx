@@ -35,6 +35,12 @@ function Playground() {
         editFileName(generatePayload(current, next))
     }, [])
 
+    const handleTextEditorChange = useCallback((
+        { detail: { file, text }}: CustomEvent<{ file: string, text: string }>
+    ) => {
+        editFileContent(generatePayload(file, text))
+    }, [])
+
     const handleClick = () => createBundle()
 
     useEffect(() => {
@@ -51,7 +57,7 @@ function Playground() {
                         onDeleteFile={handleDeleteFile}
                         onEditFileName={handleEditFileName}
                         files={files}
-                        onTextEditorChange={handleTextChange}
+                        onTextEditorChange={handleTextEditorChange}
                     />
                 }
             />

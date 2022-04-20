@@ -14,26 +14,28 @@ interface Props {
     onAddFile: (e: CustomEvent<string>) => void,
     onDeleteFile: (e: CustomEvent<string>) => void,
     onEditFileName: (e: CustomEvent<{ current: string, next: string }>) => void,
-    onTextEditorChange: (e: CustomEvent<string>) => void,
+    onTextEditorChange: (e: CustomEvent<{ file: string, text: string }>) => void,
 }
 
 function Editor(props: Props) {
     const { files: { fileList: tabs, filesById} } = props
-    const [ text, setText ] = useState(filesById[ENTRY_POINT_JSX])
     const [currentFile, setCurrentFile] = useState<string>(ENTRY_POINT_JSX)
 
     const evento = useCreateEvento(props)
 
+    // const writeFile = useCallback((file: string, text: string) => {
+    //     evento('textEditorChange', { file, text })
+    // }, [])
     const handleTextChange = useCallback((e: CustomEvent<string>) => {
-        setText(e.detail)
-    }, [])
+        evento('textEditorChange', { file: currentFile, text: e.detail })
+    }, [currentFile])
 
     const handleTabCreate = useCallback((e: CustomEvent<string>) => {
         evento('addFile', e.detail)
     }, [])
 
     const handleTabDelete = useCallback((e: CustomEvent<string>) => {
-        evento('deleteFile', e.detail)
+        evento('deleteFile',e.detail)
     }, [])
 
     const hadleTabEdit = useCallback((e: CustomEvent<{ current: string, next: string }>) => {
@@ -41,14 +43,18 @@ function Editor(props: Props) {
     }, [])
 
     const handleTabSelect = useCallback((e: CustomEvent<string>) => {
-        const tab = e.detail
-        setCurrentFile(tab)
-        setText(filesById[tab])
-    }, [filesById])
+        setCurrentFile(e.detail)
+    }, [])
 
     useEffect(() => {
-        evento('textEditorChange', text)
-    }, [text])
+        console.log('useEffect tabs currentFile', tabs, currentFile)
+        if (!tabs.includes(currentFile)) {
+            setCurrentFile(ENTRY_POINT_JSX)
+        }
+    }, [currentFile, tabs])
+
+    console.log(filesById)
+    console.log('currentFile', currentFile)
 
     return (
         <Container>
@@ -62,7 +68,7 @@ function Editor(props: Props) {
             <CodeMirror
                 language='jsx'
                 onTextChange={handleTextChange}
-                text={text}
+                text={filesById[currentFile]}
             />
         </Container>
   )
