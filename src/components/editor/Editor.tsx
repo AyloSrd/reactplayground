@@ -1,8 +1,8 @@
 import CodeMirror from '@/components/editor/CodeMirror'
 import TabsContainer from '@/components/editor/TabsContainer'
+import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useEsbuild'
 import { useCreateEvento } from 'evento-react'
-import { generateNewTabName } from '@/tools/eidtor.tools'
 import { memo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
@@ -20,6 +20,8 @@ interface Props {
 function Editor(props: Props) {
     const { files: { fileList: tabs, filesById} } = props
     const [currentFile, setCurrentFile] = useState<string>(ENTRY_POINT_JSX)
+
+    const prevTabsLength = usePreviousValue(tabs.length)
 
     const evento = useCreateEvento(props)
 
@@ -47,14 +49,19 @@ function Editor(props: Props) {
     }, [])
 
     useEffect(() => {
-        console.log('useEffect tabs currentFile', tabs, currentFile)
+        const tabsLength = tabs.length
+
         if (!tabs.includes(currentFile)) {
             setCurrentFile(ENTRY_POINT_JSX)
         }
-    }, [currentFile, tabs])
 
-    console.log(filesById)
+        if(tabsLength > prevTabsLength) {
+            setCurrentFile(tabs[tabsLength -1])
+        }
+    }, [currentFile, prevTabsLength, tabs])
+
     console.log('currentFile', currentFile)
+    console.log(filesById[currentFile])
 
     return (
         <Container>

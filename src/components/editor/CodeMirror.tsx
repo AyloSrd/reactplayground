@@ -44,6 +44,7 @@ function CodeMirror(props: Props) {
     }, [props])
 
     useEffect(() => {
+        console.log('mounted')
         setHasMounted(true)
         editorRef?.current.editor.focus()
     }, [])

@@ -38,10 +38,11 @@ function Playground() {
     const handleTextEditorChange = useCallback((
         { detail: { file, text }}: CustomEvent<{ file: string, text: string }>
     ) => {
+        console.log(generatePayload(file, text))
         editFileContent(generatePayload(file, text))
     }, [])
 
-    const handleClick = () => createBundle()
+    const handleClick = () => createBundle(files.filesById)
 
     useEffect(() => {
         console.log(bundleJSXText)

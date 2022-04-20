@@ -73,21 +73,18 @@ function reducer(state: State, action: Action): State {
             }
 
         case ActionKind.EDIT_FILE_CONTENT :
-            if (!state.vfs[action.payload.target]) {
+            if (state.vfs[action.payload.target] === undefined) {
                 return state
             }
             const editContentVfs = { ...state.vfs }
             editContentVfs[action.payload.target] = action.payload.content
+            console.log(editContentVfs)
             return {
                 fileList: [...state.fileList],
                 vfs: editContentVfs
             }
 
         case ActionKind.EDIT_FILE_NAME :
-            console.log('', action.payload.target === ENTRY_POINT_JSX)
-            console.log('!state.fileList.includes(action.payload.target)', !state.fileList.includes(action.payload.target))
-            console.log('!state.vfs[action.payload.target]', !state.vfs[action.payload.target])
-            console.log('vfs[action.payload.target]', state, action.payload.target)
             if (
                 action.payload.target === ENTRY_POINT_JSX
                 || !state.fileList.includes(action.payload.target)
@@ -159,7 +156,7 @@ export default function useEsbuild() {
         })
     }, [])
 
-    const unpkgPathPlugin = useCallback(() => {
+    const unpkgPathPlugin = useCallback((vfs) => {
         return {
           name: 'unpkg-path-plugin',
           setup(build: esbuild.PluginBuild) {
@@ -196,6 +193,7 @@ export default function useEsbuild() {
               console.log('onLoad', args)
 
                 if (args.path === ENTRY_POINT_JSX) {
+                    console.log('onLoad', vfs[ENTRY_POINT_JSX])
                     return {
                     loader: 'jsx',
                     contents: vfs[ENTRY_POINT_JSX],
@@ -229,9 +227,9 @@ export default function useEsbuild() {
             })
           },
         }
-    }, [vfs])
+    }, [])
 
-    const createBundle = useCallback(async ()=> {
+    const createBundle = useCallback(async (vfs)=> {
         if (!esbuildRef.current) {
             return
         }
@@ -240,11 +238,12 @@ export default function useEsbuild() {
             entryPoints: ['App.jsx'],
             bundle: true,
             write: false,
-            plugins: [unpkgPathPlugin()],
+            plugins: [unpkgPathPlugin(vfs)],
             // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
             define: window.defineHack,
           })
         const bundleJSX = bundle?.outputFiles?.[0]?.text
+        console.log('bundle', bundleJSX)
         setBundleJSXText(bundleJSX)
     }, [esbuildRef])
 
