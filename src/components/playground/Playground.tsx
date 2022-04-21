@@ -37,14 +37,27 @@ function Playground() {
         editFileContent(generatePayload(file, text))
     }, [])
 
+    const getSrcDoc =(bundle: string) => `
+    <html>
+    <body>
+    <div id="root"></div>
+    <script>
+    ${bundle}
+    </script>
+  </body>
+    </html>
+
+    `
+
     useEffect(() => {
-        console.log('writing...')
         const timeout = setTimeout(() => {
             createBundle(files.filesById)
-        }, 10000)
+        }, 300)
 
         return () => clearTimeout(timeout)
     }, [files.filesById])
+
+    console.log(bundleJSXText)
 
     return (
         <Page>
@@ -56,6 +69,14 @@ function Playground() {
                         onEditFileName={handleEditFileName}
                         files={files}
                         onTextEditorChange={handleTextEditorChange}
+                    />
+                }
+                rightPaneChild={
+                    <iframe
+                        title="React REPL"
+                        // @ts-ignore
+                        sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin"
+                        srcDoc={getSrcDoc(bundleJSXText)}
                     />
                 }
             />
