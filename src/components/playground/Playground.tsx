@@ -1,9 +1,8 @@
 import Editor from '@/components/editor/Editor'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
-import Icon from '@/components/esthetic/Icon'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { generatePayload } from '@/tools/eidtor.tools'
 import styled from 'styled-components'
 
@@ -62,7 +61,6 @@ function Playground() {
 
     return (
         <Page>
-            <Icon shape='react' />
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor
