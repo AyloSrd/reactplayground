@@ -243,7 +243,7 @@ export default function useEsbuild() {
             define: window.defineHack,
           })
         const bundleJSX = bundle?.outputFiles?.[0]?.text
-        console.log('bundle', bundleJSX)
+        
         setBundleJSXText(bundleJSX)
     }, [esbuildRef])
 

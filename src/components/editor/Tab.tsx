@@ -44,7 +44,7 @@ function Tab(props: Props) {
                     {tab}
                 </span>
             </span>
-            <DeleteButton onClick={handleDeleteCkick} />
+            {!isEntryPoint && <DeleteButton onClick={handleDeleteCkick} />}
         </Container>
     )
 }

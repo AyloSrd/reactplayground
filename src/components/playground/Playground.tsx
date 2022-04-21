@@ -17,10 +17,6 @@ function Playground() {
         files
     } = useEsbuild()
 
-    const handleTextChange = useCallback((e: CustomEvent<string>) => {
-        console.log(e.detail)
-    }, [])
-
     const handleAddFile = useCallback((e: CustomEvent<string>) => {
         addFile(generatePayload(e.detail))
     }, [])
@@ -38,17 +34,20 @@ function Playground() {
     const handleTextEditorChange = useCallback((
         { detail: { file, text }}: CustomEvent<{ file: string, text: string }>
     ) => {
-        console.log(generatePayload(file, text))
         editFileContent(generatePayload(file, text))
     }, [])
 
-    const handleClick = () => createBundle(files.filesById)
+    useEffect(() => {
+        console.log('writing...')
+        const timeout = setTimeout(() => {
+            createBundle(files.filesById)
+        }, 10000)
 
-    console.log(bundleJSXText)
+        return () => clearTimeout(timeout)
+    }, [files.filesById])
 
     return (
         <Page>
-            <button onClick={handleClick}>click</button>
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor
