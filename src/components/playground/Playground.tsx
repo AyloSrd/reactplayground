@@ -1,4 +1,5 @@
 import Editor from '@/components/editor/Editor'
+import Iframe from '@/components/output/Iframe'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
@@ -72,11 +73,10 @@ function Playground() {
                     />
                 }
                 rightPaneChild={
-                    <iframe
-                        title="React REPL"
-                        // @ts-ignore
-                        sandbox="allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin"
-                        srcDoc={getSrcDoc(bundleJSXText)}
+                    <Iframe
+                        onPageRefresh={() => console.log('refreshed')}
+                        output={bundleJSXText}
+                        shouldRefresh={false}
                     />
                 }
             />

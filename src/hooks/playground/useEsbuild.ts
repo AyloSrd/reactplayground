@@ -30,16 +30,27 @@ interface State {
 
 export const ENTRY_POINT_JSX = 'App.jsx'
 
-const AppdefaultContent = `
-import React, { useState } from 'react'
-import styled from 'styled-components'
-console.log(React)
+const AppDefaultContent = `
+import{ useState } from 'react
+import { createRoot } from 'react-dom/client'
+
+const App = () => {
+    const [count, setCount] = useState(0)
+
+    return (
+        <button onClick={() => setCount(count + 1)}>{count}</button>
+    )
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container)
+root.render(<App />);
 `.trim()
 
 const initialState: State = {
     fileList: [ENTRY_POINT_JSX],
     vfs : {
-        [ENTRY_POINT_JSX]: AppdefaultContent
+        [ENTRY_POINT_JSX]: AppDefaultContent
     }
 }
 
@@ -243,7 +254,7 @@ export default function useEsbuild() {
             define: window.defineHack,
           })
         const bundleJSX = bundle?.outputFiles?.[0]?.text
-        
+
         setBundleJSXText(bundleJSX)
     }, [esbuildRef])
 
