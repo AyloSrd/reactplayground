@@ -4,7 +4,7 @@ import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import { useCallback, useEffect } from 'react'
-import { generatePayload } from '@/tools/eidtor.tools'
+import { generatePayload } from '@/tools/editor.tools'
 import styled from 'styled-components'
 
 function Playground() {

@@ -1,7 +1,7 @@
 import Tab from '@/components/editor/Tab'
 import TabInput from '@/components/editor/TabInput'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
-import { generateNewTabName } from '@/tools/eidtor.tools'
+import { generateNewTabName } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useState } from "react"
 

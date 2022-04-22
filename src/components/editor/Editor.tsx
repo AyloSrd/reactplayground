@@ -25,9 +25,6 @@ function Editor(props: Props) {
 
     const evento = useCreateEvento(props)
 
-    // const writeFile = useCallback((file: string, text: string) => {
-    //     evento('textEditorChange', { file, text })
-    // }, [])
     const handleTextChange = useCallback((e: CustomEvent<string>) => {
         evento('textEditorChange', { file: currentFile, text: e.detail })
     }, [currentFile])
@@ -59,9 +56,6 @@ function Editor(props: Props) {
             setCurrentFile(tabs[tabsLength -1])
         }
     }, [currentFile, prevTabsLength, tabs])
-
-    console.log('currentFile', currentFile)
-    console.log(filesById[currentFile])
 
     return (
         <Container>

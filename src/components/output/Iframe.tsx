@@ -1,6 +1,7 @@
 import { sandboxAttributes, srcDoc } from '@/tools/iframe-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef } from 'react'
+import styled from 'styled-components'
 
 interface Props {
     onPageRefresh: () => void,
@@ -28,7 +29,7 @@ const Iframe = (props: Props) => {
     }, [output])
 
     return (
-        <iframe
+        <StyledIframe
             onLoad={handleIframeLoad}
             ref={iframeRef}
             sandbox={sandboxAttributes}
@@ -37,5 +38,11 @@ const Iframe = (props: Props) => {
         />
     )
 }
+
+const StyledIframe = styled.iframe`
+    border: none;
+    height: 100%;
+    width: 100%;
+`
 
 export default memo(Iframe)

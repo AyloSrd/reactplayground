@@ -220,6 +220,7 @@ function VerticalSplitPane(props: Props) {
             <Pane
                 style={{ width: `${leftW}px` }}
             >
+                { isMouseDown && <WindowHook />}
                 { leftPaneChild }
             </Pane>
             <Splitter
@@ -229,6 +230,7 @@ function VerticalSplitPane(props: Props) {
             <Pane
                 style={{ width: `${rightW}px` }}
             >
+                { isMouseDown && <WindowHook />}
                 { rightPaneChild }
             </Pane>
         </Container>
@@ -236,6 +238,7 @@ function VerticalSplitPane(props: Props) {
 }
 
 const Container = styled.section`
+    position: relative;
     height: 100%;
     width: 100%;
     display: flex;
@@ -259,6 +262,14 @@ const Splitter = styled.div`
     height: 100%;
     border-right: 1px solid black;
     cursor: col-resize;
+`
+
+const WindowHook = styled.div`
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 `
 
 export default memo(VerticalSplitPane)

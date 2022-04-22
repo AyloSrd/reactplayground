@@ -12,8 +12,16 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/jsx/jsx'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/theme/material.css'
-import 'codemirror/addon/edit/closebrackets.js';
-import 'codemirror/addon/edit/closetag.js';
+import 'code-mirror-themes/themes/rdark.css'
+import 'codemirror/addon/edit/closebrackets.js'
+import 'codemirror/addon/edit/closetag.js'
+import 'codemirror/addon/fold/foldcode.js'
+import 'codemirror/addon/fold/foldgutter.js'
+import 'codemirror/addon/fold/foldgutter.css'
+import 'codemirror/addon/fold/brace-fold.js'
+import 'codemirror/addon/fold/xml-fold.js'
+import 'codemirror/addon/fold/indent-fold.js'
+import 'codemirror/addon/fold/markdown-fold.js'
 
 interface Props {
     language: 'javascript' | 'jsx'
@@ -26,7 +34,7 @@ function CodeMirror(props: Props) {
 
     const [hasMounted, setHasMounted] = useState<boolean>(false)
 
-    const editorRef = useRef<codemirror.Editor>(null)
+    const editorRef = useRef<any>(null)
 
     const options = {
         ...defaultOptions,
@@ -46,7 +54,7 @@ function CodeMirror(props: Props) {
     useEffect(() => {
         console.log('mounted')
         setHasMounted(true)
-        editorRef?.current.editor.focus()
+        editorRef?.current?.editor?.focus()
     }, [])
 
     return (
@@ -62,7 +70,7 @@ function CodeMirror(props: Props) {
 }
 
 const Container = styled.div`
-    height: 100%;
+    height: calc(100%);
     width: 100%;
 
     .react-codemirror2 {
@@ -72,7 +80,15 @@ const Container = styled.div`
 
     .CodeMirror {;
         width: 100%;
-        height: 100%;
+        height: calc(100% - 50px);
+    }
+
+    .cm-s-rdark .cm-tag:not(.cm-bracket) {
+        color: #5BA1CF;
+    }
+
+    .cm-s-rdark .cm-string {
+        color: #e6d238;
     }
 }
 `
