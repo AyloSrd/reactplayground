@@ -31,7 +31,7 @@ interface State {
 export const ENTRY_POINT_JSX = 'App.jsx'
 
 const AppDefaultContent = `
-import{ useState } from 'react
+import React, { useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 const App = () => {
