@@ -56,7 +56,7 @@ const defaultState: State = {
     }
 }
 
-function init(vfsFromUrl?: VFS): State {
+function init(vfsFromUrl: VFS | null): State {
     if (!vfsFromUrl) {
         return defaultState
     }
@@ -150,7 +150,7 @@ const fileCache = localforage.createInstance({
     name: 'filecache',
   })
 
-export default function useEsbuild(vfsFromUrl?: VFS) {
+export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
 
     const [bundleJSXText, setBundleJSXText] = useState<string>('')

@@ -8,7 +8,7 @@ import { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-    initialVFS?: VFS,
+    initialVFS: VFS | null,
     onUpdateVFS: (e: CustomEvent<VFS>) => void,
 }
 
@@ -21,7 +21,7 @@ function Playground(props: Props) {
         editFileContent,
         editFileName,
         files
-    } = useEsbuild()
+    } = useEsbuild(props.initialVFS)
 
     const evento = useCreateEvento(props)
 
