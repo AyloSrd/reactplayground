@@ -1,13 +1,18 @@
 import Editor from '@/components/editor/Editor'
 import Iframe from '@/components/output/Iframe'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
-import useEsbuild from '@/hooks/playground/useEsbuild'
-import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
-import { useCallback, useEffect } from 'react'
+import useEsbuild, { VFS } from '@/hooks/playground/useEsbuild'
 import { generatePayload } from '@/tools/editor.tools'
+import { useCreateEvento } from 'evento-react'
+import { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
-function Playground() {
+interface Props {
+    initialVFS?: VFS,
+    onUpdateVFS: (e: CustomEvent<VFS>) => void,
+}
+
+function Playground(props: Props) {
     const {
         addFile,
         bundleJSXText,
@@ -17,6 +22,8 @@ function Playground() {
         editFileName,
         files
     } = useEsbuild()
+
+    const evento = useCreateEvento(props)
 
     const handleAddFile = useCallback((e: CustomEvent<string>) => {
         addFile(generatePayload(e.detail))
@@ -38,27 +45,18 @@ function Playground() {
         editFileContent(generatePayload(file, text))
     }, [])
 
-    const getSrcDoc =(bundle: string) => `
-    <html>
-    <body>
-    <div id="root"></div>
-    <script>
-    ${bundle}
-    </script>
-  </body>
-    </html>
-
-    `
-
     useEffect(() => {
+        const vfs  = files.filesById
+
         const timeout = setTimeout(() => {
-            createBundle(files.filesById)
+            createBundle(vfs)
         }, 300)
+
+        evento('updateVFS', vfs)
+        console.log('updated')
 
         return () => clearTimeout(timeout)
     }, [files.filesById])
-
-    console.log(bundleJSXText)
 
     return (
         <Page>

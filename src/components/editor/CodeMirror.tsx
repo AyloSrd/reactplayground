@@ -70,7 +70,7 @@ function CodeMirror(props: Props) {
 }
 
 const Container = styled.div`
-    height: calc(100%);
+    /* height: 100%; */
     width: 100%;
 
     .react-codemirror2 {

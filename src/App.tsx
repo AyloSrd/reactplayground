@@ -1,14 +1,29 @@
-import { useState } from 'react'
 import Playground from '@/components/playground/Playground'
-
-import '@/App.css'
+import { VFS } from '@/hooks/playground/useEsbuild'
+import { compressToEncodedURIComponent as compress} from 'lz-string'
+import { useCallback, useEffect } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+    const updateURL = useCallback((e: CustomEvent<VFS>) => {
+        const { detail: vfs } = e
+        const url = new URL(location.href)
+        url.hash = compress(JSON.stringify(vfs))
+        history.replaceState({}, '', url.toString())
+    },[])
+
+    useEffect(() => {
+        console.log('mounted')
+    }, [])
 
   return (
-    <div className='App'>
-        <Playground />
+    <div>
+        <Playground
+            onUpdateVFS={(e) => {
+                console.log('updated', e.detail)
+                updateURL(e)
+            }}
+        />
     </div>
   )
 }

@@ -49,11 +49,34 @@ const root = createRoot(container)
 root.render(<App />);
 `.trim()
 
-const initialState: State = {
+const defaultState: State = {
     fileList: [ENTRY_POINT_JSX],
     vfs : {
         [ENTRY_POINT_JSX]: AppDefaultContent
     }
+}
+
+function init(vfsFromUrl?: VFS): State {
+    if (!vfsFromUrl) {
+        return defaultState
+    }
+
+    if (!vfsFromUrl[ENTRY_POINT_JSX]) {
+        return defaultState
+    }
+
+    let tabs = Object.keys(vfsFromUrl)
+
+    if (tabs.indexOf(ENTRY_POINT_JSX) !== 0) {
+        tabs = [ENTRY_POINT_JSX, ...tabs.filter(tab => tab !== ENTRY_POINT_JSX)]
+    }
+
+    const derivedState = {
+        fileList: tabs,
+        vfs: vfsFromUrl
+    }
+
+    return derivedState
 }
 
 function reducer(state: State, action: Action): State {
@@ -127,8 +150,8 @@ const fileCache = localforage.createInstance({
     name: 'filecache',
   })
 
-export default function useEsbuild() {
-    const [{ vfs, fileList }, dispatch] = useReducer(reducer, initialState)
+export default function useEsbuild(vfsFromUrl?: VFS) {
+    const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
 
     const [bundleJSXText, setBundleJSXText] = useState<string>('')
 
