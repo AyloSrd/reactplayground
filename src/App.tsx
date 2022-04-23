@@ -19,10 +19,7 @@ function App() {
   return (
     <div>
         <Playground
-            onUpdateVFS={(e) => {
-                console.log('updated', e.detail)
-                updateURL(e)
-            }}
+            onUpdateVFS={updateURL}
         />
     </div>
   )
