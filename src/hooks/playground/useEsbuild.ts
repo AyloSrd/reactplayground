@@ -9,11 +9,8 @@ enum ActionKind {
     DELETE_FILE = 'DELETE_FILE',
     EDIT_FILE_CONTENT = ' EDIT_FILE_CONTENT',
     EDIT_FILE_NAME = 'EDIT_FILE_NAME',
-}
-
-enum VersionigCacheType {
-    DIRECT_IMPORTS = 'directImports',
-    VERSIONED_IMPORTS = 'versionedImports',
+    ADD_DIRECT_IMPORT = 'ADD_DIRECT_IMPORT',
+    ADD_VERSIONED_IMPORT = 'VERSIONED_IMPORTS'
 }
 
 interface Action {
@@ -29,8 +26,12 @@ export interface VFS {
 }
 
 interface State {
+    directImports: string[],
     fileList: string[],
-    vfs: VFS
+    versionedImports: {
+        [key: string]: string
+    },
+    vfs: VFS,
 }
 
 export const ENTRY_POINT_JSX = 'App.jsx'
@@ -55,7 +56,9 @@ root.render(<App />);
 `.trim()
 
 const defaultState: State = {
+    directImports: [],
     fileList: [ENTRY_POINT_JSX],
+    versionedImports: {},
     vfs : {
         [ENTRY_POINT_JSX]: AppDefaultContent
     }
@@ -77,7 +80,9 @@ function init(vfsFromUrl: VFS | null): State {
     }
 
     const derivedState = {
+        directImports: [],
         fileList: tabs,
+        versionedImports: {},
         vfs: vfsFromUrl
     }
 
@@ -94,6 +99,7 @@ function reducer(state: State, action: Action): State {
                 return state
             }
             return {
+                ...state,
                 fileList: [ ...state.fileList, action.payload.target ],
                 vfs: {
                     ...state.vfs,
@@ -109,6 +115,7 @@ function reducer(state: State, action: Action): State {
             const deleteVfs = { ...state.vfs }
             delete deleteVfs[action.payload.target]
             return {
+                ...state,
                 fileList: deleteList,
                 vfs: deleteVfs
             }
@@ -121,6 +128,7 @@ function reducer(state: State, action: Action): State {
             editContentVfs[action.payload.target] = action.payload.content
 
             return {
+                ...state,
                 fileList: [...state.fileList],
                 vfs: editContentVfs
             }
@@ -142,6 +150,7 @@ function reducer(state: State, action: Action): State {
             delete editedNameVfs[action.payload.target]
             editedNameVfs[action.payload.content] = editedFileContent
             return {
+                ...state,
                 fileList: editedNameFileList,
                 vfs: editedNameVfs
             }
@@ -154,13 +163,6 @@ function reducer(state: State, action: Action): State {
 const fileCache = localforage.createInstance({
     name: 'filecache',
 })
-
-const versioningCache = localforage.createInstance({
-    name: 'versioningcache',
-})
-
-await versioningCache.setItem(VersionigCacheType.DIRECT_IMPORTS, [])
-await versioningCache.setItem(VersionigCacheType.VERSIONED_IMPORTS, {})
 
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
@@ -231,15 +233,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
                 }
 
-                const directImports: string[] = await versioningCache.getItem(VersionigCacheType.DIRECT_IMPORTS) as string[]
-
-                if (Object.keys(vfs).includes(args.importer)) {
-                    directImports.push(args.path.split('/')[0])
-                    console.log('setting', directImports)
-                    await versioningCache.setItem(VersionigCacheType.DIRECT_IMPORTS, directImports)
-                    console.log('set', directImports)
-                }
-
                 return {
                     namespace: 'a',
                     path: `https://unpkg.com/${args.path}`,
@@ -303,6 +296,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     useEffect(() => {
         startService()
+            .then(() => createBundle(vfs))
     }, [])
 
     return {
