@@ -11,6 +11,11 @@ enum ActionKind {
     EDIT_FILE_NAME = 'EDIT_FILE_NAME',
 }
 
+enum VersionigCacheType {
+    DIRECT_IMPORTS = 'directImports',
+    VERSIONED_IMPORTS = 'versionedImports',
+}
+
 interface Action {
     type: ActionKind,
     payload: {
@@ -114,7 +119,7 @@ function reducer(state: State, action: Action): State {
             }
             const editContentVfs = { ...state.vfs }
             editContentVfs[action.payload.target] = action.payload.content
-            console.log(editContentVfs)
+
             return {
                 fileList: [...state.fileList],
                 vfs: editContentVfs
@@ -148,7 +153,14 @@ function reducer(state: State, action: Action): State {
 
 const fileCache = localforage.createInstance({
     name: 'filecache',
-  })
+})
+
+const versioningCache = localforage.createInstance({
+    name: 'versioningcache',
+})
+
+await versioningCache.setItem(VersionigCacheType.DIRECT_IMPORTS, [])
+await versioningCache.setItem(VersionigCacheType.VERSIONED_IMPORTS, {})
 
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
@@ -197,7 +209,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
           name: 'unpkg-path-plugin',
           setup(build: esbuild.PluginBuild) {
                 build.onResolve({ filter: /.*/ }, async (args: any) => {
-                console.log('onResolve', args)
+
                 if (args.path === ENTRY_POINT_JSX) {
                     return { path: args.path, namespace: 'a' }
                 }
@@ -219,6 +231,15 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
                 }
 
+                const directImports: string[] = await versioningCache.getItem(VersionigCacheType.DIRECT_IMPORTS) as string[]
+
+                if (Object.keys(vfs).includes(args.importer)) {
+                    directImports.push(args.path.split('/')[0])
+                    console.log('setting', directImports)
+                    await versioningCache.setItem(VersionigCacheType.DIRECT_IMPORTS, directImports)
+                    console.log('set', directImports)
+                }
+
                 return {
                     namespace: 'a',
                     path: `https://unpkg.com/${args.path}`,
@@ -226,10 +247,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                 })
 
             build.onLoad({ filter: /.*/ }, async (args: any) => {
-              console.log('onLoad', args)
-
                 if (args.path === ENTRY_POINT_JSX) {
-                    console.log('onLoad', vfs[ENTRY_POINT_JSX])
                     return {
                     loader: 'jsx',
                     contents: vfs[ENTRY_POINT_JSX],
@@ -269,7 +287,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         if (!esbuildRef.current) {
             return
         }
-
+        console.log('build')
         const bundle = await esbuildRef.current.build({
             entryPoints: ['App.jsx'],
             bundle: true,
