@@ -1,3 +1,5 @@
+import { getVersion, libVersionRegex } from '@/tools/esbuild-tools'
+import { generatePayload } from '@/tools/editor.tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -6,11 +8,12 @@ import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 
 enum ActionKind {
     ADD_FILE = 'ADD_FILE',
+    ADD_DIRECT_IMPORT = 'ADD_DIRECT_IMPORT',
+    ADD_VERSIONED_IMPORT = 'VERSIONED_IMPORTS',
     DELETE_FILE = 'DELETE_FILE',
     EDIT_FILE_CONTENT = ' EDIT_FILE_CONTENT',
     EDIT_FILE_NAME = 'EDIT_FILE_NAME',
-    ADD_DIRECT_IMPORT = 'ADD_DIRECT_IMPORT',
-    ADD_VERSIONED_IMPORT = 'VERSIONED_IMPORTS'
+    RESET_IMPORTS = 'RESET_IMPORTS ',
 }
 
 interface Action {
@@ -107,6 +110,21 @@ function reducer(state: State, action: Action): State {
                 }
             }
 
+        case ActionKind.ADD_DIRECT_IMPORT :
+            const directImports = [...new Set([...state.directImports, action.payload.target])]
+            return {
+                ...state,
+                directImports
+            }
+
+        case ActionKind.ADD_VERSIONED_IMPORT :
+            const versionedImports = {...state.versionedImports}
+            versionedImports[action.payload.target] = action.payload.content
+            return {
+                ...state,
+                versionedImports
+            }
+
         case ActionKind.DELETE_FILE :
             if (action.payload.target === ENTRY_POINT_JSX) {
                 return state
@@ -126,7 +144,6 @@ function reducer(state: State, action: Action): State {
             }
             const editContentVfs = { ...state.vfs }
             editContentVfs[action.payload.target] = action.payload.content
-
             return {
                 ...state,
                 fileList: [...state.fileList],
@@ -155,6 +172,13 @@ function reducer(state: State, action: Action): State {
                 vfs: editedNameVfs
             }
 
+        case ActionKind.RESET_IMPORTS :
+            return {
+                ...state,
+                directImports: [],
+                versionedImports: {},
+            }
+
         default:
             throw new Error()
     }
@@ -165,8 +189,8 @@ const fileCache = localforage.createInstance({
 })
 
 export default function useEsbuild(vfsFromUrl: VFS | null) {
-    const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
-
+    const [{ vfs, fileList, directImports, versionedImports }, dispatch] = useReducer(reducer, vfsFromUrl, init)
+    console.log(directImports, versionedImports)
     const [bundleJSXText, setBundleJSXText] = useState<string>('')
 
     const esbuildRef = useRef<any>()
@@ -175,6 +199,41 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         dispatch({
             type: ActionKind.ADD_FILE,
             payload
+        })
+    }, [])
+
+    const addDirectImport = useCallback((importName: string) => {
+        const versioned = getVersion(importName)
+
+        if (!versioned) {
+            return dispatch({
+                type: ActionKind.ADD_DIRECT_IMPORT,
+                payload: generatePayload(importName)
+            })
+        }
+
+        const { lib, version } = versioned
+        dispatch({
+            type: ActionKind.ADD_DIRECT_IMPORT,
+            payload: generatePayload(lib)
+        })
+        dispatch ({
+            type: ActionKind.ADD_VERSIONED_IMPORT,
+            payload:generatePayload(lib, version)
+        })
+    }, [])
+
+    const addVersionedImport = useCallback((importName: string) => {
+        const versioned = getVersion(importName)
+
+        if (!versioned) {
+            return
+        }
+
+        const { lib, version } = versioned
+        dispatch ({
+            type: ActionKind.ADD_VERSIONED_IMPORT,
+            payload:generatePayload(lib, version)
         })
     }, [])
 
@@ -208,71 +267,76 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     const unpkgPathPlugin = useCallback((vfs: VFS) => {
         return {
-          name: 'unpkg-path-plugin',
-          setup(build: esbuild.PluginBuild) {
+            name: 'unpkg-path-plugin',
+            setup(build: esbuild.PluginBuild) {
                 build.onResolve({ filter: /.*/ }, async (args: any) => {
+                    addVersionedImport(args.resolveDir.substring(1))
 
-                if (args.path === ENTRY_POINT_JSX) {
-                    return { path: args.path, namespace: 'a' }
-                }
+                    if (args.path === ENTRY_POINT_JSX) {
+                        return { path: args.path, namespace: 'a' }
+                    }
 
-                if (args.path.startsWith('./') && vfs[args.path.substring(2)]) {
+                    if (args.path.startsWith('./') && vfs[args.path.substring(2)]) {
+                        return {
+                            namespace: 'a',
+                            path: args.path.substring(2)
+                        }
+                    }
+
+                    if (args.path.includes('./') || args.path.includes('../')) {
+                        return {
+                        namespace: 'a',
+                        path: new URL(
+                            args.path,
+                            'https://unpkg.com' + args.resolveDir + '/'
+                        ).href,
+                        }
+                    }
+
+                    if (typeof vfs[args.importer] === 'string') {
+                        addDirectImport(args.path.split('/')[0])
+                    }
+
                     return {
                         namespace: 'a',
-                        path: args.path.substring(2)
+                        path: `https://unpkg.com/${args.path}`,
                     }
-                }
-
-                if (args.path.includes('./') || args.path.includes('../')) {
-                    return {
-                    namespace: 'a',
-                    path: new URL(
-                        args.path,
-                        'https://unpkg.com' + args.resolveDir + '/'
-                    ).href,
-                    }
-                }
-
-                return {
-                    namespace: 'a',
-                    path: `https://unpkg.com/${args.path}`,
-                }
                 })
 
-            build.onLoad({ filter: /.*/ }, async (args: any) => {
-                if (args.path === ENTRY_POINT_JSX) {
-                    return {
-                    loader: 'jsx',
-                    contents: vfs[ENTRY_POINT_JSX],
-                    }
-                }
-
-                if (vfs[args.path]) {
-                    return {
+                build.onLoad({ filter: /.*/ }, async (args: any) => {
+                    if (args.path === ENTRY_POINT_JSX) {
+                        return {
                         loader: 'jsx',
-                        contents: vfs[args.path],
+                        contents: vfs[ENTRY_POINT_JSX],
+                        }
                     }
-                }
 
-                const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
+                    if (vfs[args.path]) {
+                        return {
+                            loader: 'jsx',
+                            contents: vfs[args.path],
+                        }
+                    }
 
-                if (cached) {
-                    return cached
-                }
+                    const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
 
-                const { data, request } = await axios.get(args.path)
+                    if (cached) {
+                        return cached
+                    }
 
-                const result: esbuild.OnLoadResult = {
-                    loader: 'jsx',
-                    contents: data,
-                    resolveDir: new URL('./', request.responseURL).pathname,
-                }
+                    const { data, request } = await axios.get(args.path)
 
-                await fileCache.setItem(args.path, result)
+                    const result: esbuild.OnLoadResult = {
+                        loader: 'jsx',
+                        contents: data,
+                        resolveDir: new URL('./', request.responseURL).pathname,
+                    }
 
-                return result
-            })
-          },
+                    await fileCache.setItem(args.path, result)
+
+                    return result
+                })
+            },
         }
     }, [])
 
@@ -280,7 +344,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         if (!esbuildRef.current) {
             return
         }
-        console.log('build')
+        dispatch({ type: ActionKind.RESET_IMPORTS, payload: generatePayload('') })
         const bundle = await esbuildRef.current.build({
             entryPoints: ['App.jsx'],
             bundle: true,
@@ -312,3 +376,5 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         },
     }
 }
+
+/**http://localhost:3000/#N4IgggDhB0BWDOAPEAuEBLAthA9gJwBcACAIQFcCCcA7IgMzx0yIHJoB6cymuJFgHWpZchIgCUApgEMAxgQA0RYETLwJAZQJSCEogF96jZizzS5AodnzFlM09olicOYgYZNW9uQFoAJk3YZABt0CWoCC0EZGnhiSAgiAF4iAAoASiSAPiVBIjyiaOpYogBtaLJwxTUCAGEcCoIAXSSVNU0HFIBGAAY0wVz80wIyPFoU-oJ+AgAeTImpqemuKlp2OeoFyZmAIwoVohoakJkAa0TgdKyiarqGlPLwogBqIk60vXXNzeAHgj0B-L5RbsXbcaifLbTNYAoh9aj-DbUQrFQpadDUCR4Fr+GRkTBhAjQADmEgIAFEghJ8eESABPACSvhSJmcETSAG4ojFiIwXC07NIdE4XPcaGiMXg4bzCaZqL5MSlpvEiGsOSB5CBljwEMg0MJrOIzMR3MYvBF+hjECJiPK6FIyEFjRU5OgaKQ9jRLsAJkMRrRpqCVpkAJo4KGBmjrPQgPRAA */
