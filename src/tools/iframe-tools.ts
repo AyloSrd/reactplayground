@@ -6,6 +6,15 @@ export const srcDoc = /*html*/`
     <body>
         <div id="root"></div>
         <script>
+            // send console events to parent, while executing them
+            ['error', 'log', 'warning'].forEach(level => {
+                const tempConsoleMethod = console[level]
+                console[level] = (...args) {
+                    window.postMessage({ type: 'console', level, consoleArgs: args }, '*')
+                    return tempConsoleMethod(...args)
+                }
+            })
+
             window.addEventListener('message', (e) => {
                 try {
                     eval(e.data);
