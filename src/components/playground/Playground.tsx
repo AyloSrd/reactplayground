@@ -1,5 +1,6 @@
 import Editor from '@/components/editor/Editor'
 import Iframe from '@/components/output/Iframe'
+import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild, { VFS } from '@/hooks/playground/useEsbuild'
 import { generatePayload } from '@/tools/editor.tools'
@@ -71,10 +72,8 @@ function Playground(props: Props) {
                     />
                 }
                 rightPaneChild={
-                    <Iframe
-                        onPageRefresh={() => console.log('refreshed')}
+                    <MiniBrowser
                         output={bundleJSXText}
-                        shouldRefresh={false}
                     />
                 }
             />
