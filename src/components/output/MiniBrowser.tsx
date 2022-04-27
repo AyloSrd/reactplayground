@@ -24,16 +24,19 @@ const MiniBrowser = (props: Props) => {
                 { level: iframeMessage.level, message: iframeMessage.consoleArgs }
             ]
             console.log(consoleMessages, iframeMessage, updatedMessages)
-            setConsoleMessages(updatedMessages)
+            setConsoleMessages(prevConsoleMessages => [
+                ...prevConsoleMessages,
+                { level: iframeMessage.level, message: iframeMessage.consoleArgs }
+            ])
         }
 
         if (iframeMessage.type === IFrameMessageTypes.ERROR) {
-            setConsoleMessages([
-                ...consoleMessages,
+            setConsoleMessages(prevConsoleMessages => [
+                ...prevConsoleMessages,
                 { level: 'error', message: iframeMessage.err.message }
             ])
         }
-    }, [consoleMessages])
+    }, [])
 
     const handlePageRefresh = useCallback(() => {
         setShouldRefresh(false)

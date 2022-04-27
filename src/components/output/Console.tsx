@@ -21,8 +21,6 @@ const Console = (props: Props) => {
         evento('clear')
     }, [])
 
-    console.log(messages)
-
     return (
         <section>
             <nav>
