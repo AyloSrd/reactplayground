@@ -1,5 +1,5 @@
 import { useCreateEvento } from 'evento-react'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 export interface ConsoleMessage {
@@ -15,48 +15,119 @@ interface Props {
 const Console = (props: Props) => {
     const { messages } = props
 
+    const [isConsoleOpen, setIsConsoleOpen] = useState<boolean>(false)
+
+    const scrollRef = useRef<HTMLDivElement>(null)
+
     const evento = useCreateEvento(props)
 
-    const handleClick = useCallback(() => {
+    const handleClearClick = useCallback(() => {
         evento('clear')
     }, [])
+
+    const handleOpenCloseConsole = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsConsoleOpen(e.target.checked)
+    }, [])
+
+    useEffect(() => {
+        if (isConsoleOpen) {
+            scrollRef?.current?.scrollIntoView({
+                behavior: 'smooth'
+            })
+        }
+    }, [messages])
 
     return (
         <section>
             <nav>
-                <button onClick={handleClick}>
+                <button onClick={handleClearClick}>
                     Clear
                 </button>
+                <Label htmlFor="open-close">
+                    <OpenCloseCheckbox
+                        checked={isConsoleOpen}
+                        id='open-close'
+                        onChange={handleOpenCloseConsole}
+                        type='checkbox'
+                    />
+                    {
+                        isConsoleOpen ?
+                            'close'
+                        :
+                            'open'
+                    }
+                </Label>
             </nav>
-            <div>
-                <ul>
+            <ConsoleBody
+                className={ isConsoleOpen ? 'open' : 'closed'}
+            >
+                <StyledUl>
                     {
                         messages.map(({ level, message }, i) => (
-                            <Message
-                                key={i}
-                                level={level}
-                            >
-                                {message}
-                            </Message>
+
+                            <div key={i}>
+                                <Message
+                                    className={level}
+                                >
+                                    {message}
+                                </Message>
+                            </div>
 
                         ))
                     }
-                </ul>
-            </div>
-
+                </StyledUl>
+                <div ref={scrollRef}/>
+            </ConsoleBody>
         </section>
     )
 }
 
-const Message = styled.li`
-    color: ${(props: { level: 'error' | 'log' | 'warning' }) =>
-        props.level === 'error' ?
-            'red'
-        : props.level === 'log' ?
-            'grey'
-        :
-            'yellow'
+const ConsoleBody = styled.div`
+    overflow: auto;
+
+    &.open {
+        max-height: 200px;
+        transition: 100ms;
     }
+
+    &.closed {
+        max-height: 0;
+        transition: 100ms;
+    }
+`
+
+const StyledUl = styled.ul`
+    list-style-type: inside;
+`
+
+const Message = styled.li`
+    &::marker {
+        content: '';
+    }
+
+    &.error {
+        background-color: red;
+    }
+
+    &.error::marker {
+        content: '❌'
+    }
+
+    &.warn {
+        background-color: yellow;
+    }
+
+    &.warn::marker {
+        content: '⚠️'
+    }
+`
+
+const Label = styled.label`
+    cursor: pointer;
+`
+
+const OpenCloseCheckbox = styled.input`
+    display: none;
 `
 
 export default memo(Console)
