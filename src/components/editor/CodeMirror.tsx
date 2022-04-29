@@ -1,7 +1,7 @@
-import { defaultOptions } from '@/tools/codemirror-tools';
-
 import { useCreateEvento } from 'evento-react'
 import { Controlled } from 'react-codemirror2'
+import { colors } from '@/tools/style-tools'
+import { defaultOptions } from '@/tools/codemirror-tools';
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import * as codemirror from 'codemirror'
 import styled from 'styled-components'
@@ -70,25 +70,19 @@ function CodeMirror(props: Props) {
 }
 
 const Container = styled.div`
-    /* height: 100%; */
-    width: 100%;
+    height: 100%;
 
-    .react-codemirror2 {
-        width: 100%;
+    .CodeMirror {
         height: 100%;
-    }
-
-    .CodeMirror {;
-        width: 100%;
-        height: calc(100% - 50px);
+        font-family: 'Ubuntu Mono', 'Courier New', monospace;
     }
 
     .cm-s-rdark .cm-tag:not(.cm-bracket) {
-        color: #5BA1CF;
+        color: ${colors.$blue};
     }
 
     .cm-s-rdark .cm-string {
-        color: #e6d238;
+        color: ${colors.$yellow};
     }
 }
 `

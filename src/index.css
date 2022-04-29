@@ -1,28 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:wght@400;700&display=swap');
+
 *, *::after, *::before {
 	box-sizing: border-box;
 }
 
 html {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    background-color: brown;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     margin: 0;
-    height: 100%;
-    width: 100%;
+    padding: 0;
     display: flex;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: 'Ubuntu', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: aqua;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: 'Ubuntu Mono', 'Courier New',
     monospace;
 }

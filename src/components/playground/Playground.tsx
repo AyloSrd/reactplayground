@@ -3,6 +3,7 @@ import Iframe from '@/components/output/Iframe'
 import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
 import useEsbuild, { VFS } from '@/hooks/playground/useEsbuild'
+import { colors } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
 import { useCallback, useEffect } from 'react'
@@ -84,8 +85,9 @@ function Playground(props: Props) {
 const Page = styled.div`
     height: 100vh;
     width: 100vw;
-    max-height: 100vh;
+    max-height: 100%;
     max-width: 100%;
+    background-color: ${colors.$bg};
 `
 
 export default Playground

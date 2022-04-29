@@ -44,6 +44,7 @@ const Console = (props: Props) => {
                     Clear
                 </button>
                 <Label htmlFor="open-close">
+                    Console ({messages.length})
                     <OpenCloseCheckbox
                         checked={isConsoleOpen}
                         id='open-close'
@@ -86,7 +87,7 @@ const ConsoleBody = styled.div`
     overflow: auto;
 
     &.open {
-        max-height: 200px;
+        height: 200px;
         transition: 100ms;
     }
 

@@ -66,17 +66,27 @@ function Editor(props: Props) {
                 onTabEdit={hadleTabEdit}
                 onTabSelect={handleTabSelect}
                 tabs={tabs} />
-            <CodeMirror
-                language='jsx'
-                onTextChange={handleTextChange}
-                text={filesById[currentFile]}
-            />
+                <Scroller>
+                    <CodeMirror
+                        language='jsx'
+                        onTextChange={handleTextChange}
+                        text={filesById[currentFile]}
+                    />
+                </Scroller>
         </Container>
   )
 }
 
 const Container = styled.section`
     height: 100%;
+    display: flex;
+    flex-direction: column;
+`
+
+const Scroller = styled.div`
+    flex-grow: 1;
+    /* max-height: 100%; */
+    overflow-y: auto;
 `
 
 export default memo(Editor)

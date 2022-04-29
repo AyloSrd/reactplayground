@@ -1,6 +1,8 @@
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
+import { colors } from '@/tools/style-tools'
 import { memo, useCallback, useState } from 'react'
+import styled from 'styled-components'
 
 interface Props {
     output: string
@@ -18,7 +20,7 @@ const MiniBrowser = (props: Props) => {
 
     const handleIframeMessage = useCallback((e) => {
         const iframeMessage = e.detail
-        
+
         if (iframeMessage.type === IFrameMessageTypes.CONSOLE) {
             setConsoleMessages(prevConsoleMessages => [
                 ...prevConsoleMessages,
@@ -44,7 +46,7 @@ const MiniBrowser = (props: Props) => {
     }, [])
 
     return (
-        <section>
+        <Container>
             <nav>
                 <button onClick={handleRequestRefreshClick}>
                     Refresh
@@ -60,8 +62,15 @@ const MiniBrowser = (props: Props) => {
                 messages={consoleMessages}
                 onClear={handleClearConsole}
             />
-        </section>
+        </Container>
     )
 }
+
+const Container = styled.section`
+    background-color: ${colors.$silver100};
+    height: 100%;
+    display: grid;
+    grid-template-rows: 50px 1fr auto;
+`
 
 export default memo(MiniBrowser)

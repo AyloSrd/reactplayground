@@ -10,5 +10,6 @@ export const defaultOptions = {
     lineWrapping: true,
     lint: true,
     theme: 'rdark',
-    lineNumbers: true
+    lineNumbers: true,
+    viewportMargin: Infinity,
 }
