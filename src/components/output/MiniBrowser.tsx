@@ -1,6 +1,6 @@
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
-import { colors } from '@/tools/style-tools'
+import { colors, generalBorderStyle } from '@/tools/style-tools'
 import { memo, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -47,11 +47,11 @@ const MiniBrowser = (props: Props) => {
 
     return (
         <Container>
-            <nav>
+            <Nav>
                 <button onClick={handleRequestRefreshClick}>
                     Refresh
                 </button>
-            </nav>
+            </Nav>
             <Iframe
                 onMessage={handleIframeMessage}
                 onPageRefresh={handlePageRefresh}
@@ -70,7 +70,12 @@ const Container = styled.section`
     background-color: ${colors.$silver100};
     height: 100%;
     display: grid;
-    grid-template-rows: 50px 1fr auto;
+    grid-template-rows: 45px 1fr auto;
+`
+
+const Nav = styled.nav`
+    background-color: ${colors.$bg};
+    border-bottom: ${generalBorderStyle};
 `
 
 export default memo(MiniBrowser)

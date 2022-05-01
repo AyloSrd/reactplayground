@@ -1,3 +1,4 @@
+import { colors, generalBorderStyle } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -38,31 +39,31 @@ const Console = (props: Props) => {
     }, [messages])
 
     return (
-        <section>
-            <nav>
-                <button onClick={handleClearClick}>
-                    Clear
-                </button>
+        <Section>
+            <Nav>
                 <Label htmlFor="open-close">
-                    Console ({messages.length})
                     <OpenCloseCheckbox
                         checked={isConsoleOpen}
                         id='open-close'
                         onChange={handleOpenCloseConsole}
                         type='checkbox'
-                    />
+                        />
                     {
                         isConsoleOpen ?
                             'close'
                         :
                             'open'
                     }
+                    Console ({messages.length})
                 </Label>
-            </nav>
+                <button onClick={handleClearClick}>
+                    Clear
+                </button>
+            </Nav>
             <ConsoleBody
                 className={ isConsoleOpen ? 'open' : 'closed'}
             >
-                <StyledUl>
+                <Ul>
                     {
                         messages.map(({ level, message }, i) => (
 
@@ -76,28 +77,43 @@ const Console = (props: Props) => {
 
                         ))
                     }
-                </StyledUl>
+                </Ul>
                 <div ref={scrollRef}/>
             </ConsoleBody>
-        </section>
+        </Section>
     )
 }
+
+const Section = styled.section`
+    background-color: ${colors.$bg};
+`
 
 const ConsoleBody = styled.div`
     overflow: auto;
 
     &.open {
         height: 200px;
+        max-height: 200px;
         transition: 100ms;
+        border-top: ${generalBorderStyle};
+
     }
 
     &.closed {
+        height: 200px;
         max-height: 0;
         transition: 100ms;
     }
 `
 
-const StyledUl = styled.ul`
+const Nav = styled.nav`
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-top: ${generalBorderStyle};
+`
+
+const Ul = styled.ul`
     list-style-type: inside;
 `
 

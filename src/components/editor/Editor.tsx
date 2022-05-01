@@ -79,13 +79,12 @@ function Editor(props: Props) {
 
 const Container = styled.section`
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 45px 1fr;
 `
 
 const Scroller = styled.div`
     flex-grow: 1;
-    /* max-height: 100%; */
     overflow-y: auto;
 `
 

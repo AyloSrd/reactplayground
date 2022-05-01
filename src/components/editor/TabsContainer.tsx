@@ -1,9 +1,11 @@
+import AddButton from '@/components/esthetic/AddButton'
 import Tab from '@/components/editor/Tab'
 import TabInput from '@/components/editor/TabInput'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import { generateNewTabName } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useState } from "react"
+import styled from 'styled-components'
 
 interface Props {
     currentTab: string,
@@ -68,41 +70,52 @@ function TabsContainer(props: Props) {
     }, [])
 
     return (
-        <>
-            {
-                tabs.map(tab => (
-                    tab === editedTab ?
+        <nav>
+            <Container>
+                {
+                    tabs.map(tab => (
+                        tab === editedTab ?
+                            <TabInput
+                                key={tab}
+                                onNewNameSubmit={handleTabEdit}
+                                onDelete={handleTabDelete}
+                                tab={tab}
+                            />
+                        :
+                            <Tab
+                                currentTab={currentTab}
+                                key={tab}
+                                onDelete={handleTabDelete}
+                                onEditRequest={handleTabEditRequest}
+                                onSelect={handleTabSelect}
+                                tab={tab}
+                            />
+                    ))
+                }
+                {
+                    typeof newTab === 'string' && (
                         <TabInput
-                            key={tab}
-                            onNewNameSubmit={handleTabEdit}
-                            onDelete={handleTabDelete}
-                            tab={tab}
+                            onNewNameSubmit={handleNewTabAdd}
+                            onDelete={handleNewTabDelete}
+                            tab={newTab}
                         />
-                    :
-                        <Tab
-                            currentTab={currentTab}
-                            key={tab}
-                            onDelete={handleTabDelete}
-                            onEditRequest={handleTabEditRequest}
-                            onSelect={handleTabSelect}
-                            tab={tab}
-                        />
-                ))
-            }
-            {
-                typeof newTab === 'string' && (
-                    <TabInput
-                        onNewNameSubmit={handleNewTabAdd}
-                        onDelete={handleNewTabDelete}
-                        tab={newTab}
-                    />
-                )
-            }
-            <button onClick={handleAddClick}>
-                +
-            </button>
-        </>
+                    )
+                }
+                <AddButton onClick={handleAddClick} />
+            </Container>
+        </nav>
     )
 }
+
+const Container = styled.ul`
+    list-style-type: none;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+`
 
 export default memo(TabsContainer)

@@ -1,5 +1,6 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import DeleteButton from '@/components/esthetic/DeleteButton'
+import { TabContainer } from '@/components/editor/Tab'
 import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -74,7 +75,9 @@ function TabInput(props: Props) {
     )
 }
 
-const Container = styled.span`
+const Container = styled.li`
+    display: block;
+    flex: 0 0 auto;
     position: relative;
 `
 

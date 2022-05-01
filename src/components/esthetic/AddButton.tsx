@@ -7,7 +7,7 @@ interface Props {
     onClick: (e: React.MouseEvent<HTMLButtonElement>) => any
 }
 
-const DeleteButton = (props: Props) => {
+const AddButton = (props: Props) => {
 
     const evento = useCreateEvento(props)
 
@@ -17,7 +17,7 @@ const DeleteButton = (props: Props) => {
 
     return (
         <Button onClick={handleClick}>
-            x
+            +
         </Button>
     )
 }
@@ -25,12 +25,9 @@ const DeleteButton = (props: Props) => {
 const Button = styled.button`
     background: none;
     border: none;
-    color: ${colors.$red};
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0;
+    color: ${colors.$silver100};
+    padding: 0 10px;
     cursor: pointer;
 `
 
-export default memo(DeleteButton)
+export default memo(AddButton)

@@ -37,7 +37,7 @@ interface State {
     vfs: VFS,
 }
 
-export const ENTRY_POINT_JSX = 'App.jsx'
+export const ENTRY_POINT_JSX = 'App.js'
 
 const AppDefaultContent = `
 import React, { useState } from 'react'
@@ -346,7 +346,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         }
         dispatch({ type: ActionKind.RESET_IMPORTS, payload: generatePayload('') })
         const bundle = await esbuildRef.current.build({
-            entryPoints: ['App.jsx'],
+            entryPoints: [ENTRY_POINT_JSX],
             bundle: true,
             write: false,
             plugins: [unpkgPathPlugin(vfs)],

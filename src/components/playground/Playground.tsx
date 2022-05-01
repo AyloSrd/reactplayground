@@ -1,7 +1,7 @@
 import Editor from '@/components/editor/Editor'
 import Iframe from '@/components/output/Iframe'
 import MiniBrowser from '@/components/output/MiniBrowser'
-import VerticalSplitPane from '@/components/playground/VerticalSplitPane'
+import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
 import useEsbuild, { VFS } from '@/hooks/playground/useEsbuild'
 import { colors } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
@@ -32,7 +32,9 @@ function Playground(props: Props) {
     }, [])
 
     const handleDeleteFile = useCallback((e: CustomEvent<string>) => {
-        deleteFile(generatePayload(e.detail))
+        if(confirm(`Do you really want to delete ${e.detail}?`)) {
+            deleteFile(generatePayload(e.detail))
+        }
     }, [])
 
     const handleEditFileName = useCallback((
@@ -88,6 +90,7 @@ const Page = styled.div`
     max-height: 100%;
     max-width: 100%;
     background-color: ${colors.$bg};
+    color: ${colors.$silver200};
 `
 
 export default Playground

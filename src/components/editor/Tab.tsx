@@ -1,8 +1,9 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
 import DeleteButton from '@/components/esthetic/DeleteButton'
 import { useCreateEvento } from 'evento-react'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback } from 'react'
 import styled from 'styled-components'
+import { colors, makeClassName } from '@/tools/style-tools'
 
 interface Props {
     currentTab: string,
@@ -13,9 +14,13 @@ interface Props {
 }
 
 function Tab(props: Props) {
-    const { tab } = props
+    const { currentTab, tab } = props
 
     const isEntryPoint = tab === ENTRY_POINT_JSX
+    const tabClassNames = [
+        ...(isEntryPoint ? ['is-entry-point'] : []),
+        ...(tab === currentTab ? ['is-selected'] : []),
+    ]
 
     const evento = useCreateEvento(props)
 
@@ -38,19 +43,37 @@ function Tab(props: Props) {
     }, [tab])
 
     return (
-        <Container>
-            <span  onClick={handleTabClick}>
+        <TabContainer className={makeClassName(tabClassNames)}>
+            <Pointer  onClick={handleTabClick}>
                 <span onDoubleClick={handleDoubleClick}>
                     {tab}
                 </span>
-            </span>
+            </Pointer>
             {!isEntryPoint && <DeleteButton onClick={handleDeleteCkick} />}
-        </Container>
+        </TabContainer>
     )
 }
 
-const Container = styled.span`
+export const TabContainer = styled.li`
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    height: 100%;
     position: relative;
+    padding: 5px 10px 5px 0;
+    margin: 0 0 0 10px;
+
+    &.is-entry-point {
+        padding-right: 0;
+    }
+
+    &.is-selected {
+        box-shadow: inset 0px -2px 0px 0px ${colors.$react};
+    }
+`
+
+const Pointer = styled.span`
+    cursor: pointer;
 `
 
 export default memo(Tab)

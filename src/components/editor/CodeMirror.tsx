@@ -84,6 +84,11 @@ const Container = styled.div`
     .cm-s-rdark .cm-string {
         color: ${colors.$yellow};
     }
+
+    .cm-s-rdark .CodeMirror-gutters {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
 }
 `
 
