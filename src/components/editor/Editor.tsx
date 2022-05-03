@@ -1,7 +1,7 @@
 import CodeMirror from '@/components/editor/CodeMirror'
 import TabsContainer from '@/components/editor/TabsContainer'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
-import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useEsbuild'
+import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { useCreateEvento } from 'evento-react'
 import { memo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'

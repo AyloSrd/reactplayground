@@ -2,7 +2,8 @@ import Editor from '@/components/editor/Editor'
 import Iframe from '@/components/output/Iframe'
 import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
-import useEsbuild, { VFS } from '@/hooks/playground/useEsbuild'
+import useEsbuild from '@/hooks/playground/useEsbuild'
+import { VFS } from '@/hooks/playground/useEsbuild'
 import { colors } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
@@ -22,7 +23,8 @@ function Playground(props: Props) {
         deleteFile,
         editFileContent,
         editFileName,
-        files
+        files,
+        hasLoaded,
     } = useEsbuild(props.initialVFS)
 
     const evento = useCreateEvento(props)
@@ -64,22 +66,27 @@ function Playground(props: Props) {
 
     return (
         <Page>
-            <VerticalSplitPane
-                leftPaneChild={
-                    <Editor
-                        onAddFile={handleAddFile}
-                        onDeleteFile={handleDeleteFile}
-                        onEditFileName={handleEditFileName}
-                        files={files}
-                        onTextEditorChange={handleTextEditorChange}
+            {
+                hasLoaded ?
+                    <VerticalSplitPane
+                        leftPaneChild={
+                            <Editor
+                                onAddFile={handleAddFile}
+                                onDeleteFile={handleDeleteFile}
+                                onEditFileName={handleEditFileName}
+                                files={files}
+                                onTextEditorChange={handleTextEditorChange}
+                            />
+                        }
+                        rightPaneChild={
+                            <MiniBrowser
+                                output={bundleJSXText}
+                            />
+                        }
                     />
-                }
-                rightPaneChild={
-                    <MiniBrowser
-                        output={bundleJSXText}
-                    />
-                }
-            />
+                :
+                        <p>Loading...</p>
+            }
         </Page>
   )
 }
