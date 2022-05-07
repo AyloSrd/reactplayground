@@ -1,11 +1,12 @@
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
+import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, generalBorderStyle } from '@/tools/style-tools'
 import { memo, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-    output: string
+    output: OutputType,
 }
 
 const MiniBrowser = (props: Props) => {

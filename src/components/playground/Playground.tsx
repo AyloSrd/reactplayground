@@ -3,7 +3,7 @@ import Iframe from '@/components/output/Iframe'
 import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
-import { VFS } from '@/hooks/playground/useEsbuild'
+import { VFS } from '@/hooks/playground/useVFS'
 import { colors } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
@@ -18,15 +18,14 @@ interface Props {
 function Playground(props: Props) {
     const {
         addFile,
-        bundleJSXText,
         createBundle,
         deleteFile,
         editFileContent,
         editFileName,
         files,
-        hasLoaded,
+        output,
     } = useEsbuild(props.initialVFS)
-
+    console.log('output', output.error)
     const evento = useCreateEvento(props)
 
     const handleAddFile = useCallback((e: CustomEvent<string>) => {
@@ -67,25 +66,22 @@ function Playground(props: Props) {
     return (
         <Page>
             {
-                hasLoaded ?
-                    <VerticalSplitPane
-                        leftPaneChild={
-                            <Editor
-                                onAddFile={handleAddFile}
-                                onDeleteFile={handleDeleteFile}
-                                onEditFileName={handleEditFileName}
-                                files={files}
-                                onTextEditorChange={handleTextEditorChange}
-                            />
-                        }
-                        rightPaneChild={
-                            <MiniBrowser
-                                output={bundleJSXText}
-                            />
-                        }
-                    />
-                :
-                        <p>Loading...</p>
+                <VerticalSplitPane
+                    leftPaneChild={
+                        <Editor
+                            onAddFile={handleAddFile}
+                            onDeleteFile={handleDeleteFile}
+                            onEditFileName={handleEditFileName}
+                            files={files}
+                            onTextEditorChange={handleTextEditorChange}
+                        />
+                    }
+                    rightPaneChild={
+                        <MiniBrowser
+                            output={output}
+                        />
+                    }
+                />
             }
         </Page>
   )

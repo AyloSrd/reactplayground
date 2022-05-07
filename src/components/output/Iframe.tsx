@@ -1,3 +1,4 @@
+import { OutputType } from '@/hooks/playground/useEsbuild'
 import { sandboxAttributes, srcDoc } from '@/tools/iframe-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef } from 'react'
@@ -23,7 +24,7 @@ export type IframeMessage = IFrameConsoleMessage | IFrameErrorMessage
 
 interface Props {
     onPageRefresh: () => void,
-    output: string/*{ code: null | string, error: null | string }*/,
+    output: OutputType,
     onMessage: (e: CustomEvent<IframeMessage>) => void,
     shouldRefresh: boolean,
 }

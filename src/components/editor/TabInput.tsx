@@ -1,4 +1,4 @@
-import { ENTRY_POINT_JSX } from '@/hooks/playground/useEsbuild'
+import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import DeleteButton from '@/components/esthetic/DeleteButton'
 import { TabContainer } from '@/components/editor/Tab'
 import { useCreateEvento } from 'evento-react'

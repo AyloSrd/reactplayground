@@ -16,14 +16,18 @@ export const srcDoc = /*html*/`
             })
 
             window.addEventListener('message', (e) => {
+
+                if (e.data.error) {
+                    cleanDocWithoutReload()
+                    displayErr({ err: e.data.error, type: 'bundleError'})
+                    return
+                }
+
                 try {
                     cleanDocWithoutReload()
-                    eval(e.data);
+                    eval(e.data.code);
                 } catch (err) {
-                    window.postMessage({ type: 'error', error: err }, '*')
-                    const root = document.querySelector('#root');
-                    root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
-                    console.error(err);
+                    displayErr({ err, type: 'runtimeError'})
                 }
             }, false)
 
@@ -56,6 +60,16 @@ export const srcDoc = /*html*/`
                 const rootDiv = document.createElement('div')
                 rootDiv.id = 'root'
                 document.body.insertBefore(rootDiv, document.body.children[0])
+            }
+
+            function displayErr({ err, type }) {
+                const root = document.getElementById('root')
+                const errorTitle = type === 'runtimeError' ? 'Runtime ' : type === 'bundleError' ? 'Bundle ' : ''
+                root.innerHTML = '<div style="color: red;"><h4>' + errorTitle + 'Error</h4><pre>' + err + '</pre></div>'
+                if (type === 'runtimeError') {
+                    window.postMessage({ type: 'error', error: err }, '*')
+                    console.error(err)
+                }
             }
         </script>
     </body>

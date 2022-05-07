@@ -261,7 +261,7 @@ export default function useVFS(vfsFromUrl: VFS | null) {
         editFileContent,
         editFileName,
         fileList,
-        vfs,
         resetImports,
+        vfs,
     }
 }
