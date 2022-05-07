@@ -71,7 +71,7 @@ const Console = (props: Props) => {
                                 <Message
                                     className={level}
                                 >
-                                    {message}
+                                    <pre>{message}</pre>
                                 </Message>
                             </div>
 
