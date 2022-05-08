@@ -13,4 +13,4 @@ export const colors = {
     $yellow: '#e6d238',
 }
 
-export const generalBorderStyle = `2px solid ${colors.$silver300}`
+export const generalBorderStyle = `1px solid ${colors.$silver300}`

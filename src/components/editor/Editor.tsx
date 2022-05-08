@@ -65,20 +65,21 @@ function Editor(props: Props) {
                 onTabDelete={handleTabDelete}
                 onTabEdit={hadleTabEdit}
                 onTabSelect={handleTabSelect}
-                tabs={tabs} />
-                <Scroller>
-                    <CodeMirror
-                        language='jsx'
-                        onTextChange={handleTextChange}
-                        text={filesById[currentFile]}
-                    />
-                </Scroller>
+                tabs={tabs} 
+            />
+            <Scroller>
+                <CodeMirror
+                    language='jsx'
+                    onTextChange={handleTextChange}
+                    text={filesById[currentFile]}
+                />
+            </Scroller>
         </Container>
   )
 }
 
 const Container = styled.section`
-    height: 100%;
+    flex-grow: 1;
     display: grid;
     grid-template-rows: 45px 1fr;
 `

@@ -1,3 +1,5 @@
+import Button from '@/components/esthetic/Button'
+import CloseSVG from '@/components/esthetic/icons/CloseSVG'
 import { colors } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback } from 'react'
@@ -16,21 +18,22 @@ const DeleteButton = (props: Props) => {
     }, [props])
 
     return (
-        <Button onClick={handleClick}>
-            x
-        </Button>
+        <StyledButton onClick={handleClick}>
+            <CloseSVG height={"15px"} width={"15px"} />
+        </StyledButton>
     )
 }
 
-const Button = styled.button`
-    background: none;
-    border: none;
-    color: ${colors.$red};
+const StyledButton = styled(Button)`
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
-    padding: 0;
-    cursor: pointer;
+    height: 100%;
+    color: ${colors.$silver300};
+
+    &:hover {
+        color: ${colors.$red};
+    }
 `
 
 export default memo(DeleteButton)

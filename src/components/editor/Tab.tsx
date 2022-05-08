@@ -60,7 +60,7 @@ export const TabContainer = styled.li`
     flex: 0 0 auto;
     height: 100%;
     position: relative;
-    padding: 5px 10px 5px 0;
+    padding: 5px 30px 5px 0;
     margin: 0 0 0 10px;
 
     &.is-entry-point {

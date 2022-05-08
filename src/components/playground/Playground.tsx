@@ -1,5 +1,5 @@
 import Editor from '@/components/editor/Editor'
-import Iframe from '@/components/output/Iframe'
+import Navbar from '@/components/playground/Navbar'
 import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
@@ -25,7 +25,7 @@ function Playground(props: Props) {
         files,
         output,
     } = useEsbuild(props.initialVFS)
-    console.log('output', output.error)
+
     const evento = useCreateEvento(props)
 
     const handleAddFile = useCallback((e: CustomEvent<string>) => {
@@ -65,30 +65,30 @@ function Playground(props: Props) {
 
     return (
         <Page>
-            {
-                <VerticalSplitPane
-                    leftPaneChild={
-                        <Editor
-                            onAddFile={handleAddFile}
-                            onDeleteFile={handleDeleteFile}
-                            onEditFileName={handleEditFileName}
-                            files={files}
-                            onTextEditorChange={handleTextEditorChange}
-                        />
-                    }
-                    rightPaneChild={
-                        <MiniBrowser
-                            output={output}
-                        />
-                    }
-                />
-            }
+            <Navbar />
+            <VerticalSplitPane
+                leftPaneChild={
+                    <Editor
+                        onAddFile={handleAddFile}
+                        onDeleteFile={handleDeleteFile}
+                        onEditFileName={handleEditFileName}
+                        files={files}
+                        onTextEditorChange={handleTextEditorChange}
+                    />
+                }
+                rightPaneChild={
+                    <MiniBrowser
+                        output={output}
+                    />
+                }
+            />
         </Page>
-  )
+    )
 }
 
 const Page = styled.div`
-    height: 100vh;
+    margin-top: 45px;
+    height: calc(100vh - 45px);
     width: 100vw;
     max-height: 100%;
     max-width: 100%;

@@ -1,3 +1,5 @@
+import AddSVG from '@/components/esthetic//icons/AddSVG'
+import Button from '@/components/esthetic/Button'
 import { colors } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback } from 'react'
@@ -16,18 +18,18 @@ const AddButton = (props: Props) => {
     }, [props])
 
     return (
-        <Button onClick={handleClick}>
-            +
-        </Button>
+        <StyledButton onClick={handleClick}>
+            <AddSVG height={"20px"} width={"20px"} />
+        </StyledButton>
     )
 }
 
-const Button = styled.button`
-    background: none;
-    border: none;
-    color: ${colors.$silver100};
-    padding: 0 10px;
-    cursor: pointer;
+const StyledButton = styled(Button)`
+    color: ${colors.$silver300};
+
+    &:hover {
+        color: ${colors.$silver200};
+    }
 `
 
 export default memo(AddButton)

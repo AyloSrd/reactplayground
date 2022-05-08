@@ -3,6 +3,7 @@ import Tab from '@/components/editor/Tab'
 import TabInput from '@/components/editor/TabInput'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { generateNewTabName } from '@/tools/editor.tools'
+import { generalBorderStyle } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useState } from "react"
 import styled from 'styled-components'
@@ -116,6 +117,7 @@ const Container = styled.ul`
     align-items: center;
     flex-wrap: nowrap;
     overflow-x: auto;
+    border-bottom: ${generalBorderStyle};
 `
 
 export default memo(TabsContainer)

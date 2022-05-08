@@ -1,6 +1,6 @@
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import useWindowSize from '@/hooks/playground/useWindowSize'
-import { generalBorderStyle } from '@/tools/style-tools'
+import { colors, generalBorderStyle } from '@/tools/style-tools'
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -88,7 +88,7 @@ function reducer(state: State, action: Action) {
 }
 
 function VerticalSplitPane(props: Props) {
-    const { leftPaneChild = null, minWidth = 30, splitterWidth = 4, rightPaneChild = null } = props
+    const { leftPaneChild = null, minWidth = 200, splitterWidth = 4, rightPaneChild = null } = props
 
     const [
         {
@@ -243,7 +243,6 @@ const Container = styled.section`
     height: 100%;
     width: 100%;
     display: flex;
-    border: 1px solid black;
 
     &.diableSelect, &.disableSelect * {
         user-select: none;
@@ -262,6 +261,7 @@ const Pane = styled.div`
 const Splitter = styled.div`
     height: 100%;
     border-right: ${generalBorderStyle};
+    background-color: transparent;
     cursor: col-resize;
 `
 

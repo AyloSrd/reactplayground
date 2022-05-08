@@ -89,7 +89,6 @@ const Container = styled.div`
         box-shadow: none;
         -webkit-box-shadow: none;
     }
-}
 `
 
 export default memo(CodeMirror)
