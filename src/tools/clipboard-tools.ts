@@ -13,11 +13,13 @@ function copyLegacy(str: string) {
     document.body.removeChild(textArea)
 }
 
-export function copyToClipboard(str: string) {
+export async function copyToClipboard(str: string): Promise<string> {
     // @ts-ignore
-    if (document.execCommand) { 
-        return copyLegacy(str)
+    if (document.execCommand) {
+        copyLegacy(str)
+        return new Promise<string>(resolve => { resolve('legacy') })
     } else {
-        return navigator.clipboard.writeText(str)
+        await navigator.clipboard.writeText(str)
+        return new Promise(resolve => { resolve('clipboard API') })
     }
 }

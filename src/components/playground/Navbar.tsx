@@ -1,17 +1,24 @@
 import ReactLogoSVG from '@/components/esthetic/icons/ReactLogoSVG'
 import Button from '@/components/esthetic/Button'
+import useURLStorage from '@/hooks/playground/useURLStorage'
 import { generalBorderStyle ,colors } from '@/tools/style-tools'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import styled from 'styled-components'
 
 const Navbar = () => {
+    const { copyURLToClipBoard } = useURLStorage()
+
+    const handleShareClick = useCallback(() => {
+        copyURLToClipBoard().then(() => alert('link copied to clipboard'))
+    }, [])
+
     return (
         <Nav>
             <TitleContainer>
                 <ReactLogoSVG height={"40px"} width={"40px"}/>
                 <Title>React Playground</Title>
             </TitleContainer>
-            <Button>
+            <Button onClick={handleShareClick}>
                 Share
             </Button>
         </Nav>

@@ -13,9 +13,7 @@ export default function useURLStorage() {
         history.replaceState({}, '', url.toString())
     },[])
 
-    const copyURLToClipBoard = useCallback((): void | Promise<void> => {
-        copyToClipboard(location.href)
-    }, [])
+    const copyURLToClipBoard = useCallback((): Promise<string> => copyToClipboard(location.href), [])
 
     useEffect(() => {
         const url = new URL(location.href)
