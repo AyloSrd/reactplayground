@@ -1,4 +1,5 @@
 import ReactLogoSVG from '@/components/esthetic/icons/ReactLogoSVG'
+import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import useURLStorage from '@/hooks/playground/useURLStorage'
 import { generalBorderStyle ,colors } from '@/tools/style-tools'
@@ -19,14 +20,17 @@ const Navbar = () => {
                 <Title>React Playground</Title>
             </TitleContainer>
             <Button onClick={handleShareClick}>
-                Share
+                <BtnContent>
+                    <ShareSVG height={"20px"} width={"20px"}/>
+                    <span>get shareable link</span>
+                </BtnContent>
             </Button>
         </Nav>
     )
 }
 
 const Nav = styled.nav`
-    height: 45px; 
+    height: 45px;
     width: 100vw;
     max-width: 100%;
     position: fixed;
@@ -38,6 +42,18 @@ const Nav = styled.nav`
     background-color: ${colors.$bg};
     border-bottom: ${generalBorderStyle};
     padding: 0 10px;
+`
+
+const BtnContent = styled.div`
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+    place-content: center;
+    color: ${colors.$silver200};
+
+    &:hover {
+        color: ${colors.$silver100};
+    }
 `
 
 const TitleContainer = styled.div`

@@ -6,8 +6,8 @@ const Button = styled.button`
     background: none;
     border: none;
     color: ${colors.$silver100};
-    height: 30px;
-    width: 30px;
+    min-height: 30px;
+    min-width: 30px;
     margin: 0;
     padding: 0;
     display: flex;
