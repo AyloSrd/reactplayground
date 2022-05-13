@@ -14,3 +14,7 @@ export const colors = {
 }
 
 export const generalBorderStyle = `1px solid ${colors.$silver300}`
+
+export const transitionDuration = {
+    fast: '100ms',
+}

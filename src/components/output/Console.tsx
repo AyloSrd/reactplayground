@@ -1,4 +1,6 @@
-import { colors, generalBorderStyle } from '@/tools/style-tools'
+import Button from '@/components/esthetic/Button'
+import ExpandSVG from '@/components/esthetic/icons/ExpandSVG'
+import { colors, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -48,17 +50,16 @@ const Console = (props: Props) => {
                         onChange={handleOpenCloseConsole}
                         type='checkbox'
                         />
-                    {
-                        isConsoleOpen ?
-                            'close'
-                        :
-                            'open'
-                    }
+                    <ExpandSVG
+                        direction={isConsoleOpen ? "down" : "up"}
+                        height={"20px"}
+                        width={"20px"}
+                    />
                     Console ({messages.length})
                 </Label>
-                <button onClick={handleClearClick}>
-                    Clear
-                </button>
+                <Button onClick={handleClearClick}>
+                    <BtnContent>Clear</BtnContent>
+                </Button>
             </Nav>
             <ConsoleBody
                 className={ isConsoleOpen ? 'open' : 'closed'}
@@ -94,7 +95,7 @@ const ConsoleBody = styled.div`
     &.open {
         height: 200px;
         max-height: 200px;
-        transition: 100ms;
+        transition: ${transitionDuration.fast};
         border-top: ${generalBorderStyle};
 
     }
@@ -102,7 +103,16 @@ const ConsoleBody = styled.div`
     &.closed {
         height: 200px;
         max-height: 0;
-        transition: 100ms;
+        transition: ${transitionDuration.fast};
+    }
+`
+
+const BtnContent = styled.span`
+    color: ${colors.$silver200};
+
+    &:hover {
+        color: ${colors.$silver100};
+        text-decoration: underline;
     }
 `
 
@@ -115,32 +125,34 @@ const Nav = styled.nav`
 
 const Ul = styled.ul`
     list-style-type: inside;
+    padding: 0;
 `
 
 const Message = styled.li`
-    &::marker {
-        content: '';
-    }
+    padding: 0 0 0 30px;
 
     &.error {
-        background-color: red;
-    }
-
-    &.error::marker {
-        content: '❌'
+        background-color: #3c0303;
     }
 
     &.warn {
-        background-color: yellow;
+        background-color: #252502;
     }
 
-    &.warn::marker {
-        content: '⚠️'
+    & pre {
+        margin: 0;
+        padding: 10px 0;
     }
 `
 
 const Label = styled.label`
     cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        color: ${colors.$silver100};
+    }
 `
 
 const OpenCloseCheckbox = styled.input`
