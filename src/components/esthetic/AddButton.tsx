@@ -19,7 +19,7 @@ const AddButton = (props: Props) => {
 
     return (
         <StyledButton onClick={handleClick}>
-            <AddSVG height={"20px"} width={"20px"} />
+            <AddSVG height={"25px"} width={"25px"} />
         </StyledButton>
     )
 }
@@ -28,7 +28,7 @@ const StyledButton = styled(Button)`
     color: ${colors.$silver300};
 
     &:hover {
-        color: ${colors.$silver200};
+        color: ${colors.$silver100};
     }
 `
 
