@@ -65,7 +65,7 @@ function Editor(props: Props) {
                 onTabDelete={handleTabDelete}
                 onTabEdit={hadleTabEdit}
                 onTabSelect={handleTabSelect}
-                tabs={tabs} 
+                tabs={tabs}
             />
             <Scroller>
                 <CodeMirror
@@ -79,13 +79,13 @@ function Editor(props: Props) {
 }
 
 const Container = styled.section`
+    max-height: 100%;
     flex-grow: 1;
     display: grid;
     grid-template-rows: 45px 1fr;
 `
 
 const Scroller = styled.div`
-    flex-grow: 1;
     overflow-y: auto;
 `
 
