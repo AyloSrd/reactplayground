@@ -132,11 +132,11 @@ const Message = styled.li`
     padding: 0 0 0 30px;
 
     &.error {
-        background-color: #3c0303;
+        background-color: ${colors.$redConsole};
     }
 
     &.warn {
-        background-color: #252502;
+        background-color: ${colors.$yellowConsole};
     }
 
     & pre {

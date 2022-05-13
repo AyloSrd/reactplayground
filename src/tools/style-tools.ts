@@ -10,7 +10,9 @@ export const colors = {
     $blue: '#5ba1cf',
     $react: '#61dafb',
     $red: '#e24a4a',
+    $redConsole: '#3c0303',
     $yellow: '#e6d238',
+    $yellowConsole: '#524104',
 }
 
 export const generalBorderStyle = `1px solid ${colors.$silver300}`
