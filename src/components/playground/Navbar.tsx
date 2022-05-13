@@ -56,11 +56,6 @@ const BtnContent = styled.div`
     }
 `
 
-const Span = styled.span`
-    display: block;
-    height: 100%:
-`
-
 const TitleContainer = styled.div`
     display: flex;
     align-items: center;

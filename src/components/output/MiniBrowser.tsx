@@ -1,7 +1,9 @@
+import Button from '@/components/esthetic/Button'
+import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
-import { colors, generalBorderStyle } from '@/tools/style-tools'
+import { colors, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -58,9 +60,11 @@ const MiniBrowser = (props: Props) => {
     return (
         <Container>
             <Nav>
-                <button onClick={handleRequestRefreshClick}>
-                    Refresh
-                </button>
+                <Button onClick={handleRequestRefreshClick}>
+                    <BtnContent>
+                        <RefreshSVG height="28px" width="28px" />
+                    </BtnContent>
+                </Button>
             </Nav>
             <Iframe
                 onMessage={handleIframeMessage}
@@ -76,6 +80,15 @@ const MiniBrowser = (props: Props) => {
     )
 }
 
+const BtnContent = styled.div`
+    transition: transform ${transitionDuration.medium};
+
+    &:hover {
+        color: ${colors.$silver100};
+        transform: rotate(360deg);
+    }
+`
+
 const Container = styled.section`
     background-color: ${colors.$silver100};
     height: 100%;
@@ -86,6 +99,9 @@ const Container = styled.section`
 const Nav = styled.nav`
     background-color: ${colors.$bg};
     border-bottom: ${generalBorderStyle};
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
 `
 
 export default memo(MiniBrowser)

@@ -77,6 +77,20 @@ const Container = styled.div`
         font-family: 'Ubuntu Mono', 'Courier New', monospace;
     }
 
+    .CodeMirror-foldmarker {
+        visibility: hidden;
+        width: 1rem;
+        text-shadow: none;
+    }
+
+    .CodeMirror-foldmarker::after {
+        visibility: visible;
+        width: 1rem;
+        color: ${colors.$silver100};
+        content: ' . . . ';
+        margin-left: -1rem;
+    }
+
     .cm-s-rdark .cm-tag:not(.cm-bracket) {
         color: ${colors.$blue};
     }

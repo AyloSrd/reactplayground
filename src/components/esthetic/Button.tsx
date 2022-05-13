@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const Button = styled.button`
     background: none;
     border: none;
-    color: ${colors.$silver100};
+    color: ${colors.$silver200};
     min-height: 30px;
     min-width: 30px;
     margin: 0;
