@@ -18,7 +18,7 @@ interface Props {
 }
 
 function Editor(props: Props) {
-    const { files: { fileList: tabs, filesById} } = props
+    const { files: { fileList: tabs, filesById } } = props
     const [currentFile, setCurrentFile] = useState<string>(ENTRY_POINT_JSX)
 
     const prevTabsLength = usePreviousValue(tabs.length)
@@ -34,7 +34,7 @@ function Editor(props: Props) {
     }, [])
 
     const handleTabDelete = useCallback((e: CustomEvent<string>) => {
-        evento('deleteFile',e.detail)
+        evento('deleteFile', e.detail)
     }, [])
 
     const hadleTabEdit = useCallback((e: CustomEvent<{ current: string, next: string }>) => {
@@ -52,8 +52,8 @@ function Editor(props: Props) {
             setCurrentFile(ENTRY_POINT_JSX)
         }
 
-        if(tabsLength > prevTabsLength) {
-            setCurrentFile(tabs[tabsLength -1])
+        if (tabsLength > prevTabsLength) {
+            setCurrentFile(tabs[tabsLength - 1])
         }
     }, [currentFile, prevTabsLength, tabs])
 
@@ -75,7 +75,7 @@ function Editor(props: Props) {
                 />
             </Scroller>
         </Container>
-  )
+    )
 }
 
 const Container = styled.section`

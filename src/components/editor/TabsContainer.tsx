@@ -71,7 +71,7 @@ function TabsContainer(props: Props) {
     }, [])
 
     return (
-        <nav>
+        <Nav>
             <Container>
                 {
                     tabs.map(tab => (
@@ -104,19 +104,31 @@ function TabsContainer(props: Props) {
                 }
                 <AddButton onClick={handleAddClick} />
             </Container>
-        </nav>
+        </Nav>
     )
 }
 
+const Nav = styled.nav`
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`
+
 const Container = styled.ul`
+    width: 100%;
     list-style-type: none;
     height: 100%;
     margin: 0;
     padding: 0;
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    overflow-x: auto;
     border-bottom: ${generalBorderStyle};
 `
 

@@ -80,5 +80,8 @@ const Container = styled.li`
     flex: 0 0 auto;
     position: relative;
 `
+const Flex = styled.div`
+    display: flex;
+`
 
 export default memo(TabInput)
