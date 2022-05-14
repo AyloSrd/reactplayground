@@ -39,8 +39,7 @@ const Nav = styled.nav`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: ${colors.$bg};
-    border-bottom: ${generalBorderStyle};
+    background-color: ${colors.$bgNav};
     padding: 0 10px;
 `
 

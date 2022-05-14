@@ -1,7 +1,8 @@
+import ThreeVerticalDotsSVG from '@/components/esthetic/icons/ThreeVerticalDotsSVG'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import useWindowSize from '@/hooks/playground/useWindowSize'
-import { colors, generalBorderStyle } from '@/tools/style-tools'
-import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { colors } from '@/tools/style-tools'
+import React, { memo, useEffect, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -88,7 +89,7 @@ function reducer(state: State, action: Action) {
 }
 
 function VerticalSplitPane(props: Props) {
-    const { leftPaneChild = null, minWidth = 200, splitterWidth = 4, rightPaneChild = null } = props
+    const { leftPaneChild = null, minWidth = 200, splitterWidth = 10, rightPaneChild = null } = props
 
     const [
         {
@@ -227,7 +228,9 @@ function VerticalSplitPane(props: Props) {
             <Splitter
                 onMouseDown={handleMouseDown}
                 style={{ width: `${splitterWidth}px` }}
-            />
+            >
+                <ThreeVerticalDotsSVG height={"30px"} width={"50px"} />   
+            </Splitter>
             <Pane
                 style={{ width: `${rightW}px` }}
             >
@@ -260,9 +263,11 @@ const Pane = styled.div`
 
 const Splitter = styled.div`
     height: 100%;
-    border-right: ${generalBorderStyle};
-    background-color: transparent;
+    display: grid;
+    place-content: center;
+    background-color: ${colors.$bgNav};
     cursor: col-resize;
+    color: ${colors.$silver200}
 `
 
 const WindowHook = styled.div`

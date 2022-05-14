@@ -28,4 +28,29 @@ code {
 
 button {
     font-size: 1rem;
+    font-family: 'Ubuntu', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #1b2426 #2e4b52;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #1b2426;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #2e4b52;
+    border-radius: 0px;
+    border: 0px solid #2e4b52;
+  }

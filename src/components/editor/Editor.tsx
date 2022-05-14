@@ -4,6 +4,7 @@ import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { useCreateEvento } from 'evento-react'
 import { memo, useState, useCallback, useEffect } from 'react'
+import { colors } from '@/tools/style-tools'
 import styled from 'styled-components'
 
 interface Props {
@@ -79,6 +80,7 @@ function Editor(props: Props) {
 }
 
 const Container = styled.section`
+    height: 100%;
     max-height: 100%;
     flex-grow: 1;
     display: grid;
@@ -87,6 +89,7 @@ const Container = styled.section`
 
 const Scroller = styled.div`
     overflow-y: auto;
+    background-color: ${colors.$bg};
 `
 
 export default memo(Editor)

@@ -120,7 +120,6 @@ const Nav = styled.nav`
     display: flex;
     justify-content: space-between;
     padding: 10px 15px;
-    border-top: ${generalBorderStyle};
 `
 
 const Ul = styled.ul`

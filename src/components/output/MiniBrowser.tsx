@@ -98,7 +98,6 @@ const Container = styled.section`
 
 const Nav = styled.nav`
     background-color: ${colors.$bg};
-    border-bottom: ${generalBorderStyle};
     display: flex;
     align-items: center;
     padding-left: 10px;
