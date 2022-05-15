@@ -62,13 +62,16 @@ export const TabContainer = styled.li`
     position: relative;
     padding: 5px 30px 5px 0;
     margin: 0 0 0 10px;
+    color: ${colors.$silver200};
 
     &.is-entry-point {
         padding-right: 0;
+        margin-right: 5px;
     }
 
     &.is-selected {
         box-shadow: inset 0px -2px 0px 0px ${colors.$react};
+        color: ${colors.$silver100};
     }
 `
 

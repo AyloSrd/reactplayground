@@ -65,7 +65,7 @@ function TabInput(props: Props) {
 
 const Container = styled.li`
     height: 100%;
-    padding: 5px 5px 5px 0;
+    padding: 5px;
     display: block;
     flex: 0 0 auto;
     position: relative;
