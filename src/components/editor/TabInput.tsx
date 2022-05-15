@@ -84,7 +84,7 @@ const Input = styled.input`
     border: none;
     box-shadow: inset 0px -1px 0px 0px ${colors.$silver100};
     color: ${colors.$silver100};
-    background-color: ${colors.$bgNav}
+    background-color: ${colors.$bgNav};
 `
 
 export default memo(TabInput)
