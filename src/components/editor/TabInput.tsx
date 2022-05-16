@@ -26,7 +26,10 @@ function TabInput(props: Props) {
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
 
-        if (`${tempName}.${type}` === ENTRY_POINT_JSX) {
+        if (
+            `${tempName}.${type}` === ENTRY_POINT_JSX
+            || !tempName.length
+        ) {
             return
         }
 
