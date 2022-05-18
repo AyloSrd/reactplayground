@@ -64,21 +64,20 @@ const Console = (props: Props) => {
             <ConsoleBody
                 className={ isConsoleOpen ? 'open' : 'closed'}
             >
-                <Ul>
+                <UnorderedList>
                     {
                         messages.map(({ level, message }, i) => (
 
-                            <div key={i}>
-                                <Message
-                                    className={level}
-                                >
-                                    <pre>{message}</pre>
-                                </Message>
-                            </div>
+                            <Message
+                                key={i}
+                                className={level}
+                            >
+                                <pre>{message}</pre>
+                            </Message>
 
                         ))
                     }
-                </Ul>
+                </UnorderedList>
                 <div ref={scrollRef}/>
             </ConsoleBody>
         </Section>
@@ -87,10 +86,14 @@ const Console = (props: Props) => {
 
 const Section = styled.section`
     background-color: ${colors.$bg};
+    width: 100%;
+    max-width: 100%;
 `
 
 const ConsoleBody = styled.div`
     overflow: auto;
+    width: 100%;
+    max-width: 100%;
 
     &.open {
         height: 200px;
@@ -122,12 +125,15 @@ const Nav = styled.nav`
     padding: 10px 15px;
 `
 
-const Ul = styled.ul`
+const UnorderedList = styled.ul`
     list-style-type: inside;
     padding: 0;
 `
 
 const Message = styled.li`
+    display: block;
+    max-width: 100%;
+    width: 100%;
     padding: 0 0 0 30px;
 
     &.error {
@@ -141,6 +147,7 @@ const Message = styled.li`
     & pre {
         margin: 0;
         padding: 10px 0;
+        white-space: pre-wrap;
     }
 `
 

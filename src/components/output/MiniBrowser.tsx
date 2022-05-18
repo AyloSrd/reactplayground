@@ -92,6 +92,7 @@ const BtnContent = styled.div`
 const Container = styled.section`
     background-color: ${colors.$silver100};
     height: 100%;
+    flex-grow: 1;
     display: grid;
     grid-template-rows: 45px 1fr auto;
 `
