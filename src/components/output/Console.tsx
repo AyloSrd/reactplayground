@@ -86,14 +86,15 @@ const Console = (props: Props) => {
 
 const Section = styled.section`
     background-color: ${colors.$bg};
-    width: 100%;
-    max-width: 100%;
+    justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 `
 
 const ConsoleBody = styled.div`
     overflow: auto;
-    width: 100%;
-    max-width: 100%;
+    min-width: 0;
 
     &.open {
         height: 200px;
@@ -126,14 +127,17 @@ const Nav = styled.nav`
 `
 
 const UnorderedList = styled.ul`
+    display: block;
     list-style-type: inside;
     padding: 0;
+    /* overflow: auto; */
+    min-width: 0;
 `
 
 const Message = styled.li`
     display: block;
-    max-width: 100%;
-    width: 100%;
+    min-width: 100%;
+    width: fit-content;
     padding: 0 0 0 30px;
 
     &.error {
@@ -147,7 +151,7 @@ const Message = styled.li`
     & pre {
         margin: 0;
         padding: 10px 0;
-        white-space: pre-wrap;
+        /* white-space: pre-wrap; */
     }
 `
 
