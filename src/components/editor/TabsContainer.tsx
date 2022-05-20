@@ -78,7 +78,6 @@ function TabsContainer(props: Props) {
                             <TabInput
                                 key={tab}
                                 onNewNameSubmit={handleTabEdit}
-                                onDelete={handleTabDelete}
                                 tab={tab}
                             />
                         :
@@ -96,7 +95,6 @@ function TabsContainer(props: Props) {
                     typeof newTab === 'string' && (
                         <TabInput
                             onNewNameSubmit={handleNewTabAdd}
-                            onDelete={handleNewTabDelete}
                             tab={newTab}
                         />
                     )
