@@ -4,7 +4,7 @@ export function makeClassName(classNames: string[]): string {
 
 export const colors = {
     $bg: '#1b2426',
-    $bgNav: '#1e3439',
+    $bgNav: '#2e3d51',
     $scrollbarThumb:'#2e4b52',
     $silver100: '#fff',
     $silver200: '#b9bdb6',
