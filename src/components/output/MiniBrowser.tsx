@@ -3,7 +3,7 @@ import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
-import { colors, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
+import { colors, transitionDuration } from '@/tools/style-tools'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 

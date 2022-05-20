@@ -66,9 +66,9 @@ export const srcDoc = /*html*/`
                 const root = document.getElementById('root')
                 const errorTitle = type === 'runtimeError' ? 'Runtime ' : type === 'bundleError' ? 'Bundle ' : ''
                 root.innerHTML = '<div style="color: red;"><h4>' + errorTitle + 'Error</h4><pre>' + err + '</pre></div>'
-                if (type === 'runtimeError') {
+                if (type === 'runtimeError' && err.name && err.message) {
                     window.postMessage({ type: 'error', error: err }, '*')
-                    console.error(err)
+                    console.error( err.name + ': '  + err.message)
                 }
             }
         </script>
