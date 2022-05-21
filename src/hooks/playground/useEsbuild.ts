@@ -42,7 +42,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
     const startService = useCallback(async () => {
         esbuildRef.current = await esbuild.startService({
             worker: true,
-            wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' // '/esbuild.wasm' 
+            wasmURL:  '/esbuild.wasm' // 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' // 
         })
     }, [])
 
