@@ -58,7 +58,6 @@ function Playground(props: Props) {
         }, 300)
 
         evento('updateVFS', vfs)
-        console.log('updated')
 
         return () => clearTimeout(timeout)
     }, [files.filesById])

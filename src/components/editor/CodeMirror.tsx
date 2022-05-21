@@ -53,7 +53,6 @@ function CodeMirror(props: Props) {
 
     useEffect(() => {
         setHasMounted(true)
-        console.log(editorRef)
         editorRef?.current?.editor?.focus()
     }, [])
 
