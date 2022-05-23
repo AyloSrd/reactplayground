@@ -143,7 +143,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             setBundleErr(createErrorString(err as BundleError))
         }
 
-    }, [esbuildRef])
+    }, [])
 
     useEffect(() => {
         startService()
