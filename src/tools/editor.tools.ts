@@ -1,9 +1,4 @@
-const componentCount = (function* countGen() {
-    let count = 0
-    while (true) {
-      yield ++count
-    }
-  })()
+const componentCount = countGen()
 
 export function generateNewTabName(tabs: string[]): string {
     let tempLength = componentCount.next().value
@@ -22,4 +17,11 @@ export function generatePayload(target: string, content?: string) {
         target,
         content: content ?? ''
     })
+}
+
+export function* countGen(initialCount: number = -1) {
+    let count = initialCount
+    while (true) {
+      yield ++count
+    }
 }
