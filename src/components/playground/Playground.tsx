@@ -24,6 +24,8 @@ function Playground(props: Props) {
         editFileName,
         files,
         output,
+        versionGeneratorRef,
+        versionRef,
     } = useEsbuild(props.initialVFS)
 
     const evento = useCreateEvento(props)
@@ -54,7 +56,11 @@ function Playground(props: Props) {
         const vfs  = files.filesById
 
         const timeout = setTimeout(() => {
-            createBundle(vfs)
+            if (typeof versionRef.current !== 'number') {
+                return
+            }
+            versionRef.current = versionGeneratorRef.current.next().value
+            createBundle(vfs, versionRef.current)
         }, 300)
 
         evento('updateVFS', vfs)

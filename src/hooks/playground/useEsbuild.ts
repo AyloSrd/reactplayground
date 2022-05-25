@@ -39,6 +39,8 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
     } = useVFS(vfsFromUrl)
 
     const esbuildRef = useRef<any>()
+    const versionGeneratorRef = useRef<Generator<number>>(countGen())
+    const versionRef = useRef<number>(versionGeneratorRef.current.next().value)
 
     const startService = useCallback(async () => {
         esbuildRef.current = await esbuild.startService({
@@ -122,8 +124,11 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         }
     }, [])
 
-    const createBundle = useCallback(async (vfs: VFS)=> {
-        if (!esbuildRef.current) {
+    const createBundle = useCallback(async (vfs: VFS, prevVersion: number)=> {
+        if (
+            !esbuildRef.current 
+            || typeof versionRef.current !== 'number'
+        ) {
             return
         }
         resetImports()
@@ -137,9 +142,18 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                 define: window.defineHack,
               })
             const bundleJSX = bundle?.outputFiles?.[0]?.text
+
+            if (prevVersion < versionRef.current) {
+                return
+            }
+
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
         } catch(err) {
+            if (prevVersion < versionRef.current) {
+                return
+            }
+
             setBundleJSXText(null)
             setBundleErr(createErrorString(err as BundleError))
         }
@@ -148,7 +162,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     useEffect(() => {
         startService()
-            .then(() => createBundle(vfs))
+            .then(() => createBundle(vfs, versionRef.current))
     }, [])
 
     return {
@@ -165,6 +179,8 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             code: typeof bundleJSXText === 'string' ? bundleJSXText : null,
             error: typeof bundleJSXText === 'string' ? null : bundleErr,
         } as OutputType,
+        versionGeneratorRef,
+        versionRef,
     }
 }
 

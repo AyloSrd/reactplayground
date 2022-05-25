@@ -19,7 +19,7 @@ export function generatePayload(target: string, content?: string) {
     })
 }
 
-export function* countGen(initialCount: number = -1) {
+export function* countGen(initialCount: number = -1): Generator<number> {
     let count = initialCount
     while (true) {
       yield ++count
