@@ -17,6 +17,9 @@ export const colors = {
     $yellowConsole: '#524104',
 }
 
+// CE61FB => viola
+// FB8161 => coomplementare react
+
 export const generalBorderStyle = `1px solid ${colors.$silver300}`
 
 export const transitionDuration = {

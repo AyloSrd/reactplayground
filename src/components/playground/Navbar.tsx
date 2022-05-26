@@ -1,4 +1,4 @@
-import ReactLogoSVG from '@/components/esthetic/icons/ReactLogoSVG'
+import ReactPlaygroundLogoSVG from '@/components/esthetic/icons/ReactPlaygroundLogoSVG'
 import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import useURLStorage from '@/hooks/playground/useURLStorage'
@@ -16,7 +16,7 @@ const Navbar = () => {
     return (
         <Nav>
             <TitleContainer>
-                <ReactLogoSVG height={"40px"} width={"40px"}/>
+                <ReactPlaygroundLogoSVG height={"30px"} width={"auto"}/>
                 <Title>React Playground</Title>
             </TitleContainer>
             <Button onClick={handleShareClick}>
@@ -56,8 +56,10 @@ const BtnContent = styled.div`
 `
 
 const TitleContainer = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto;
     align-items: center;
+    gap: 10px;
 `
 
 const Title = styled.h1`
