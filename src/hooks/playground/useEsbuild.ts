@@ -36,6 +36,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         fileList,
         vfs,
         resetImports,
+        resetVFS,
     } = useVFS(vfsFromUrl)
 
     const esbuildRef = useRef<any>()
@@ -179,30 +180,8 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             code: typeof bundleJSXText === 'string' ? bundleJSXText : null,
             error: typeof bundleJSXText === 'string' ? null : bundleErr,
         } as OutputType,
+        resetVFS,
         versionGeneratorRef,
         versionRef,
     }
 }
-
-/**http://localhost:3000/#N4IgggDhB0BWDOAPEAuEBLAthA9gJwBcACAIQFcCCcA7IgMzx0yIHJoB6cymuJFgHWpZchIgCUApgEMAxgQA0RYETLwJAZQJSCEogF96jZizzS5AodnzFlM09olicOYgYZNW9uQFoAJk3YZABt0CWoCC0EZGnhiSAgiAF4iAAoASiSAPiVBIjyiaOpYogBtaLJwxTUCAGEcCoIAXSSVNU0HFIBGAAY0wVz80wIyPFoU-oJ+AgAeTImpqemuKlp2OeoFyZmAIwoVohoakJkAa0TgdKyiarqGlPLwogBqIk60vXXNzeAHgj0B-L5RbsXbcaifLbTNYAoh9aj-DbUQrFQpadDUCR4Fr+GRkTBhAjQADmEgIAFEghJ8eESABPACSvhSJmcETSAG4ojFiIwXC07NIdE4XPcaGiMXg4bzCaZqL5MSlpvEiGsOSB5CBljwEMg0MJrOIzMR3MYvBF+hjECJiPK6FIyEFjRU5OgaKQ9jRLsAJkMRrRpqCVpkAJo4KGBmjrPQgPRAA */
-
-/**
- *
- * error: Error: Build failed with 1 error: a:App.js:1:32: error: [unpkg-path-plugin] Request failed with status code 404 at he (http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:534:26) at j (http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:408:26) at http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:443:38 at K (http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:319:68) at v (http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:257:21) at Worker.i.onmessage (http://localhost:3000/node_modules/.vite/deps/esbuild-wasm.js?v=9fa389e2:609:58)
-errors: Array(1)
-0:
-location:
-column: 32
-file: "a:App.js"
-length: 5
-line: 1
-lineText: "import React, { useState } from 'rct'"
-[[Prototype]]: Object
-text: "[unpkg-path-plugin] Request failed with status code 404"
-[[Prototype]]: Object
-length: 1
-[[Prototype]]: Array(0)
-warnings: []
-message: "Build failed with 1 error:\na:App.js:1:32: error: [unpkg-path-plugin] Request failed with status code 404"
-stack: "Error: Build failed with 1 error:\na:App.js:1:32: error: [unpkg-path-plugin] Req
- */

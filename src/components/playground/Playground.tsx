@@ -24,6 +24,7 @@ function Playground(props: Props) {
         editFileName,
         files,
         output,
+        resetVFS,
         versionGeneratorRef,
         versionRef,
     } = useEsbuild(props.initialVFS)
@@ -35,15 +36,24 @@ function Playground(props: Props) {
     }, [])
 
     const handleDeleteFile = useCallback((e: CustomEvent<string>) => {
-        if(confirm(`Do you really want to delete ${e.detail}?`)) {
-            deleteFile(generatePayload(e.detail))
+        if(!confirm(`Do you really want to delete ${e.detail}?`)) {
+            return
         }
+        deleteFile(generatePayload(e.detail))
     }, [])
 
     const handleEditFileName = useCallback((
         { detail: { current, next }}: CustomEvent<{ current: string, next: string }>
     ) => {
         editFileName(generatePayload(current, next))
+    }, [])
+
+    const handleReloadPlayground = useCallback(() => {
+        if(!confirm(`If you remoad this playground, all of your current changes will be lost.
+        Do you want to proceed ?`)) {
+            return
+        }
+        resetVFS()
     }, [])
 
     const handleTextEditorChange = useCallback((
@@ -70,7 +80,7 @@ function Playground(props: Props) {
 
     return (
         <Page>
-            <Navbar />
+            <Navbar onReloadPlayground={handleReloadPlayground} />
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor

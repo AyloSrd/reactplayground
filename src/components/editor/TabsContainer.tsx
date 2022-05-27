@@ -38,10 +38,6 @@ function TabsContainer(props: Props) {
             })
     }, [newTab])
 
-    const handleNewTabDelete = useCallback(() => {
-        setNewTab(null)
-    }, [])
-
     const handleTabDelete = useCallback((e: CustomEvent<string>) => {
         evento('tabDelete', e.detail)
     }, [])
