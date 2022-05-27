@@ -3,6 +3,7 @@ import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { colors } from '@/tools/style-tools'
+import { validateTabName } from '@/tools/editor.tools'
 
 interface Props {
     onNewNameSubmit: (e: CustomEvent<{ current: string; next: string }>) => void,
@@ -29,6 +30,7 @@ function TabInput(props: Props) {
         if (
             `${tempName}.${type}` === ENTRY_POINT_JSX
             || !tempName.length
+            || !validateTabName(tempName)
         ) {
             return
         }

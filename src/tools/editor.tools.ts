@@ -19,6 +19,10 @@ export function generatePayload(target: string, content?: string) {
     })
 }
 
+export function validateTabName(tabName: string) {
+    return /^[A-Za-z0-9]*$/.test(tabName)
+}
+
 export function* countGen(initialCount: number = -1): Generator<number> {
     let count = initialCount
     while (true) {
