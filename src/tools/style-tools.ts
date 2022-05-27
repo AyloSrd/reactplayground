@@ -10,7 +10,6 @@ export const colors = {
     $silver200: '#b9bdb6',
     $silver300: '#8c8e8a',
     $blue: '#5ba1cf',
-    $purple: '#ce61fb',
     $react: '#61dafb',
     $red: '#e24a4a',
     $redConsole: '#3c0303',

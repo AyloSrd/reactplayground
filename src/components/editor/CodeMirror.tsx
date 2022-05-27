@@ -98,10 +98,6 @@ const Container = styled.div`
         color: ${colors.$yellow};
     }
 
-    .cm-s-rdark .cm-keyword {
-        color: ${colors.$purple};
-    }
-
     .cm-s-rdark .CodeMirror-gutters {
         box-shadow: none;
         -webkit-box-shadow: none;
