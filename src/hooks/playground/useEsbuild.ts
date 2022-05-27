@@ -1,5 +1,5 @@
 import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
-import { BundleError, createErrorString } from '@/tools/esbuild-tools'
+import { BundleError, createErrorString, injectReactGlobalVariableImport } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
@@ -93,14 +93,14 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     if (args.path === ENTRY_POINT_JSX) {
                         return {
                         loader: 'jsx',
-                        contents: vfs[ENTRY_POINT_JSX],
+                        contents: injectReactGlobalVariableImport(vfs[ENTRY_POINT_JSX]),
                         }
                     }
 
                     if (vfs[args.path]) {
                         return {
                             loader: 'jsx',
-                            contents: vfs[args.path],
+                            contents: injectReactGlobalVariableImport(vfs[args.path]),
                         }
                     }
 

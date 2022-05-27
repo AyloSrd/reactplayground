@@ -13,6 +13,8 @@ export interface BundleError {
 }
 
 export const libVersionRegex = new RegExp(/@(\d+\.)?(\d+\.)?(\*|\d+)/)
+const reactImportVersionRegex = new RegExp(/(\'|")((\breact)|(\breact)(@(\d+\.)?(\d+\.)?(\*|\d+)))(\'|")/g)
+const isReactImportedAsGlobalVariableRegex = new RegExp(/(\bimport).*(\bReact).* (\bfrom)\s+(\'|")((\breact)|(\breact)(@(\d+\.)?(\d+\.)?(\*|\d+)))(\'|")/g)
 
 export function getVersion(urlImport: string): { lib: string, version: string} | null {
     if (!libVersionRegex.test(urlImport)) {
@@ -54,6 +56,20 @@ export function createErrorString(err: BundleError): string {
     ${line} | ${lineText}
     ${gutter}   ${space}${underline}
     `.trim()
+}
+
+export function injectReactGlobalVariableImport(fileContent: string): string {
+    if (isReactImportedAsGlobalVariableRegex.test(fileContent)) {
+        return fileContent
+    }
+
+    const versionedReact = fileContent.match(reactImportVersionRegex)
+    console.log({versionedReact})
+    const importDeclaration = 
+        'import React from' 
+        + (versionedReact?.length ? `${versionedReact?.[0]};\n` : '"react";\n')
+    console.log({importDeclaration})
+    return importDeclaration + fileContent
 }
 
 /**
