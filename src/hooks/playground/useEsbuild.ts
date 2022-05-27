@@ -39,16 +39,10 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         resetVFS,
     } = useVFS(vfsFromUrl)
 
-    const esbuildRef = useRef<any>()
+    const esbuildRef = useRef<any>(esbuild)
+    const isEsbuildInitializedRef = useRef<boolean>(false)
     const versionGeneratorRef = useRef<Generator<number>>(countGen())
     const versionRef = useRef<number>(versionGeneratorRef.current.next().value)
-
-    const startService = useCallback(async () => {
-        esbuildRef.current = await esbuild.startService({
-            worker: true,
-            wasmURL:  '/esbuild.wasm' // 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' // 
-        })
-    }, [])
 
     const unpkgPathPlugin = useCallback((vfs: VFS) => {
         return {
@@ -134,7 +128,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     const createBundle = useCallback(async (vfs: VFS, prevVersion: number)=> {
         if (
-            !esbuildRef.current 
+            ! isEsbuildInitializedRef.current 
             || typeof versionRef.current !== 'number'
         ) {
             return
@@ -169,8 +163,12 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
     }, [])
 
     useEffect(() => {
-        startService()
-            .then(() => createBundle(vfs, versionRef.current))
+        esbuildRef.current.initialize({
+            wasmURL:  '/esbuild.wasm' // 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' // 
+        }).then(() => {
+            isEsbuildInitializedRef.current = true
+            createBundle(vfs, versionRef.current)
+        })
     }, [])
 
     return {
