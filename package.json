@@ -11,7 +11,7 @@
     "axios": "^0.26.1",
     "code-mirror-themes": "^1.0.0",
     "codemirror": "^5.65.2",
-    "esbuild-wasm": "0.8.27",
+    "esbuild-wasm": "^0.14.41",
     "evento-react": "^0.2.1",
     "localforage": "^1.10.0",
     "lz-string": "^1.4.4",
