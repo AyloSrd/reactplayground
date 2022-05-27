@@ -72,6 +72,7 @@ function TabsContainer(props: Props) {
                     tabs.map(tab => (
                         tab === editedTab ?
                             <TabInput
+                                existingTabNames={tabs}
                                 key={tab}
                                 onNewNameSubmit={handleTabEdit}
                                 tab={tab}
@@ -90,6 +91,7 @@ function TabsContainer(props: Props) {
                 {
                     typeof newTab === 'string' && (
                         <TabInput
+                            existingTabNames={tabs}
                             onNewNameSubmit={handleNewTabAdd}
                             tab={newTab}
                         />
