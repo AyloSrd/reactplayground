@@ -6,12 +6,13 @@ import { colors } from '@/tools/style-tools'
 import { validateTabName } from '@/tools/editor.tools'
 
 interface Props {
+    existingTabNames: string[],
     onNewNameSubmit: (e: CustomEvent<{ current: string; next: string }>) => void,
     tab: string
 }
 
 function TabInput(props: Props) {
-    const { tab } = props
+    const { existingTabNames, tab } = props
     const [ name, type ] = tab.split('.')
 
     const [tempName, setTempName] = useState<string>(name)
@@ -26,17 +27,23 @@ function TabInput(props: Props) {
 
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
-
+        const suffixedTabName = `${tempName}.${type}`
+        console.log('suffixedTabName !== `${tab}.${type}`', suffixedTabName !== `${tab}.${type}`)
+        console.log('existingTabNames.includes(suffixedTabName)', existingTabNames.includes(suffixedTabName))
         if (
-            `${tempName}.${type}` === ENTRY_POINT_JSX
+            suffixedTabName === ENTRY_POINT_JSX
             || !tempName.length
             || !validateTabName(tempName)
+            || (
+                suffixedTabName !== `${tab}.${type}`
+                && existingTabNames.includes(suffixedTabName)
+            )
         ) {
             return
         }
 
         evento('newNameSubmit', { current: tab, next: `${tempName}.${type}` })
-    }, [tab, tempName])
+    }, [existingTabNames, tab, tempName])
 
     const handleBlur = useCallback(() => {
         handleSubmit()
