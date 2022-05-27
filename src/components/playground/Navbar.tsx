@@ -2,12 +2,22 @@ import ReactPlaygroundLogoSVG from '@/components/esthetic/icons/ReactPlaygroundL
 import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import useURLStorage from '@/hooks/playground/useURLStorage'
-import { generalBorderStyle ,colors } from '@/tools/style-tools'
+import { colors } from '@/tools/style-tools'
 import { memo, useCallback } from 'react'
 import styled from 'styled-components'
+import { useCreateEvento } from 'evento-react'
 
-const Navbar = () => {
+interface Props {
+    onReloadPlayground: () => void,
+}
+
+const Navbar = (props: Props) => {
+    const evento = useCreateEvento(props)
     const { copyURLToClipBoard } = useURLStorage()
+
+    const handleReloadClick = useCallback(() => {
+        evento('reloadPlayground')
+    }, [])
 
     const handleShareClick = useCallback(() => {
         copyURLToClipBoard().then(() => alert('link copied to clipboard'))
@@ -15,8 +25,8 @@ const Navbar = () => {
 
     return (
         <Nav>
-            <TitleContainer>
-                <ReactPlaygroundLogoSVG height={"30px"} width={"auto"}/>
+            <TitleContainer onClick={handleReloadClick}>
+                <ReactPlaygroundLogoSVG height={"30px"} width={"100%"}/>
                 <Title>React Playground</Title>
             </TitleContainer>
             <Button onClick={handleShareClick}>
@@ -60,6 +70,7 @@ const TitleContainer = styled.div`
     grid-template-columns: auto auto;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
 `
 
 const Title = styled.h1`

@@ -12,12 +12,13 @@
     "code-mirror-themes": "^1.0.0",
     "codemirror": "^5.65.2",
     "esbuild-wasm": "0.8.27",
-    "evento-react": "^0.2.0",
+    "evento-react": "^0.2.1",
     "localforage": "^1.10.0",
     "lz-string": "^1.4.4",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^17.0.2",
+    "react-is": "^18.1.0",
     "styled-components": "^5.3.5"
   },
   "devDependencies": {

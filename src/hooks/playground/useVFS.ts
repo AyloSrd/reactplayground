@@ -10,6 +10,7 @@ enum ActionKind {
     EDIT_FILE_CONTENT = ' EDIT_FILE_CONTENT',
     EDIT_FILE_NAME = 'EDIT_FILE_NAME',
     RESET_IMPORTS = 'RESET_IMPORTS ',
+    RESET_VFS = 'RESET_VFS'
 }
 
 interface Action {
@@ -175,6 +176,9 @@ function reducer(state: State, action: Action): State {
                 versionedImports: {},
             }
 
+        case ActionKind.RESET_VFS :
+            return defaultState
+
         default:
             throw new Error()
     }
@@ -253,6 +257,13 @@ export default function useVFS(vfsFromUrl: VFS | null) {
         })
     }, [])
 
+    const resetVFS = useCallback(() => {
+        dispatch({
+            type: ActionKind.RESET_VFS,
+            payload: generatePayload('')
+        })
+    }, [])
+
     return {
         addDirectImport,
         addFile,
@@ -262,6 +273,7 @@ export default function useVFS(vfsFromUrl: VFS | null) {
         editFileName,
         fileList,
         resetImports,
+        resetVFS,
         vfs,
     }
 }
