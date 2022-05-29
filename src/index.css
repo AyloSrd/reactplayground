@@ -12,9 +12,14 @@ html {
     margin: 0;
     padding: 0;
     font-size: 14px;
+    height: fill-available;
+    height: -webkit-fill-available;
 }
 
 body {
+    min-height: 100vh;
+    min-height: fill-available;
+    min-height: -webkit-fill-available;
     margin: 0;
     padding: 0;
     display: flex;
