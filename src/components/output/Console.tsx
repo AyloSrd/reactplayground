@@ -49,7 +49,7 @@ const Console = (props: Props) => {
                         id='open-close'
                         onChange={handleOpenCloseConsole}
                         type='checkbox'
-                        />
+                    />
                     <ExpandSVG
                         direction={isConsoleOpen ? "down" : "up"}
                         height={"20px"}
