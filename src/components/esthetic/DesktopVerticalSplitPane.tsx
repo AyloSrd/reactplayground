@@ -226,6 +226,7 @@ function VerticalSplitPane(props: Props) {
                 { leftPaneChild }
             </Pane>
             <Splitter
+                className={isMouseDown ? "in-use" : ""}
                 onMouseDown={handleMouseDown}
                 style={{ width: `${splitterWidth}px` }}
             >
@@ -268,6 +269,10 @@ const Splitter = styled.div`
     background-color: ${colors.$bgNav};
     cursor: col-resize;
     color: ${colors.$silver200};
+
+    &:hover, &.in-use {
+        background-color: ${colors.$purple};
+    }
 `
 
 const WindowHook = styled.div`
