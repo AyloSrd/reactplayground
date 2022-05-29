@@ -75,6 +75,8 @@ const Pane = styled.div`
 `
 
 const SwithcSection = styled.form`
+    position: sticky;
+    bottom: 0;
     height: 35px;
     width: 100%;
     display: flex;
