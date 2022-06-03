@@ -85,7 +85,6 @@ const BtnContent = styled.div`
 
     &:hover {
         color: ${colors.$silver100};
-        transform: rotate(360deg);
     }
 `
 
