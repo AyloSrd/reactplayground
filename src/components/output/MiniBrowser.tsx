@@ -81,11 +81,10 @@ const MiniBrowser = (props: Props) => {
 }
 
 const BtnContent = styled.div`
-    transition: transform ${transitionDuration.medium};
+    transition: transform ${transitionDuration.fast};
 
     &:hover {
         color: ${colors.$silver100};
-        transform: rotate(360deg);
     }
 `
 

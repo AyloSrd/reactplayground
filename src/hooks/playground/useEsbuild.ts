@@ -1,6 +1,7 @@
 import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString, injectReactGlobalVariableImport } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
+import { initialLoader } from '@/tools/iframe-tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -23,7 +24,7 @@ const fileCache = localforage.createInstance({
 })
 
 export default function useEsbuild(vfsFromUrl: VFS | null) {
-    const [bundleJSXText, setBundleJSXText] = useState<null | string>('')
+    const [bundleJSXText, setBundleJSXText] = useState<null | string>(initialLoader)
     const [bundleErr, setBundleErr] = useState<null | string>(null)
 
     const {
@@ -128,7 +129,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     const createBundle = useCallback(async (vfs: VFS, prevVersion: number)=> {
         if (
-            ! isEsbuildInitializedRef.current 
+            ! isEsbuildInitializedRef.current
             || typeof versionRef.current !== 'number'
         ) {
             return
@@ -164,7 +165,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
     useEffect(() => {
         esbuildRef.current.initialize({
-            wasmURL:  '/esbuild.wasm' // 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' // 
+            wasmURL:  '/esbuild.wasm' // 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm' //
         }).then(() => {
             isEsbuildInitializedRef.current = true
             createBundle(vfs, versionRef.current)

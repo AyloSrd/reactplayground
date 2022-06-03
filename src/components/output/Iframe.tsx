@@ -62,6 +62,7 @@ const Iframe = (props: Props) => {
 
     return (
         <StyledIframe
+            allow="clipboard-read; clipboard-write"
             onLoad={handleIframeLoad}
             ref={iframeRef}
             sandbox={sandboxAttributes}
