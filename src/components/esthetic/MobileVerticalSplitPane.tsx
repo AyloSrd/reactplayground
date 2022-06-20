@@ -34,21 +34,21 @@ function MobileTabDisplayer(props: Props) {
                     {
                         showEditor ?
                             <>
-                                <ExpandSVG
-                                    direction={"left"}
-                                    height={"20px"}
-                                    width={"20px"}
-                                />
                                 {Tabs.RIGHT}
-                            </>
-                        :
-                            <>
-                                {Tabs.LEFT}
                                 <ExpandSVG
                                     direction={"right"}
                                     height={"20px"}
                                     width={"20px"}
                                 />
+                            </>
+                        :
+                            <>
+                                <ExpandSVG
+                                    direction={"left"}
+                                    height={"20px"}
+                                    width={"20px"}
+                                />
+                                {Tabs.LEFT}
                             </>
                     }
                     <TabCheckbox

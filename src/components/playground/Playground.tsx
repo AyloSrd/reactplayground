@@ -102,7 +102,8 @@ function Playground(props: Props) {
 }
 
 const Page = styled.div`
-    margin-top: 45px;
+    position: fixed;
+    top: 45px;
     height: calc(100vh - 45px);
     width: 100vw;
     max-height: 100%;
