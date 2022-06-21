@@ -36,12 +36,19 @@ export const srcDoc = /*html*/`
 
             function consoleArgsToString(consoleArgs) {
                 const stringifiedArgs = consoleArgs.map(arg => {
+                    let sanitizedArg
+
+                    try {
+                        sanitizedArg
+                    }catch{
+
+                    }
                     return (
                         arg instanceof Element ?
                             arg.outerHTML
                         : typeof arg === 'object' ?
-                            // add trycatch to deal with JSON.stringify BigInt or Object with circular reference
-                            JSON.stringify(arg)
+                            // need to handle also BigInt case
+                            stringifyAndPreventCircularDep(arg)
                         :
                             arg + ""
                     )
@@ -72,6 +79,18 @@ export const srcDoc = /*html*/`
                     window.postMessage({ type: 'error', error: err }, '*')
                     console.error( err.name + ': '  + err.message)
                 }
+            }
+
+            function stringifyAndPreventCircularDep(arg) {
+                let sanitizedArg
+
+                try {
+                    sanitizedArg = JSON.stringify(arg)
+                } catch {
+                    sanitizedArg = "Impossible to log. Please check the developer tools."
+                }
+
+                return sanitizedArg
             }
         </script>
     </body>
