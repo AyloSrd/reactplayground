@@ -26,6 +26,7 @@ const fileCache = localforage.createInstance({
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [bundleJSXText, setBundleJSXText] = useState<null | string>(initialLoader)
     const [bundleErr, setBundleErr] = useState<null | string>(null)
+    const [rawImports, setRawImports] = useState<Array<string>>([])
 
     const {
         addDirectImport,
@@ -72,7 +73,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
                     if (args.path.includes('./') || args.path.includes('../')) {
                         return {
-                        namespace: 'a',
+                        namespace: 'b',
                         path: new URL(
                             args.path,
                             'https://unpkg.com' + args.resolveDir + '/'
@@ -85,7 +86,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
 
                     return {
-                        namespace: 'a',
+                        namespace: 'b',
                         path: `https://unpkg.com/${args.path}`,
                     }
                 })
@@ -139,19 +140,21 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             const bundle = await esbuildRef.current.build({
                 entryPoints: [ENTRY_POINT_JSX],
                 bundle: true,
+                metafile: true,
                 write: false,
                 plugins: [unpkgPathPlugin(vfs)],
                 // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
                 define: window.defineHack,
               })
             const bundleJSX = bundle?.outputFiles?.[0]?.text
-
+            const _imports = bundle?.metafile?.inputs
             if (prevVersion < versionRef.current) {
                 return
             }
 
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
+            setRawImports(_imports)
         } catch(err) {
             if (prevVersion < versionRef.current) {
                 return
