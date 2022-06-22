@@ -102,8 +102,7 @@ function Playground(props: Props) {
 }
 
 const Page = styled.div`
-    padding-top: 45px;
-    height: 100vh;
+    height: calc(100vh - 45px);
     width: 100vw;
     max-height: 100%;
     max-width: 100%;

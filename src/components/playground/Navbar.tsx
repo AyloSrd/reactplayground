@@ -43,8 +43,6 @@ const Nav = styled.nav`
     height: 45px;
     width: 100vw;
     max-width: 100%;
-    position: fixed;
-    top: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
