@@ -1,4 +1,4 @@
-export function getNameAndVersion(rawImport: string): string[] {
+export function extractNameAndVersionFromRawImport(rawImport: string): string[] {
     const unpkgLess = rawImport.split('b:https://unpkg.com/')[0]
     const unpkgLessSplitted = unpkgLess.split('/')
     const rawName =
@@ -20,6 +20,6 @@ export function getNameAndVersion(rawImport: string): string[] {
 
 export function getLatestVersion(name: string): Promise<string[]> {
     return fetch(`https://unpkg.com/${name}`)
-        .then(res =>  getNameAndVersion(res.url)[1].length ? getNameAndVersion(res.url) : [name, 'latest'])
+        .then(res =>  extractNameAndVersionFromRawImport(res.url)[1].length ? extractNameAndVersionFromRawImport(res.url) : [name, 'latest'])
         .catch(() => [name, 'latest'])
 }
