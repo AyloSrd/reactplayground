@@ -145,13 +145,13 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                 plugins: [unpkgPathPlugin(vfs)],
                 // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
                 define: window.defineHack,
-              })
+            })
             const bundleJSX = bundle?.outputFiles?.[0]?.text
             const _imports = bundle?.metafile?.inputs
             if (prevVersion < versionRef.current) {
                 return
             }
-
+            console.log(_imports)
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
             setRawImports(_imports)
