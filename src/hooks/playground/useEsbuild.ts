@@ -2,6 +2,7 @@ import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
 import { initialLoader } from '@/tools/iframe-tools'
+import { getPackageJSON, RawImports } from '@/tools/exports-tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -26,7 +27,7 @@ const fileCache = localforage.createInstance({
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [bundleJSXText, setBundleJSXText] = useState<null | string>(initialLoader)
     const [bundleErr, setBundleErr] = useState<null | string>(null)
-    const [rawImports, setRawImports] = useState<Array<string>>([])
+    const [rawImports, setRawImports] = useState<RawImports>({})
 
     const {
         addDirectImport,
@@ -165,6 +166,10 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         }
 
     }, [])
+
+    useEffect(() => {
+        getPackageJSON(rawImports).then(console.log)
+    }, [rawImports])
 
     useEffect(() => {
         esbuildRef.current.initialize({

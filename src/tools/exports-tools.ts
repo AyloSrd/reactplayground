@@ -1,35 +1,38 @@
+import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import dedent from 'dedent'
 import { key } from 'localforage'
 
 interface RawImport {
     bytes: number,
     imports: Array<{
-        type: string,
+        kind: string,
         path: string,
     }>,
 }
 
-interface RawImports {
+export interface RawImports {
     [key: string] : RawImport,
 }
 
 export function extractNameAndVersionFromRawImport(rawImport: string): string[] {
-    const unpkgLess = rawImport.split('b:https://unpkg.com/')[0]
+    const unpkgLess = rawImport.split('https://unpkg.com/')[1]
     const unpkgLessSplitted = unpkgLess.split('/')
     const rawName =
         unpkgLess.startsWith('@') ?
             `${unpkgLessSplitted[0]}/${unpkgLessSplitted[1]}`
         :
             unpkgLessSplitted[0]
-
     const rawNameSplitted = rawName.split('@')
     const name =
         rawName.startsWith('@') ?
-            `@${rawNameSplitted[0]}`
+            `@${rawNameSplitted[1]}`
         :
             rawNameSplitted[0]
-    const version = rawNameSplitted[1] ?? ''
-
+    const version =
+        name.startsWith('@') ?
+            (rawNameSplitted[2] ?? '')
+        :
+            (rawNameSplitted[1] ?? '')
     return [name, version]
 }
 
@@ -54,7 +57,7 @@ const htmlFileCodeSandBox = dedent`
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/App.js"></script>
+    <script type="module" src="/${ENTRY_POINT_JSX}"></script>
   </body>
 </html>
 `
@@ -68,33 +71,65 @@ export default defineConfig({
   plugins: [react()]
 })
 `
-
-async function getPackageJSON(rawImports: RawImports): Promise<string> {
+export async function getPackageJSON(rawImports: RawImports): Promise<string> {
     const rawImporters = Object.keys(rawImports).filter(imprt => imprt.startsWith('a:'))
+    const importeesNames: Array<string> = []
+    const versionRequests: Array<Promise<string[]>> = []
 
     const rawImportees =
         rawImporters.reduce((acc: { [key: string]: string }, rawImporter: string) => {
-            const tempRawImportees = Object.keys(rawImports[rawImporter].imports)
-                .filter(imprt => imprt.startsWith('b:'))
+            const importsURLs = rawImports[rawImporter].imports.map(imprt => {
+                if (imprt.path.startsWith('b:')) {
+                    return imprt.path.substring(2)
+                }
+            }).filter(importURL => typeof importURL === 'string' && importURL !== undefined)
+
+            importsURLs.forEach(imprt => {
+
+                if (!imprt) {
+                    return
+                }
+
+                if (!importeesNames.includes(imprt)) {
+                    importeesNames.push(imprt)
+                }
+                const [name, version] = extractNameAndVersionFromRawImport(imprt)
+
+                if (!version.length && (acc[name] === undefined || acc[name].length <= 1)) {
+                    versionRequests.push(getLatestVersion(name))
+                }
+                acc[name] = "^" + version
+            })
+
+            return acc
         }, {})
-    return JSON.stringify(`
-    {
-        "name": "vite-react-starter",
-        "private": true,
-        "version": "0.0.0",
-        "type": "module",
-        "scripts": {
-          "dev": "vite",
-          "build": "vite build",
-          "preview": "vite preview"
-        },
-        "dependencies": {
-          "react": "18.2.0",
-          "react-dom": "18.2.0"
-        },
-        "devDependencies": {
-          "@vitejs/plugin-react": "^1.3.2",
-          "vite": "^2.9.12"
-        }
-      }`.trim())
+
+    const versionedImportees = await Promise.all(versionRequests).then(values => {
+        return values.reduce((acc, val) => {
+            acc[val[0]] = "^" + val[1]
+            return acc
+        }, rawImportees)
+    })
+
+    const dependencies = JSON.stringify(versionedImportees)
+
+    const packageJSON =  JSON.stringify(`
+{
+    "name": "vite-react-starter",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": ${dependencies},
+    "devDependencies": {
+        "@vitejs/plugin-react": "^1.3.2",
+        "vite": "^2.9.12"
+    }
+}`.trim())
+
+    return packageJSON
 }
