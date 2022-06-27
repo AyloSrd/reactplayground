@@ -1,6 +1,18 @@
+import { VFS } from '@/hooks/playground/useVFS'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
+import { compressToBase64 } from 'lz-string'
 import dedent from 'dedent'
-import { key } from 'localforage'
+
+interface CodeSanboxFile {
+    content: string,
+    isBinary: boolean,
+}
+
+interface CodeSandboxFilesTree {
+    files :{
+        [key: string] : CodeSanboxFile,
+    }
+}
 
 interface RawImport {
     bytes: number,
@@ -57,7 +69,7 @@ const htmlFileCodeSandBox = dedent`
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/${ENTRY_POINT_JSX}"></script>
+    <script type="module" src="./src/${ENTRY_POINT_JSX}"></script>
   </body>
 </html>
 `
@@ -71,6 +83,49 @@ export default defineConfig({
   plugins: [react()]
 })
 `
+
+function getCodeSandboxFilesTree(fileList: string[], vfs: VFS) : { [key: string] : CodeSanboxFile } {
+    console.log('fileList', fileList)
+    console.log('vfs', vfs)
+
+    return fileList.reduce((acc: CodeSandboxFilesTree, val: string) => {
+        acc[`src/${val}`] = {
+            content: vfs[val],
+            isBinary: false,
+        }
+        console.log('acc', acc)
+        return acc
+    }, {})
+}
+
+export async function getCodeSandboxParameters(fileList: string[], rawImports: RawImports, vfs: VFS): Promise<string> {
+    const packageJSON = await getPackageJSON(rawImports)
+    const parameters = {
+        files: {
+            ...getCodeSandboxFilesTree(fileList, vfs),
+            'index.html': {
+                content: htmlFileCodeSandBox,
+                isBinary: false,
+            },
+            'package.json': {
+                content: packageJSON,
+                isBinary: false,
+            },
+            'vite.config.js': {
+                content: viteConfig,
+                isBinary: false,
+            },
+        }
+    }
+
+    console.log('parameters', JSON.stringify(parameters))
+
+    return compressToBase64(JSON.stringify(parameters))
+        .replace(/\+/g, '-') // Convert '+' to '-'
+        .replace(/\//g, '_') // Convert '/' to '_'
+        .replace(/=+$/, ''); // Remove ending '='
+}
+
 export async function getPackageJSON(rawImports: RawImports): Promise<string> {
     const rawImporters = Object.keys(rawImports).filter(imprt => imprt.startsWith('a:'))
     const importeesNames: Array<string> = []
@@ -113,8 +168,7 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
 
     const dependencies = JSON.stringify(versionedImportees)
 
-    const packageJSON =  JSON.stringify(`
-{
+    const packageJSON =  dedent(`{
     "name": "vite-react-starter",
     "private": true,
     "version": "0.0.0",
@@ -129,7 +183,24 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
         "@vitejs/plugin-react": "^1.3.2",
         "vite": "^2.9.12"
     }
-}`.trim())
-
+}`)
+    console.log(packageJSON)
     return packageJSON
+}
+
+export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
+    getCodeSandboxParameters(fileList, rawImports, vfs)
+        .then(parameters => {
+            const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
+            console.log(url)
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener');
+
+            document.body.appendChild(a)
+            a.click();
+            console.log('clicked')
+            a.remove();
+        })
 }

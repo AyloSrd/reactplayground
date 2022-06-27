@@ -2,7 +2,7 @@ import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
 import { initialLoader } from '@/tools/iframe-tools'
-import { getPackageJSON, RawImports } from '@/tools/exports-tools'
+import { getPackageJSON, RawImports, getCodeSandboxParameters, exportToCodeSandbox } from '@/tools/exports-tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -168,8 +168,8 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
     }, [])
 
     useEffect(() => {
-        getPackageJSON(rawImports).then(console.log)
-    }, [rawImports])
+        exportToCodeSandbox(fileList, rawImports, vfs)
+    }, [fileList, rawImports, vfs])
 
     useEffect(() => {
         esbuildRef.current.initialize({
