@@ -85,15 +85,11 @@ export default defineConfig({
 `
 
 function getCodeSandboxFilesTree(fileList: string[], vfs: VFS) : { [key: string] : CodeSanboxFile } {
-    console.log('fileList', fileList)
-    console.log('vfs', vfs)
-
-    return fileList.reduce((acc: CodeSandboxFilesTree, val: string) => {
+    return fileList.reduce((acc: { [key: string] : CodeSanboxFile}, val: string) => {
         acc[`src/${val}`] = {
             content: vfs[val],
             isBinary: false,
         }
-        console.log('acc', acc)
         return acc
     }, {})
 }

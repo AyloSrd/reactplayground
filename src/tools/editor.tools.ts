@@ -2,11 +2,11 @@ const componentCount = countGen()
 
 export function generateNewTabName(tabs: string[]): string {
     let tempLength = componentCount.next().value
-    let tempName = `Component${tempLength}.js`
+    let tempName = `Component${tempLength}.jsx`
 
     while (tabs.includes(tempName)) {
         tempLength = componentCount.next().value
-        tempName = `Component${tempLength}.js`
+        tempName = `Component${tempLength}.jsx`
     }
 
     return tempName

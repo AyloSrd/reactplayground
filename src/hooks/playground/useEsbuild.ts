@@ -65,10 +65,10 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                         }
                     }
 
-                    if (args.path.startsWith('./') && vfs[`${args.path.substring(2)}.js`]) {
+                    if (args.path.startsWith('./') && vfs[`${args.path.substring(2)}.jsx`]) {
                         return {
                             namespace: 'a',
-                            path: `${args.path.substring(2)}.js`
+                            path: `${args.path.substring(2)}.jsx`
                         }
                     }
 

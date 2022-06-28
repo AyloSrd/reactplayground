@@ -34,7 +34,7 @@ interface State {
     vfs: VFS,
 }
 
-export const ENTRY_POINT_JSX = 'App.js'
+export const ENTRY_POINT_JSX = 'App.jsx'
 
 const AppDefaultContent = `
 import React, { useState } from 'react'
