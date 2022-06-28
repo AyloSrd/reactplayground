@@ -96,7 +96,7 @@ function getCodeSandboxFilesTree(fileList: string[], vfs: VFS) : { [key: string]
 
 export async function getCodeSandboxParameters(fileList: string[], rawImports: RawImports, vfs: VFS): Promise<string> {
     const packageJSON = await getPackageJSON(rawImports)
-    const parameters = {
+    const parameters: CodeSandboxFilesTree = {
         files: {
             ...getCodeSandboxFilesTree(fileList, vfs),
             'index.html': {
