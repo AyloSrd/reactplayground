@@ -122,6 +122,23 @@ export async function getCodeSandboxParameters(fileList: string[], rawImports: R
         .replace(/=+$/, ''); // Remove ending '='
 }
 
+function getVersionedDependencies(rawImports: RawImports): any {
+    const { rawImportersFromVFS, rawImportersFromUNPKG } =  (Object.keys(rawImports) as any[]).reduce((importersLists, rawImporter: string) => {
+        if (rawImporter.startsWith('a:')) {
+            importersLists.rawImportersFromVFS.push(rawImporter)
+            return importersLists
+        }
+
+        if (rawImporter.startsWith('b:')) {
+            importersLists.rawImportersFromUNPKG.push(rawImporter)
+            return importersLists
+        }
+
+        return importersLists
+
+    }, { rawImportersFromVFS: [], rawImportersFromUNPKG: [] })
+}
+
 export async function getPackageJSON(rawImports: RawImports): Promise<string> {
     const rawImporters = Object.keys(rawImports).filter(imprt => imprt.startsWith('a:'))
     const importeesNames: Array<string> = []
@@ -185,18 +202,22 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
 }
 
 export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
-    getCodeSandboxParameters(fileList, rawImports, vfs)
-        .then(parameters => {
-            const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
-            console.log(url)
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('target', '_blank');
-            a.setAttribute('rel', 'noopener');
-
-            document.body.appendChild(a)
-            a.click();
-            console.log('clicked')
-            a.remove();
-        })
+    console.log('yo')
 }
+
+// export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
+//     getCodeSandboxParameters(fileList, rawImports, vfs)
+//         .then(parameters => {
+//             const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
+//             console.log(url)
+//             const a = document.createElement('a');
+//             a.setAttribute('href', url);
+//             a.setAttribute('target', '_blank');
+//             a.setAttribute('rel', 'noopener');
+
+//             document.body.appendChild(a)
+//             a.click();
+//             console.log('clicked')
+//             a.remove();
+//         })
+// }
