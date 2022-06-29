@@ -123,7 +123,8 @@ export async function getCodeSandboxParameters(fileList: string[], rawImports: R
 }
 
 function getVersionedDependencies(rawImports: RawImports): any {
-    const { rawImportersFromVFS, rawImportersFromUNPKG } =  (Object.keys(rawImports) as any[]).reduce((importersLists, rawImporter: string) => {
+    const rawImporters: any[] = Object.keys(rawImports) // I have too, or else I will have "Argument of type 'string' is not assignable to parameter of type 'never'" down below in the reduce method
+    const { rawImportersFromVFS, rawImportersFromUNPKG } =  rawImporters.reduce((importersLists, rawImporter: string) => {
         if (rawImporter.startsWith('a:')) {
             importersLists.rawImportersFromVFS.push(rawImporter)
             return importersLists
