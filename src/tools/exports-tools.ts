@@ -123,21 +123,57 @@ export async function getCodeSandboxParameters(fileList: string[], rawImports: R
 }
 
 function getVersionedDependencies(rawImports: RawImports): any {
-    const rawImporters: any[] = Object.keys(rawImports) // I have too, or else I will have "Argument of type 'string' is not assignable to parameter of type 'never'" down below in the reduce method
-    const { rawImportersFromVFS, rawImportersFromUNPKG } =  rawImporters.reduce((importersLists, rawImporter: string) => {
-        if (rawImporter.startsWith('a:')) {
-            importersLists.rawImportersFromVFS.push(rawImporter)
+    const rawImporters: any[] = Object.keys(rawImports)
+    // I have too, or else I will have "Argument of type 'string' is not assignable to parameter of type 'never'" down below in the reduce method
+    const { rawImportersFromVFS, rawImportersFromUNPKG } =
+        rawImporters.reduce((importersLists, rawImporter: string) => {
+            if (rawImporter.startsWith('a:')) {
+                importersLists.rawImportersFromVFS.push(rawImporter)
+                return importersLists
+            }
+
+            if (rawImporter.startsWith('b:')) {
+                importersLists.rawImportersFromUNPKG.push(rawImporter)
+                return importersLists
+            }
+
             return importersLists
-        }
 
-        if (rawImporter.startsWith('b:')) {
-            importersLists.rawImportersFromUNPKG.push(rawImporter)
-            return importersLists
-        }
+        }, { rawImportersFromVFS: [], rawImportersFromUNPKG: [] } as { rawImportersFromVFS: string[], rawImportersFromUNPKG: string[] })
 
-        return importersLists
+    const versionedImports = rawImportersFromVFS.reduce((acc: Record<string, string>, importer: string) => {
+        (rawImports[importer] as RawImport).imports.forEach(({ path }) => {
+            if (path.startsWith('a:')) {
+                return
+            }
+            
+            let [name, version] = extractNameAndVersionFromRawImport(path)
+            if (acc[name]) {
+                return
+            }
 
-    }, { rawImportersFromVFS: [], rawImportersFromUNPKG: [] })
+            if(version) {
+                acc[name] = version
+                return
+            }
+
+            version = 'latest'
+
+            for (const imprt of rawImportersFromUNPKG) {
+                if (imprt.startsWith(`b:https://unpkg.com/${name}@`)) {
+                    console.log(imprt)
+                    version = extractNameAndVersionFromRawImport(imprt)[1]
+                    break
+                }
+            }
+
+            acc[name] = version
+        })
+
+        return acc
+    }, {} as Record<string, string>)
+
+    return versionedImports
 }
 
 export async function getPackageJSON(rawImports: RawImports): Promise<string> {
@@ -203,7 +239,8 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
 }
 
 export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
-    console.log('yo')
+    const versionedDependencies = getVersionedDependencies(rawImports)
+    console.log('versionedDependencies', versionedDependencies)
 }
 
 // export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
