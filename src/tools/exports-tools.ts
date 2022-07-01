@@ -117,7 +117,7 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
     return compressToBase64(JSON.stringify(parameters))
         .replace(/\+/g, '-') // Convert '+' to '-'
         .replace(/\//g, '_') // Convert '/' to '_'
-        .replace(/=+$/, ''); // Remove ending '='
+        .replace(/=+$/, '') // Remove ending '='
 }
 
 async function getPackageJSON(rawImports: RawImports): Promise<string> {
@@ -200,13 +200,13 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
     getCodeSandboxParameters(fileList, rawImports, vfs)
         .then(parameters => {
             const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('target', '_blank');
-            a.setAttribute('rel', 'noopener');
+            const a = document.createElement('a')
+            a.setAttribute('href', url)
+            a.setAttribute('target', '_blank')
+            a.setAttribute('rel', 'noopener')
 
             document.body.appendChild(a)
-            a.click();
-            a.remove();
+            a.click()
+            a.remove()
         })
 }
