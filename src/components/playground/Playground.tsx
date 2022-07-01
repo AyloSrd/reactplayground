@@ -6,6 +6,7 @@ import useEsbuild from '@/hooks/playground/useEsbuild'
 import { VFS } from '@/hooks/playground/useVFS'
 import { colors } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
+import { exportToCodeSandbox } from '@/tools/exports-tools'
 import { useCreateEvento } from 'evento-react'
 import { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
@@ -24,6 +25,7 @@ function Playground(props: Props) {
         editFileName,
         files,
         output,
+        rawImports,
         resetVFS,
         versionGeneratorRef,
         versionRef,
@@ -47,6 +49,10 @@ function Playground(props: Props) {
     ) => {
         editFileName(generatePayload(current, next))
     }, [])
+
+    const handleExportToCodeSandbox = useCallback(() => {
+        exportToCodeSandbox(files.fileList, rawImports, files.filesById)
+    }, [rawImports, files])
 
     const handleReloadPlayground = useCallback(() => {
         if(!confirm(`If you remoad this playground, all of your current changes will be lost.
@@ -77,10 +83,12 @@ function Playground(props: Props) {
 
         return () => clearTimeout(timeout)
     }, [files.filesById])
-
     return (
         <Page>
-            <Navbar onReloadPlayground={handleReloadPlayground} />
+            <Navbar
+                onExportToCodeSandbox={handleExportToCodeSandbox}
+                onReloadPlayground={handleReloadPlayground}
+            />
             <VerticalSplitPane
                 leftPaneChild={
                     <Editor

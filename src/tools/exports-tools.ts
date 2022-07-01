@@ -26,7 +26,7 @@ export interface RawImports {
     [key: string] : RawImport,
 }
 
-export function extractNameAndVersionFromRawImport(rawImport: string): string[] {
+function extractNameAndVersionFromRawImport(rawImport: string): string[] {
     const unpkgLess = rawImport.split('https://unpkg.com/')[1]
     const unpkgLessSplitted = unpkgLess.split('/')
     const rawName =
@@ -48,7 +48,7 @@ export function extractNameAndVersionFromRawImport(rawImport: string): string[] 
     return [name, version]
 }
 
-export function getLatestVersion(name: string): Promise<string[]> {
+function getLatestVersion(name: string): Promise<string[]> {
     return fetch(`https://unpkg.com/${name}`)
         .then(res =>
                 extractNameAndVersionFromRawImport(res.url)[1].length ?
@@ -94,7 +94,7 @@ function getCodeSandboxFilesTree(fileList: string[], vfs: VFS) : { [key: string]
     }, {})
 }
 
-export async function getCodeSandboxParameters(fileList: string[], rawImports: RawImports, vfs: VFS): Promise<string> {
+async function getCodeSandboxParameters(fileList: string[], rawImports: RawImports, vfs: VFS): Promise<string> {
     const packageJSON = await getPackageJSON(rawImports)
     const parameters: CodeSandboxFilesTree = {
         files: {
@@ -114,75 +114,30 @@ export async function getCodeSandboxParameters(fileList: string[], rawImports: R
         }
     }
 
-    console.log('parameters', JSON.stringify(parameters))
-
     return compressToBase64(JSON.stringify(parameters))
         .replace(/\+/g, '-') // Convert '+' to '-'
         .replace(/\//g, '_') // Convert '/' to '_'
         .replace(/=+$/, ''); // Remove ending '='
 }
 
-function getVersionedDependencies(rawImports: RawImports): any {
-    const rawImporters: any[] = Object.keys(rawImports)
-    // I have too, or else I will have "Argument of type 'string' is not assignable to parameter of type 'never'" down below in the reduce method
-    const { rawImportersFromVFS, rawImportersFromUNPKG } =
-        rawImporters.reduce((importersLists, rawImporter: string) => {
-            if (rawImporter.startsWith('a:')) {
-                importersLists.rawImportersFromVFS.push(rawImporter)
-                return importersLists
-            }
+async function getPackageJSON(rawImports: RawImports): Promise<string> {
+    const rawImportersFromVFS: string[] = []
+    const rawImportersFromUNPKG: string[] = []
 
-            if (rawImporter.startsWith('b:')) {
-                importersLists.rawImportersFromUNPKG.push(rawImporter)
-                return importersLists
-            }
+    for (const rawImporter in rawImports) {
+        if (rawImporter.startsWith('a:')) {
+            rawImportersFromVFS.push(rawImporter)
+        }
 
-            return importersLists
+        if (rawImporter.startsWith('b:')) {
+            rawImportersFromUNPKG.push(rawImporter)
+        }
+    }
 
-        }, { rawImportersFromVFS: [], rawImportersFromUNPKG: [] } as { rawImportersFromVFS: string[], rawImportersFromUNPKG: string[] })
-
-    const versionedImports = rawImportersFromVFS.reduce((acc: Record<string, string>, importer: string) => {
-        (rawImports[importer] as RawImport).imports.forEach(({ path }) => {
-            if (path.startsWith('a:')) {
-                return
-            }
-            
-            let [name, version] = extractNameAndVersionFromRawImport(path)
-            if (acc[name]) {
-                return
-            }
-
-            if(version) {
-                acc[name] = version
-                return
-            }
-
-            version = 'latest'
-
-            for (const imprt of rawImportersFromUNPKG) {
-                if (imprt.startsWith(`b:https://unpkg.com/${name}@`)) {
-                    console.log(imprt)
-                    version = extractNameAndVersionFromRawImport(imprt)[1]
-                    break
-                }
-            }
-
-            acc[name] = version
-        })
-
-        return acc
-    }, {} as Record<string, string>)
-
-    return versionedImports
-}
-
-export async function getPackageJSON(rawImports: RawImports): Promise<string> {
-    const rawImporters = Object.keys(rawImports).filter(imprt => imprt.startsWith('a:'))
-    const importeesNames: Array<string> = []
     const versionRequests: Array<Promise<string[]>> = []
 
     const rawImportees =
-        rawImporters.reduce((acc: { [key: string]: string }, rawImporter: string) => {
+        rawImportersFromVFS.reduce((acc: { [key: string]: string }, rawImporter: string) => {
             const importsURLs = rawImports[rawImporter].imports.map(imprt => {
                 if (imprt.path.startsWith('b:')) {
                     return imprt.path.substring(2)
@@ -190,20 +145,24 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
             }).filter(importURL => typeof importURL === 'string' && importURL !== undefined)
 
             importsURLs.forEach(imprt => {
-
                 if (!imprt) {
                     return
                 }
 
-                if (!importeesNames.includes(imprt)) {
-                    importeesNames.push(imprt)
-                }
-                const [name, version] = extractNameAndVersionFromRawImport(imprt)
+                let [name, version] = extractNameAndVersionFromRawImport(imprt)
 
-                if (!version.length && (acc[name] === undefined || acc[name].length <= 1)) {
+                for (const rawImporterFromUNPKG of rawImportersFromUNPKG) {
+                    if (rawImporterFromUNPKG.startsWith(`b:https://unpkg.com/${name}@`)) {
+                        version = extractNameAndVersionFromRawImport(rawImporterFromUNPKG)[1]
+                        break
+                    }
+                }
+
+                if (!version.length && !acc[name]) {
                     versionRequests.push(getLatestVersion(name))
                 }
-                acc[name] = "^" + version
+
+                acc[name] = version ? "^" + version : ''
             })
 
             return acc
@@ -211,7 +170,7 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
 
     const versionedImportees = await Promise.all(versionRequests).then(values => {
         return values.reduce((acc, val) => {
-            acc[val[0]] = "^" + val[1]
+            acc[val[0]] = val[1] === 'latest' ? val[1] : "^" + val[1]
             return acc
         }, rawImportees)
     })
@@ -234,28 +193,20 @@ export async function getPackageJSON(rawImports: RawImports): Promise<string> {
         "vite": "^2.9.12"
     }
 }`)
-    console.log(packageJSON)
     return packageJSON
 }
 
 export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
-    const versionedDependencies = getVersionedDependencies(rawImports)
-    console.log('versionedDependencies', versionedDependencies)
+    getCodeSandboxParameters(fileList, rawImports, vfs)
+        .then(parameters => {
+            const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener');
+
+            document.body.appendChild(a)
+            a.click();
+            a.remove();
+        })
 }
-
-// export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
-//     getCodeSandboxParameters(fileList, rawImports, vfs)
-//         .then(parameters => {
-//             const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
-//             console.log(url)
-//             const a = document.createElement('a');
-//             a.setAttribute('href', url);
-//             a.setAttribute('target', '_blank');
-//             a.setAttribute('rel', 'noopener');
-
-//             document.body.appendChild(a)
-//             a.click();
-//             console.log('clicked')
-//             a.remove();
-//         })
-// }

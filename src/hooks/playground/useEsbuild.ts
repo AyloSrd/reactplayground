@@ -2,7 +2,7 @@ import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
 import { initialLoader } from '@/tools/iframe-tools'
-import { getPackageJSON, RawImports, getCodeSandboxParameters, exportToCodeSandbox } from '@/tools/exports-tools'
+import { RawImports } from '@/tools/exports-tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -30,15 +30,12 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [rawImports, setRawImports] = useState<RawImports>({})
 
     const {
-        addDirectImport,
         addFile,
-        addVersionedImport,
         deleteFile,
         editFileContent,
         editFileName,
         fileList,
         vfs,
-        resetImports,
         resetVFS,
     } = useVFS(vfsFromUrl)
 
@@ -52,7 +49,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             name: 'unpkg-path-plugin',
             setup(build: esbuild.PluginBuild) {
                 build.onResolve({ filter: /.*/ }, async (args: any) => {
-                    addVersionedImport(args.resolveDir.substring(1))
 
                     if (args.path === ENTRY_POINT_JSX) {
                         return { path: args.path, namespace: 'a' }
@@ -80,10 +76,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                             'https://unpkg.com' + args.resolveDir + '/'
                         ).href,
                         }
-                    }
-
-                    if (typeof vfs[args.importer] === 'string') {
-                        addDirectImport(args.path.split('/')[0])
                     }
 
                     return {
@@ -136,7 +128,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         ) {
             return
         }
-        resetImports()
         try {
             const bundle = await esbuildRef.current.build({
                 entryPoints: [ENTRY_POINT_JSX],
@@ -152,7 +143,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             if (prevVersion < versionRef.current) {
                 return
             }
-            console.log(_imports)
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
             setRawImports(_imports)
@@ -166,10 +156,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         }
 
     }, [])
-
-    useEffect(() => {
-        exportToCodeSandbox(fileList, rawImports, vfs)
-    }, [fileList, rawImports, vfs])
 
     useEffect(() => {
         esbuildRef.current.initialize({
@@ -194,6 +180,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             code: typeof bundleJSXText === 'string' ? bundleJSXText : null,
             error: typeof bundleJSXText === 'string' ? null : bundleErr,
         } as OutputType,
+        rawImports,
         resetVFS,
         versionGeneratorRef,
         versionRef,
