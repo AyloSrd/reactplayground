@@ -70,6 +70,7 @@ const Nav = styled.nav`
 const ButtonContainer = styled.div`
     display: flex;
     gap: 10px;
+    margin-right: 20px;
 `
 
 const BtnContent = styled.div`
