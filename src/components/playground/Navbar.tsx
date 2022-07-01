@@ -1,6 +1,7 @@
 import ReactPlaygroundLogoSVG from '@/components/esthetic/icons/ReactPlaygroundLogoSVG'
 import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
+import CodeSandboxLogoSVG from '@/components/esthetic/icons/CodeSanboxLogoSVG'
 import useURLStorage from '@/hooks/playground/useURLStorage'
 import { colors } from '@/tools/style-tools'
 import { memo, useCallback } from 'react'
@@ -8,12 +9,17 @@ import styled from 'styled-components'
 import { useCreateEvento } from 'evento-react'
 
 interface Props {
+    onExportToCodeSandbox: () => void,
     onReloadPlayground: () => void,
 }
 
 const Navbar = (props: Props) => {
     const evento = useCreateEvento(props)
     const { copyURLToClipBoard } = useURLStorage()
+
+    const handleExportToCodeSandboxClick = useCallback(() => {
+        evento('exportToCodeSandbox')
+    }, [props])
 
     const handleReloadClick = useCallback(() => {
         evento('reloadPlayground')
@@ -29,12 +35,22 @@ const Navbar = (props: Props) => {
                 <ReactPlaygroundLogoSVG height={"30px"} width={"100%"}/>
                 <Title>React Playground</Title>
             </TitleContainer>
-            <Button onClick={handleShareClick}>
-                <BtnContent>
-                    <ShareSVG height={"20px"} width={"20px"}/>
-                    <span>get shareable link</span>
-                </BtnContent>
-            </Button>
+            <ButtonContainer>
+                <div title="Export to CodeSandbox">
+                    <Button onClick={handleExportToCodeSandboxClick}>
+                        <BtnContent>
+                            <CodeSandboxLogoSVG height={"20px"} width={"20px"}/>
+                        </BtnContent>
+                    </Button>
+                </div>
+                <div title="Get shareable link">
+                    <Button onClick={handleShareClick}>
+                        <BtnContent>
+                            <ShareSVG height={"25px"} width={"25px"}/>
+                        </BtnContent>
+                    </Button>
+                </div>
+            </ButtonContainer>
         </Nav>
     )
 }
@@ -51,13 +67,12 @@ const Nav = styled.nav`
     padding: 0 10px;
 `
 
-const BtnContent = styled.div`
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 5px;
-    place-content: center;
-    color: ${colors.$silver200};
+const ButtonContainer = styled.div`
+    display: flex;
+    gap: 10px;
+`
 
+const BtnContent = styled.div`
     &:hover {
         color: ${colors.$silver100};
     }

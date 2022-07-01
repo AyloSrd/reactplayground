@@ -4,12 +4,9 @@ import { useCallback, useReducer } from 'react'
 
 enum ActionKind {
     ADD_FILE = 'ADD_FILE',
-    ADD_DIRECT_IMPORT = 'ADD_DIRECT_IMPORT',
-    ADD_VERSIONED_IMPORT = 'VERSIONED_IMPORTS',
     DELETE_FILE = 'DELETE_FILE',
     EDIT_FILE_CONTENT = ' EDIT_FILE_CONTENT',
     EDIT_FILE_NAME = 'EDIT_FILE_NAME',
-    RESET_IMPORTS = 'RESET_IMPORTS ',
     RESET_VFS = 'RESET_VFS'
 }
 
@@ -26,15 +23,11 @@ export interface VFS {
 }
 
 interface State {
-    directImports: string[],
     fileList: string[],
-    versionedImports: {
-        [key: string]: string
-    },
     vfs: VFS,
 }
 
-export const ENTRY_POINT_JSX = 'App.js'
+export const ENTRY_POINT_JSX = 'App.jsx'
 
 const AppDefaultContent = `
 import React, { useState } from 'react'
@@ -56,9 +49,7 @@ root.render(<App />)
 `.trim()
 
 const defaultState: State = {
-    directImports: [],
     fileList: [ENTRY_POINT_JSX],
-    versionedImports: {},
     vfs : {
         [ENTRY_POINT_JSX]: AppDefaultContent
     }
@@ -105,21 +96,6 @@ function reducer(state: State, action: Action): State {
                     ...state.vfs,
                     [action.payload.target]: action.payload.content
                 }
-            }
-
-        case ActionKind.ADD_DIRECT_IMPORT :
-            const directImports = [...new Set([...state.directImports, action.payload.target])]
-            return {
-                ...state,
-                directImports
-            }
-
-        case ActionKind.ADD_VERSIONED_IMPORT :
-            const versionedImports = {...state.versionedImports}
-            versionedImports[action.payload.target] = action.payload.content
-            return {
-                ...state,
-                versionedImports
             }
 
         case ActionKind.DELETE_FILE :
@@ -169,13 +145,6 @@ function reducer(state: State, action: Action): State {
                 vfs: editedNameVfs
             }
 
-        case ActionKind.RESET_IMPORTS :
-            return {
-                ...state,
-                directImports: [],
-                versionedImports: {},
-            }
-
         case ActionKind.RESET_VFS :
             return defaultState
 
@@ -185,47 +154,12 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function useVFS(vfsFromUrl: VFS | null) {
-    const [{ vfs, fileList, directImports, versionedImports }, dispatch] = useReducer(reducer, vfsFromUrl, init)
+    const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
 
     const addFile = useCallback((payload: Action['payload']) => {
         dispatch({
             type: ActionKind.ADD_FILE,
             payload
-        })
-    }, [])
-
-    const addDirectImport = useCallback((importName: string) => {
-        const versioned = getVersion(importName)
-
-        if (!versioned) {
-            return dispatch({
-                type: ActionKind.ADD_DIRECT_IMPORT,
-                payload: generatePayload(importName)
-            })
-        }
-
-        const { lib, version } = versioned
-        dispatch({
-            type: ActionKind.ADD_DIRECT_IMPORT,
-            payload: generatePayload(lib)
-        })
-        dispatch ({
-            type: ActionKind.ADD_VERSIONED_IMPORT,
-            payload:generatePayload(lib, version)
-        })
-    }, [])
-
-    const addVersionedImport = useCallback((importName: string) => {
-        const versioned = getVersion(importName)
-
-        if (!versioned) {
-            return
-        }
-
-        const { lib, version } = versioned
-        dispatch ({
-            type: ActionKind.ADD_VERSIONED_IMPORT,
-            payload: generatePayload(lib, version)
         })
     }, [])
 
@@ -250,13 +184,6 @@ export default function useVFS(vfsFromUrl: VFS | null) {
         })
     }, [])
 
-    const resetImports = useCallback(() => {
-        dispatch({
-            type: ActionKind.RESET_IMPORTS,
-            payload: generatePayload('')
-        })
-    }, [])
-
     const resetVFS = useCallback(() => {
         dispatch({
             type: ActionKind.RESET_VFS,
@@ -265,14 +192,11 @@ export default function useVFS(vfsFromUrl: VFS | null) {
     }, [])
 
     return {
-        addDirectImport,
         addFile,
-        addVersionedImport,
         deleteFile,
         editFileContent,
         editFileName,
         fileList,
-        resetImports,
         resetVFS,
         vfs,
     }

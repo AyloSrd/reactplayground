@@ -28,8 +28,7 @@ function TabInput(props: Props) {
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
         const suffixedTabName = `${tempName}.${type}`
-        console.log('suffixedTabName !== `${tab}.${type}`', suffixedTabName !== `${tab}.${type}`)
-        console.log('existingTabNames.includes(suffixedTabName)', existingTabNames.includes(suffixedTabName))
+
         if (
             suffixedTabName === ENTRY_POINT_JSX
             || !tempName.length

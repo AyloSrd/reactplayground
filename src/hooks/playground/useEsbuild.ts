@@ -2,6 +2,7 @@ import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString } from '@/tools/esbuild-tools'
 import { countGen } from '@/tools/editor.tools'
 import { initialLoader } from '@/tools/iframe-tools'
+import { RawImports } from '@/tools/exports-tools'
 import * as esbuild from 'esbuild-wasm'
 import axios from 'axios'
 import localforage from 'localforage'
@@ -26,17 +27,15 @@ const fileCache = localforage.createInstance({
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [bundleJSXText, setBundleJSXText] = useState<null | string>(initialLoader)
     const [bundleErr, setBundleErr] = useState<null | string>(null)
+    const [rawImports, setRawImports] = useState<RawImports>({})
 
     const {
-        addDirectImport,
         addFile,
-        addVersionedImport,
         deleteFile,
         editFileContent,
         editFileName,
         fileList,
         vfs,
-        resetImports,
         resetVFS,
     } = useVFS(vfsFromUrl)
 
@@ -50,7 +49,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             name: 'unpkg-path-plugin',
             setup(build: esbuild.PluginBuild) {
                 build.onResolve({ filter: /.*/ }, async (args: any) => {
-                    addVersionedImport(args.resolveDir.substring(1))
 
                     if (args.path === ENTRY_POINT_JSX) {
                         return { path: args.path, namespace: 'a' }
@@ -63,16 +61,16 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                         }
                     }
 
-                    if (args.path.startsWith('./') && vfs[`${args.path.substring(2)}.js`]) {
+                    if (args.path.startsWith('./') && vfs[`${args.path.substring(2)}.jsx`]) {
                         return {
                             namespace: 'a',
-                            path: `${args.path.substring(2)}.js`
+                            path: `${args.path.substring(2)}.jsx`
                         }
                     }
 
                     if (args.path.includes('./') || args.path.includes('../')) {
                         return {
-                        namespace: 'a',
+                        namespace: 'b',
                         path: new URL(
                             args.path,
                             'https://unpkg.com' + args.resolveDir + '/'
@@ -80,12 +78,8 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                         }
                     }
 
-                    if (typeof vfs[args.importer] === 'string') {
-                        addDirectImport(args.path.split('/')[0])
-                    }
-
                     return {
-                        namespace: 'a',
+                        namespace: 'b',
                         path: `https://unpkg.com/${args.path}`,
                     }
                 })
@@ -134,24 +128,24 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
         ) {
             return
         }
-        resetImports()
         try {
             const bundle = await esbuildRef.current.build({
                 entryPoints: [ENTRY_POINT_JSX],
                 bundle: true,
+                metafile: true,
                 write: false,
                 plugins: [unpkgPathPlugin(vfs)],
                 // @ts-ignore, this is necessary because vite will automatically escape and replace the string "process.env.NODE_ENV"
                 define: window.defineHack,
-              })
+            })
             const bundleJSX = bundle?.outputFiles?.[0]?.text
-
+            const _imports = bundle?.metafile?.inputs
             if (prevVersion < versionRef.current) {
                 return
             }
-
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
+            setRawImports(_imports)
         } catch(err) {
             if (prevVersion < versionRef.current) {
                 return
@@ -186,6 +180,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             code: typeof bundleJSXText === 'string' ? bundleJSXText : null,
             error: typeof bundleJSXText === 'string' ? null : bundleErr,
         } as OutputType,
+        rawImports,
         resetVFS,
         versionGeneratorRef,
         versionRef,
