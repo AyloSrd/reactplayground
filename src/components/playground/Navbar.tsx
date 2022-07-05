@@ -52,7 +52,7 @@ const Navbar = (props: Props) => {
                         </BtnContent>
                     </Button>
                 </div>
-                <div>
+                <div title="Report bug or issue">
                     <Button>
                         <Anchor>
                             <BtnContent>
