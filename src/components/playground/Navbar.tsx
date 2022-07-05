@@ -54,7 +54,10 @@ const Navbar = (props: Props) => {
                 </div>
                 <div title="Report bug or issue">
                     <Button>
-                        <Anchor>
+                        <Anchor
+                            href="https://github.com/AyloSrd/reactplayground/issues"
+                            target="_blank"
+                        >
                             <BtnContent>
                                 <BugSVG height={"30px"} width={"30px"}/>
                             </BtnContent>
