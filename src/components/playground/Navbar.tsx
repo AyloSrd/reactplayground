@@ -1,4 +1,6 @@
 import ReactPlaygroundLogoSVG from '@/components/esthetic/icons/ReactPlaygroundLogoSVG'
+import Anchor from '@/components/esthetic/Anchor'
+import BugSVG from '@/components/esthetic/icons/BugSVG'
 import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import CodeSandboxLogoSVG from '@/components/esthetic/icons/CodeSanboxLogoSVG'
@@ -48,6 +50,18 @@ const Navbar = (props: Props) => {
                         <BtnContent>
                             <ShareSVG height={"25px"} width={"25px"}/>
                         </BtnContent>
+                    </Button>
+                </div>
+                <div title="Report bug or issue">
+                    <Button>
+                        <Anchor
+                            href="https://github.com/AyloSrd/reactplayground/issues"
+                            target="_blank"
+                        >
+                            <BtnContent>
+                                <BugSVG height={"30px"} width={"30px"}/>
+                            </BtnContent>
+                        </Anchor>
                     </Button>
                 </div>
             </ButtonContainer>
