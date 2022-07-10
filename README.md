@@ -14,14 +14,15 @@ Here you can :
 - Only JS/JSX third party libraries can be imported (no CSS). However libraries like styled-components work.
 
 ## Technologies used
-- React
-- styled-components
-- evento-react, for Component events and less prop-drilling
-- lz-string, to compress the project code for the shareble URL
-- vite, for scaffolding
-- CodeMirror, for the online editor
-- *esbuild wasm*, to quickly transpile and bundle on the browser
+- [ReactJS](https://reactjs.org/)
+- [styled-components](https://styled-components.com/)
+- [evento-react](https://www.npmjs.com/package/evento-react/v/0.2.1), for Component events and less prop-drilling
+- [lz-string](https://pieroxy.net/blog/pages/lz-string/index.html), to compress the project code for the shareble URL
+- [Vite](https://vitejs.dev/), for scaffolding
+- [CodeMirror](https://codemirror.net/), for the online editor
+- [*esbuild wasm*](https://www.npmjs.com/package/esbuild-wasm), to quickly transpile and bundle on the browser
 
 ## Credits
 React Playground inspired by [SvelteJS REPL](https://svelte.dev/repl/hello-world), [SolidJS Playground](https://playground.solidjs.com/) and [VueJS Playground](https://sfc.vuejs.org/).
+
 [This Udemy course](https://www.udemy.com/course/react-and-typescript-build-a-portfolio-project/) by Stephen Grider, was essential to learn how to work with bundlers in the browser
