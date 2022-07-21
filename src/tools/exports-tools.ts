@@ -120,7 +120,7 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
         .replace(/=+$/, '') // Remove ending '='
 }
 
-async function getPackageJSON(rawImports: RawImports): Promise<string> {
+async function getDependencies(rawImports: RawImports): Promise<{ [key: string]: string }> {
     const rawImportersFromVFS: string[] = []
     const rawImportersFromUNPKG: string[] = []
 
@@ -168,14 +168,20 @@ async function getPackageJSON(rawImports: RawImports): Promise<string> {
             return acc
         }, {})
 
-    const versionedImportees = await Promise.all(versionRequests).then(values => {
+    const dependencies = await Promise.all(versionRequests).then(values => {
         return values.reduce((acc, val) => {
             acc[val[0]] = val[1] === 'latest' ? val[1] : "^" + val[1]
             return acc
         }, rawImportees)
     })
+    
+    return dependencies
+}
 
-    const dependencies = JSON.stringify(versionedImportees)
+async function getPackageJSON(rawImports: RawImports): Promise<string> {
+    const depsObj = await getDependencies(rawImports)
+
+    const dependencies = JSON.stringify(depsObj)
 
     const packageJSON =  dedent(`{
     "name": "vite-react-starter",
@@ -211,7 +217,10 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
         })
 }
 
-export function exportToStackBlitz() {
-    const StackblitzSDK = import('@stackblitz/sdk')
-    console.log(StackblitzSDK)
+export async function exportToStackBlitz() {
+    const { default: StackblitzSDK } = await import('@stackblitz/sdk')
+
+    console.log('StackblitzSDK', StackblitzSDK)
 }
+
+exportToStackBlitz()
