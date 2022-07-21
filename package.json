@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stackblitz/sdk": "^1.8.0",
     "axios": "^0.26.1",
     "code-mirror-themes": "^1.0.0",
     "codemirror": "^5.65.2",

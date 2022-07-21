@@ -210,3 +210,8 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
             a.remove()
         })
 }
+
+export function exportToStackBlitz() {
+    const StackblitzSDK = import('@stackblitz/sdk')
+    console.log(StackblitzSDK)
+}
