@@ -4,7 +4,7 @@ import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { VFS } from '@/hooks/playground/useVFS'
-import { colors } from '@/tools/style-tools'
+import { colors, fixedSizes } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { exportToCodeSandbox } from '@/tools/exports-tools'
 import { useCreateEvento } from 'evento-react'
@@ -110,7 +110,7 @@ function Playground(props: Props) {
 }
 
 const Page = styled.div`
-    height: calc(100vh - 45px);
+    height: calc(100vh - ${fixedSizes.navbarHeight});
     width: 100vw;
     max-height: 100%;
     max-width: 100%;

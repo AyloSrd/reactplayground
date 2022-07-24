@@ -4,7 +4,7 @@ import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { useCreateEvento } from 'evento-react'
 import { memo, useState, useCallback, useEffect } from 'react'
-import { colors } from '@/tools/style-tools'
+import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
 
 interface Props {
@@ -84,7 +84,7 @@ const Container = styled.section`
     max-height: 100%;
     flex-grow: 1;
     display: grid;
-    grid-template-rows: 45px 1fr;
+    grid-template-rows: ${fixedSizes.editorTabsContainerHeight} 1fr;
 `
 
 const Scroller = styled.div`
