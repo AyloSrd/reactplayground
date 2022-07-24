@@ -21,6 +21,11 @@ export const colors = {
 // CE61FB => viola
 // FB8161 => coomplementare react
 
+export const fixedSizes: Record<string, string> = {
+    navbarHeight: '50px',
+    editorTabsContainerHeight: '40px',
+}
+
 export const generalBorderStyle = `1px solid ${colors.$silver300}`
 
 export const responsiveBreakpoint = 540;

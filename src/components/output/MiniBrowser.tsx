@@ -3,7 +3,7 @@ import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
 import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
-import { colors, transitionDuration } from '@/tools/style-tools'
+import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -93,7 +93,7 @@ const Container = styled.section`
     height: 100%;
     flex-grow: 1;
     display: grid;
-    grid-template-rows: 45px 1fr auto;
+    grid-template-rows: ${fixedSizes.editorTabsContainerHeight} 1fr auto;
 `
 
 const Nav = styled.nav`
@@ -101,6 +101,7 @@ const Nav = styled.nav`
     display: flex;
     align-items: center;
     padding-left: 10px;
+    border-bottom: ${generalBorderStyle};
 `
 
 export default memo(MiniBrowser)

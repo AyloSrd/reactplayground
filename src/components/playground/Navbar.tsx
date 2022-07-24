@@ -5,7 +5,7 @@ import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import CodeSandboxLogoSVG from '@/components/esthetic/icons/CodeSanboxLogoSVG'
 import useURLStorage from '@/hooks/playground/useURLStorage'
-import { colors } from '@/tools/style-tools'
+import { colors, fixedSizes, generalBorderStyle } from '@/tools/style-tools'
 import { memo, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCreateEvento } from 'evento-react'
@@ -70,15 +70,16 @@ const Navbar = (props: Props) => {
 }
 
 const Nav = styled.nav`
-    height: 45px;
+    height: ${fixedSizes.navbarHeight};
     width: 100vw;
     max-width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: ${colors.$bgNav};
+    background-color: ${colors.$bg};
     padding: 0 10px;
+    border-bottom: ${generalBorderStyle};
 `
 
 const ButtonContainer = styled.div`
@@ -104,6 +105,7 @@ const TitleContainer = styled.div`
 const Title = styled.h1`
     display: inline-block;
     margin: 0;
+    font-weight: normal;
 `
 
 export default memo(Navbar)

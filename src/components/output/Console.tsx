@@ -1,6 +1,6 @@
 import Button from '@/components/esthetic/Button'
 import ExpandSVG from '@/components/esthetic/icons/ExpandSVG'
-import { colors, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
+import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -121,9 +121,10 @@ const BtnContent = styled.span`
 `
 
 const Nav = styled.nav`
+    height: ${fixedSizes.editorTabsContainerHeight};
     display: flex;
     justify-content: space-between;
-    padding: 10px 15px;
+    padding: 0 10px;
 `
 
 const UnorderedList = styled.ul`
