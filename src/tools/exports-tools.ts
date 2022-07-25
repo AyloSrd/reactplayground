@@ -234,12 +234,12 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
 function getStackBlitzFiles(fileList: string[], vfs: VFS): Record<string, string> {
     return fileList.reduce((acc: { [key: string] : string}, val: string) => {
         if (val === ENTRY_POINT_JSX) {
-            acc['./index.js'] = vfs[val]
+            acc['index.js'] = vfs[val]
         } else {
-            acc[`./${val}`] = vfs[val]
+            acc[`${val}`] = vfs[val]
         }
         return acc
-    }, {})
+    }, { ['index.html']: htmlFileStackBlitz })
 }
 
 async function getStackblitzProjectPayload(fileList: string[], rawImports: RawImports, vfs: VFS) {
@@ -254,7 +254,9 @@ async function getStackblitzProjectPayload(fileList: string[], rawImports: RawIm
 
 export async function exportToStackblitz(fileList: string[], rawImports: RawImports, vfs: VFS) {
     const { default: StackblitzSDK } = await import('@stackblitz/sdk')
+    const projectPayload = await getStackblitzProjectPayload(fileList, rawImports, vfs)
 
+    StackblitzSDK.openProject(projectPayload)
     console.log('StackblitzSDK', StackblitzSDK)
     console.log('files', await getStackblitzProjectPayload(fileList, rawImports, vfs))
 
