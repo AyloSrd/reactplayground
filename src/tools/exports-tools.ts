@@ -255,9 +255,6 @@ async function getStackblitzProjectPayload(fileList: string[], rawImports: RawIm
 export async function exportToStackblitz(fileList: string[], rawImports: RawImports, vfs: VFS) {
     const { default: StackblitzSDK } = await import('@stackblitz/sdk')
     const projectPayload = await getStackblitzProjectPayload(fileList, rawImports, vfs)
-
+    // @ts-ignore, pkg imported dinaically
     StackblitzSDK.openProject(projectPayload)
-    console.log('StackblitzSDK', StackblitzSDK)
-    console.log('files', await getStackblitzProjectPayload(fileList, rawImports, vfs))
-
 }
