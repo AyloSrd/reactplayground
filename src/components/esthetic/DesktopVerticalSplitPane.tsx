@@ -1,7 +1,7 @@
 import ThreeVerticalDotsSVG from '@/components/esthetic/icons/ThreeVerticalDotsSVG'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import useWindowSize from '@/hooks/playground/useWindowSize'
-import { colors } from '@/tools/style-tools'
+import { colors, generalBorderStyle } from '@/tools/style-tools'
 import React, { memo, useEffect, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -266,9 +266,11 @@ const Splitter = styled.div`
     height: 100%;
     display: grid;
     place-content: center;
-    background-color: ${colors.$bgNav};
+    background-color: ${colors.$bg};
     cursor: col-resize;
     color: ${colors.$silver200};
+    border-left: ${generalBorderStyle};
+    border-right: ${generalBorderStyle};
 
     &:hover, &.in-use {
         background-color: ${colors.$purple};

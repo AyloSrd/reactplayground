@@ -5,6 +5,7 @@ import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { generateNewTabName } from '@/tools/editor.tools'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useState } from "react"
+import { generalBorderStyle } from '@/tools/style-tools'
 import styled from 'styled-components'
 
 interface Props {
@@ -110,6 +111,7 @@ const Nav = styled.nav`
     overflow-x: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    border-bottom: ${generalBorderStyle};
 
     &::-webkit-scrollbar {
         display: none;
