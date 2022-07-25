@@ -89,7 +89,7 @@ const Container = styled.section`
 
 const Scroller = styled.div`
     overflow-y: auto;
-    background-color: ${colors.$bgEditor};
+    background-color: ${colors.$bg};
 `
 
 export default memo(Editor)

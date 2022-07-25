@@ -12,6 +12,7 @@ import { useCreateEvento } from 'evento-react'
 
 interface Props {
     onExportToCodeSandbox: () => void,
+    onExportToStackblitz: () => void,
     onReloadPlayground: () => void,
 }
 
@@ -21,6 +22,10 @@ const Navbar = (props: Props) => {
 
     const handleExportToCodeSandboxClick = useCallback(() => {
         evento('exportToCodeSandbox')
+    }, [props])
+
+    const handleExportToStackblitz = useCallback(() => {
+        evento('exportToStackblitz')
     }, [props])
 
     const handleReloadClick = useCallback(() => {
@@ -38,6 +43,13 @@ const Navbar = (props: Props) => {
                 <Title>React Playground</Title>
             </TitleContainer>
             <ButtonContainer>
+                <div title="Export to Stackblitz">
+                    <Button onClick={handleExportToStackblitz}>
+                        <BtnContent>
+                            <CodeSandboxLogoSVG height={"20px"} width={"20px"}/>
+                        </BtnContent>
+                    </Button>
+                </div>
                 <div title="Export to CodeSandbox">
                     <Button onClick={handleExportToCodeSandboxClick}>
                         <BtnContent>

@@ -74,6 +74,20 @@ const htmlFileCodeSandBox = dedent`
 </html>
 `
 
+const htmlFileStackBlitz = dedent`
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+`
+
 const viteConfig = dedent`
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -174,7 +188,7 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
             return acc
         }, rawImportees)
     })
-    
+
     return dependencies
 }
 
@@ -217,10 +231,31 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
         })
 }
 
-export async function exportToStackBlitz() {
+function getStackBlitzFiles(fileList: string[], vfs: VFS): Record<string, string> {
+    return fileList.reduce((acc: { [key: string] : string}, val: string) => {
+        if (val === ENTRY_POINT_JSX) {
+            acc['./index.js'] = vfs[val]
+        } else {
+            acc[`./${val}`] = vfs[val]
+        }
+        return acc
+    }, {})
+}
+
+async function getStackblitzProjectPayload(fileList: string[], rawImports: RawImports, vfs: VFS) {
+    return {
+        files: getStackBlitzFiles(fileList, vfs),
+        title: 'React Playground',
+        description: 'Your React Playground with CRA on Stackblitz',
+        template: 'create-react-app',
+        dependencies: await getDependencies(rawImports),
+      }
+}
+
+export async function exportToStackblitz(fileList: string[], rawImports: RawImports, vfs: VFS) {
     const { default: StackblitzSDK } = await import('@stackblitz/sdk')
 
     console.log('StackblitzSDK', StackblitzSDK)
-}
+    console.log('files', await getStackblitzProjectPayload(fileList, rawImports, vfs))
 
-exportToStackBlitz()
+}
