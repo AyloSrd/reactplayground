@@ -229,20 +229,9 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
         })
 }
 
-function getStackBlitzFiles(fileList: string[], vfs: VFS): Record<string, string> {
-    return fileList.reduce((acc: { [key: string] : string}, val: string) => {
-        if (val === ENTRY_POINT_JSX) {
-            acc['index.js'] = vfs[val]
-        } else {
-            acc[`${val}`] = vfs[val]
-        }
-        return acc
-    }, { ['index.html']: htmlFileStackBlitz })
-}
-
 async function getStackblitzProjectPayload(fileList: string[], rawImports: RawImports, vfs: VFS) {
     return {
-        files: getStackBlitzFiles(fileList, vfs),
+        files: { ...vfs, ['index.html']: htmlFileStackBlitz },
         title: 'React Playground',
         description: 'Your React Playground with CRA on Stackblitz',
         template: 'create-react-app',

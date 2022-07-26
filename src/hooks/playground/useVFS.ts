@@ -1,4 +1,3 @@
-import { getVersion, libVersionRegex } from '@/tools/esbuild-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { useCallback, useReducer } from 'react'
 
@@ -27,31 +26,44 @@ interface State {
     vfs: VFS,
 }
 
-export const ENTRY_POINT_JSX = 'index.jsx'
+export const ENTRY_POINT_JSX = 'index.js'
+
+const indexDefaultContent = `
+import App from './App.jsx'
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+
+const container = document.getElementById('root')
+const root = createRoot(container)
+root.render(React.createElement(App))
+`.trim()
 
 const AppDefaultContent = `
 import React, { useState } from 'react'
-import { createRoot } from 'react-dom/client'
+import styled from 'styled-components'
 
 const App = () => {
   const [count, setCount] = useState(0)
 
   return (
-    <button onClick={() => setCount(count + 1)}>
+    <Button onClick={() => setCount(count + 1)}>
         {count}
-    </button>
+    </Button>
   )
 }
 
-const container = document.getElementById('root')
-const root = createRoot(container)
-root.render(<App />)
+const Button = styled.button\`
+  font-size: 2rem;
+\`
+
+export default App
 `.trim()
 
 const defaultState: State = {
-    fileList: [ENTRY_POINT_JSX],
+    fileList: [ENTRY_POINT_JSX, 'App.jsx'],
     vfs : {
-        [ENTRY_POINT_JSX]: AppDefaultContent
+        [ENTRY_POINT_JSX]: indexDefaultContent,
+        'App.jsx': AppDefaultContent,
     }
 }
 
