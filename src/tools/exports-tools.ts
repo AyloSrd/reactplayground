@@ -193,27 +193,25 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
 }
 
 async function getPackageJSON(rawImports: RawImports): Promise<string> {
-    const depsObj = await getDependencies(rawImports)
+    const dependencies = await getDependencies(rawImports)
 
-    const dependencies = JSON.stringify(depsObj)
-
-    const packageJSON =  dedent(`{
-    "name": "vite-react-starter",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    },
-    "dependencies": ${dependencies},
-    "devDependencies": {
-        "@vitejs/plugin-react": "^1.3.2",
-        "vite": "^2.9.12"
+    const packageJSON = {
+        "name": "vite-react-starter",
+        "private": true,
+        "version": "0.0.0",
+        "type": "module",
+        "scripts": {
+            "dev": "vite",
+            "build": "vite build",
+            "preview": "vite preview"
+        },
+        "dependencies": dependencies,
+        "devDependencies": {
+            "@vitejs/plugin-react": "^1.3.2",
+            "vite": "^2.9.12"
+        }
     }
-}`)
-    return packageJSON
+    return JSON.stringify(packageJSON, null, 4)
 }
 
 export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
