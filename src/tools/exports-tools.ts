@@ -74,6 +74,20 @@ const htmlFileCodeSandBox = dedent`
 </html>
 `
 
+const htmlFileStackBlitz = dedent`
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
+`
+
 const viteConfig = dedent`
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -120,7 +134,7 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
         .replace(/=+$/, '') // Remove ending '='
 }
 
-async function getPackageJSON(rawImports: RawImports): Promise<string> {
+async function getDependencies(rawImports: RawImports): Promise<{ [key: string]: string }> {
     const rawImportersFromVFS: string[] = []
     const rawImportersFromUNPKG: string[] = []
 
@@ -168,32 +182,36 @@ async function getPackageJSON(rawImports: RawImports): Promise<string> {
             return acc
         }, {})
 
-    const versionedImportees = await Promise.all(versionRequests).then(values => {
+    const dependencies = await Promise.all(versionRequests).then(values => {
         return values.reduce((acc, val) => {
             acc[val[0]] = val[1] === 'latest' ? val[1] : "^" + val[1]
             return acc
         }, rawImportees)
     })
 
-    const dependencies = JSON.stringify(versionedImportees)
+    return dependencies
+}
 
-    const packageJSON =  dedent(`{
-    "name": "vite-react-starter",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    },
-    "dependencies": ${dependencies},
-    "devDependencies": {
-        "@vitejs/plugin-react": "^1.3.2",
-        "vite": "^2.9.12"
+async function getPackageJSON(rawImports: RawImports): Promise<string> {
+    const dependencies = await getDependencies(rawImports)
+
+    const packageJSON = {
+        "name": "vite-react-starter",
+        "private": true,
+        "version": "0.0.0",
+        "type": "module",
+        "scripts": {
+            "dev": "vite",
+            "build": "vite build",
+            "preview": "vite preview"
+        },
+        "dependencies": dependencies,
+        "devDependencies": {
+            "@vitejs/plugin-react": "^1.3.2",
+            "vite": "^2.9.12"
+        }
     }
-}`)
-    return packageJSON
+    return JSON.stringify(packageJSON, null, 4)
 }
 
 export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, vfs: VFS): void {
@@ -209,4 +227,32 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
             a.click()
             a.remove()
         })
+}
+
+function getStackBlitzFiles(fileList: string[], vfs: VFS): Record<string, string> {
+    return fileList.reduce((acc: { [key: string] : string}, val: string) => {
+        if (val === ENTRY_POINT_JSX) {
+            acc['index.js'] = vfs[val]
+        } else {
+            acc[`${val}`] = vfs[val]
+        }
+        return acc
+    }, { ['index.html']: htmlFileStackBlitz })
+}
+
+async function getStackblitzProjectPayload(fileList: string[], rawImports: RawImports, vfs: VFS) {
+    return {
+        files: getStackBlitzFiles(fileList, vfs),
+        title: 'React Playground',
+        description: 'Your React Playground with CRA on Stackblitz',
+        template: 'create-react-app',
+        dependencies: await getDependencies(rawImports),
+      }
+}
+
+export async function exportToStackblitz(fileList: string[], rawImports: RawImports, vfs: VFS) {
+    const { default: StackblitzSDK } = await import('@stackblitz/sdk')
+    const projectPayload = await getStackblitzProjectPayload(fileList, rawImports, vfs)
+    // @ts-ignore, pkg imported dinamically
+    StackblitzSDK.openProject(projectPayload)
 }
