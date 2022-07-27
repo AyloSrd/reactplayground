@@ -1,4 +1,6 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
+import JavaScripLogoSVG from '@/components/esthetic/icons/JavaScripLogoSVG'
+import ReactLogoSVG from '@/components/esthetic/icons/ReactLogoSVG'
 import DeleteButton from '@/components/esthetic/DeleteButton'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback } from 'react'
@@ -16,6 +18,7 @@ interface Props {
 function Tab(props: Props) {
     const { currentTab, tab } = props
 
+    const fileFormat = tab.split('.')[1]
     const isEntryPoint = tab === ENTRY_POINT_JSX
     const tabClassNames = [
         ...(isEntryPoint ? ['is-entry-point'] : []),
@@ -45,6 +48,16 @@ function Tab(props: Props) {
     return (
         <TabContainer className={makeClassName(tabClassNames)}>
             <Pointer  onClick={handleTabClick}>
+                <FormatIcon>
+                    {
+                        fileFormat === 'js' ?
+                            <JavaScripLogoSVG height="12px" width='12px' />
+                        : fileFormat === 'jsx' ?
+                            <ReactLogoSVG height="22px" width='25px' />
+                        :
+                            null
+                    }
+                </FormatIcon>
                 <span onDoubleClick={handleDoubleClick}>
                     {tab}
                 </span>
@@ -75,8 +88,14 @@ export const TabContainer = styled.li`
     }
 `
 
-const Pointer = styled.span`
+const Pointer = styled.div`
     cursor: pointer;
+    display: flex;
+    align-items: center;
+`
+
+const FormatIcon = styled.span`
+    margin-right: 3px;
 `
 
 export default memo(Tab)
