@@ -1,9 +1,11 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
+import JavaScripLogoSVG from '@/components/esthetic/icons/JavaScripLogoSVG'
+import ReactLogoSVG from '@/components/esthetic/icons/ReactLogoSVG'
 import DeleteButton from '@/components/esthetic/DeleteButton'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback } from 'react'
 import styled from 'styled-components'
-import { colors, makeClassName } from '@/tools/style-tools'
+import { colors, languageToColor, makeClassName } from '@/tools/style-tools'
 
 interface Props {
     currentTab: string,
@@ -16,6 +18,7 @@ interface Props {
 function Tab(props: Props) {
     const { currentTab, tab } = props
 
+    const fileFormat = tab.split('.')[1]
     const isEntryPoint = tab === ENTRY_POINT_JSX
     const tabClassNames = [
         ...(isEntryPoint ? ['is-entry-point'] : []),
@@ -43,8 +46,21 @@ function Tab(props: Props) {
     }, [tab])
 
     return (
-        <TabContainer className={makeClassName(tabClassNames)}>
+        <TabContainer
+            className={makeClassName(tabClassNames)}
+            underliningColor={languageToColor[fileFormat]}
+        >
             <Pointer  onClick={handleTabClick}>
+                <FormatIcon>
+                    {
+                        fileFormat === 'js' ?
+                            <JavaScripLogoSVG height="12px" width='12px' />
+                        : fileFormat === 'jsx' ?
+                            <ReactLogoSVG height="22px" width='25px' />
+                        :
+                            null
+                    }
+                </FormatIcon>
                 <span onDoubleClick={handleDoubleClick}>
                     {tab}
                 </span>
@@ -54,7 +70,7 @@ function Tab(props: Props) {
     )
 }
 
-export const TabContainer = styled.li`
+export const TabContainer = styled.li<{underliningColor: string}>`
     display: flex;
     align-items: center;
     flex: 0 0 auto;
@@ -70,13 +86,19 @@ export const TabContainer = styled.li`
     }
 
     &.is-selected {
-        box-shadow: inset 0px -2px 0px 0px ${colors.$react};
+        box-shadow: inset 0px -2px 0px 0px ${props => props.underliningColor};
         color: ${colors.$silver100};
     }
 `
 
-const Pointer = styled.span`
+const Pointer = styled.div`
     cursor: pointer;
+    display: flex;
+    align-items: center;
+`
+
+const FormatIcon = styled.span`
+    margin-right: 3px;
 `
 
 export default memo(Tab)

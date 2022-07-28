@@ -6,6 +6,7 @@ export const colors = {
     $bg: '#1b2426',
     $bgNav: '#2e3d51',
     $blue: '#5ba1cf',
+    $javascript: '#f7df1e',
     $scrollbarThumb:'#2e4b52',
     $silver100: '#fff',
     $silver200: '#b9bdb6',
@@ -33,4 +34,9 @@ export const responsiveBreakpoint = 540;
 export const transitionDuration = {
     fast: '100ms',
     medium: '300ms',
+}
+
+export const languageToColor: Record<string,string> = {
+    js: colors.$javascript,
+    jsx: colors.$react,
 }
