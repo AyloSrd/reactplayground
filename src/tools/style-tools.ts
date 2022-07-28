@@ -35,3 +35,8 @@ export const transitionDuration = {
     fast: '100ms',
     medium: '300ms',
 }
+
+export const languageToColor: Record<string,string> = {
+    js: colors.$javascript,
+    jsx: colors.$react,
+}

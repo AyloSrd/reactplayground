@@ -5,7 +5,7 @@ import DeleteButton from '@/components/esthetic/DeleteButton'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback } from 'react'
 import styled from 'styled-components'
-import { colors, makeClassName } from '@/tools/style-tools'
+import { colors, languageToColor, makeClassName } from '@/tools/style-tools'
 
 interface Props {
     currentTab: string,
@@ -46,7 +46,10 @@ function Tab(props: Props) {
     }, [tab])
 
     return (
-        <TabContainer className={makeClassName(tabClassNames)}>
+        <TabContainer
+            className={makeClassName(tabClassNames)}
+            underliningColor={languageToColor[fileFormat]}
+        >
             <Pointer  onClick={handleTabClick}>
                 <FormatIcon>
                     {
@@ -67,7 +70,7 @@ function Tab(props: Props) {
     )
 }
 
-export const TabContainer = styled.li`
+export const TabContainer = styled.li<{underliningColor: string}>`
     display: flex;
     align-items: center;
     flex: 0 0 auto;
@@ -83,7 +86,7 @@ export const TabContainer = styled.li`
     }
 
     &.is-selected {
-        box-shadow: inset 0px -2px 0px 0px ${colors.$react};
+        box-shadow: inset 0px -2px 0px 0px ${props => props.underliningColor};
         color: ${colors.$silver100};
     }
 `
