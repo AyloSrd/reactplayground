@@ -6,7 +6,7 @@ import useEsbuild from '@/hooks/playground/useEsbuild'
 import { VFS } from '@/hooks/playground/useVFS'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
-import { exportToCodeSandbox, exportToStackblitz } from '@/tools/exports-tools'
+import { exportToCodeSandbox, exportToStackblitz, exportToZip } from '@/tools/exports-tools'
 import { useCreateEvento } from 'evento-react'
 import { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
@@ -58,6 +58,10 @@ function Playground(props: Props) {
         exportToStackblitz(files.fileList, rawImports, files.filesById)
     }, [rawImports, files])
 
+    const handleExportToZip = useCallback(() => {
+        exportToZip(files.fileList, rawImports, files.filesById)
+    }, [rawImports, files])
+
     const handleReloadPlayground = useCallback(() => {
         if(!confirm(`If you remoad this playground, all of your current changes will be lost.
         Do you want to proceed ?`)) {
@@ -90,6 +94,7 @@ function Playground(props: Props) {
     return (
         <Page>
             <Navbar
+                onExportToZip={handleExportToZip}
                 onExportToCodeSandbox={handleExportToCodeSandbox}
                 onExportToStackblitz={handleExportToStackblitz}
                 onReloadPlayground={handleReloadPlayground}

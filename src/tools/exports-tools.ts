@@ -245,3 +245,8 @@ export async function exportToStackblitz(fileList: string[], rawImports: RawImpo
     // @ts-ignore, pkg imported dinamically
     StackblitzSDK.openProject(projectPayload)
 }
+
+export async function exportToZip(fileList: string[], rawImports: RawImports, vfs: VFS) {
+    const { default: jsZip } = await import('jszip')
+    console.log(jsZip)
+}
