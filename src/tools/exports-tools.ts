@@ -197,7 +197,7 @@ async function getCRAPackageJSON(rawImports: RawImports): Promise<string> {
     const dependencies = await getDependencies(rawImports)
 
     const packageJSON = {
-        "name": "vite-react-starter",
+    "name": "CRA-react-starter",
         "private": true,
         "version": "0.0.0",
         "dependencies": dependencies,
@@ -247,17 +247,17 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
     getCodeSandboxParameters(fileList, rawImports, vfs)
         .then(parameters => {
             const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
-            const a = document.createElement('a')
-            a.setAttribute('href', url)
-            downloadFromURL(url)
+            exportFromURL(url)
         })
 }
 
-function downloadFromURL(url: string) {
+function exportFromURL(url: string, downloadName?: string) {
     const a = document.createElement('a')
     a.setAttribute('href', url)
     a.setAttribute('target', '_blank')
     a.setAttribute('rel', 'noopener')
+
+    if(downloadName) a.setAttribute('download', downloadName)
 
     document.body.appendChild(a)
     a.click()
@@ -299,5 +299,5 @@ export async function exportToZip(fileList: string[], rawImports: RawImports, vf
 
     const zipBlob = await zip.generateAsync({ type: 'blob' })
     const downloadURL = URL.createObjectURL(zipBlob)
-    downloadFromURL(downloadURL)
+    exportFromURL(downloadURL, 'react-playground-project')
 }
