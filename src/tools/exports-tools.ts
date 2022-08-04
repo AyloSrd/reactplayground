@@ -2,6 +2,7 @@ import { VFS } from '@/hooks/playground/useVFS'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { compressToBase64 } from 'lz-string'
 import dedent from 'dedent'
+import JSZip from 'jszip'
 
 interface CodeSanboxFile {
     content: string,
@@ -109,7 +110,7 @@ function getCodeSandboxFilesTree(fileList: string[], vfs: VFS) : { [key: string]
 }
 
 async function getCodeSandboxParameters(fileList: string[], rawImports: RawImports, vfs: VFS): Promise<string> {
-    const packageJSON = await getPackageJSON(rawImports)
+    const packageJSON = await getVitePackageJSON(rawImports)
     const parameters: CodeSandboxFilesTree = {
         files: {
             ...getCodeSandboxFilesTree(fileList, vfs),
@@ -192,7 +193,35 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
     return dependencies
 }
 
-async function getPackageJSON(rawImports: RawImports): Promise<string> {
+async function getCRAPackageJSON(rawImports: RawImports): Promise<string> {
+    const dependencies = await getDependencies(rawImports)
+
+    const packageJSON = {
+        "name": "vite-react-starter",
+        "private": true,
+        "version": "0.0.0",
+        "dependencies": dependencies,
+        "scripts": {
+            "start": "react-scripts start",
+            "build": "react-scripts build",
+            "test": "react-scripts test --env=jsdom",
+            "eject": "react-scripts eject"
+          },
+          "devDependencies": {
+            "react-scripts": "latest"
+          },
+          "browserslist": {
+            "development": [
+              "last 1 chrome version",
+              "last 1 firefox version",
+              "last 1 safari version"
+            ]
+          }
+    }
+    return JSON.stringify(packageJSON, null, 4)
+}
+
+async function getVitePackageJSON(rawImports: RawImports): Promise<string> {
     const dependencies = await getDependencies(rawImports)
 
     const packageJSON = {
@@ -220,13 +249,19 @@ export function exportToCodeSandbox(fileList: string[], rawImports: RawImports, 
             const url = `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`
             const a = document.createElement('a')
             a.setAttribute('href', url)
-            a.setAttribute('target', '_blank')
-            a.setAttribute('rel', 'noopener')
-
-            document.body.appendChild(a)
-            a.click()
-            a.remove()
+            downloadFromURL(url)
         })
+}
+
+function downloadFromURL(url: string) {
+    const a = document.createElement('a')
+    a.setAttribute('href', url)
+    a.setAttribute('target', '_blank')
+    a.setAttribute('rel', 'noopener')
+
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
 }
 
 async function getStackblitzProjectPayload(fileList: string[], rawImports: RawImports, vfs: VFS) {
@@ -247,6 +282,22 @@ export async function exportToStackblitz(fileList: string[], rawImports: RawImpo
 }
 
 export async function exportToZip(fileList: string[], rawImports: RawImports, vfs: VFS) {
-    const { default: jsZip } = await import('jszip')
-    console.log(jsZip)
+    const { default: JSZip } = await import('jszip')
+    const zip = new JSZip()
+
+    const publicFolder = zip.folder('public')
+    const srcFolder = zip.folder('src')
+
+    if (!publicFolder || !srcFolder) return
+
+    publicFolder.file('index.html', htmlFileStackBlitz)
+
+    fileList.forEach(fileName => srcFolder.file(fileName, vfs[fileName]))
+
+    const CRAPackageJSON = await getCRAPackageJSON(rawImports)
+    zip.file('package.json', CRAPackageJSON)
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' })
+    const downloadURL = URL.createObjectURL(zipBlob)
+    downloadFromURL(downloadURL)
 }
