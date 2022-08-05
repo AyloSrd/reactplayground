@@ -5,6 +5,7 @@ import ShareSVG from '@/components/esthetic/icons/ShareSVG'
 import Button from '@/components/esthetic/Button'
 import CodeSandboxLogoSVG from '@/components/esthetic/icons/CodeSanboxLogoSVG'
 import StackblitzLogoSVG from '@/components/esthetic/icons/StackblitzLogoSVG'
+import DownloadSVG from '@/components/esthetic/icons/DownloadSVG'
 import useURLStorage from '@/hooks/playground/useURLStorage'
 import { colors, fixedSizes, generalBorderStyle } from '@/tools/style-tools'
 import { memo, useCallback } from 'react'
@@ -12,6 +13,7 @@ import styled from 'styled-components'
 import { useCreateEvento } from 'evento-react'
 
 interface Props {
+    onExportToZip: () => void,
     onExportToCodeSandbox: () => void,
     onExportToStackblitz: () => void,
     onReloadPlayground: () => void,
@@ -20,6 +22,10 @@ interface Props {
 const Navbar = (props: Props) => {
     const evento = useCreateEvento(props)
     const { copyURLToClipBoard } = useURLStorage()
+
+    const handleExportToZip = useCallback(() => {
+        evento('exportToZip')
+    }, [props])
 
     const handleExportToCodeSandboxClick = useCallback(() => {
         evento('exportToCodeSandbox')
@@ -45,6 +51,13 @@ const Navbar = (props: Props) => {
                     <Title>React Playground</Title>
                 </TitleContainer>
                 <ButtonContainer>
+                    <div title="Download your zipped project">
+                        <Button onClick={handleExportToZip}>
+                            <BtnContent>
+                                <DownloadSVG height={"30px"} width={"30px"}/>
+                            </BtnContent>
+                        </Button>
+                    </div>
                     <div title="Export to Stackblitz">
                         <Button onClick={handleExportToStackblitz}>
                             <BtnContent>

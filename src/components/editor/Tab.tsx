@@ -51,16 +51,16 @@ function Tab(props: Props) {
             underliningColor={languageToColor[fileFormat]}
         >
             <Pointer  onClick={handleTabClick}>
-                <FormatIcon>
+                <span>
                     {
                         fileFormat === 'js' ?
-                            <JavaScripLogoSVG height="12px" width='12px' />
+                            <StyledJavaScriptLogoSVG height="12px" width='12px' />
                         : fileFormat === 'jsx' ?
                             <ReactLogoSVG height="22px" width='25px' />
                         :
                             null
                     }
-                </FormatIcon>
+                </span>
                 <span onDoubleClick={handleDoubleClick}>
                     {tab}
                 </span>
@@ -70,7 +70,7 @@ function Tab(props: Props) {
     )
 }
 
-export const TabContainer = styled.li<{underliningColor: string}>`
+export const TabContainer = styled.li<{ underliningColor: string }>`
     display: flex;
     align-items: center;
     flex: 0 0 auto;
@@ -91,14 +91,14 @@ export const TabContainer = styled.li<{underliningColor: string}>`
     }
 `
 
+const StyledJavaScriptLogoSVG = styled(JavaScripLogoSVG)`
+    margin-right: 5px;
+`
+
 const Pointer = styled.div`
     cursor: pointer;
     display: flex;
     align-items: center;
-`
-
-const FormatIcon = styled.span`
-    margin-right: 3px;
 `
 
 export default memo(Tab)

@@ -20,7 +20,7 @@ interface Props {
 
 function Editor(props: Props) {
     const { files: { fileList: tabs, filesById } } = props
-    const [currentFile, setCurrentFile] = useState<string>(ENTRY_POINT_JSX)
+    const [currentFile, setCurrentFile] = useState<string>(filesById['App.jsx'] ? 'App.jsx' : ENTRY_POINT_JSX)
 
     const prevTabsLength = usePreviousValue(tabs.length)
 

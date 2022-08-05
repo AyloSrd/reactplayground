@@ -36,11 +36,11 @@ import { createRoot } from 'react-dom/client'
 const container = document.getElementById('root')
 const root = createRoot(container)
 root.render(
-	React.createElement(
-		React.StrictMode,
-		null,
-		React.createElement(App)
-	)
+  React.createElement(
+    React.StrictMode,
+    null,
+    React.createElement(App)
+  )
 )
 `.trim()
 
@@ -53,7 +53,7 @@ const App = () => {
 
   return (
     <Button onClick={() => setCount(count + 1)}>
-        {count}
+      <span role="img" aria-label="react-emoji">⚛️</span> {count}
     </Button>
   )
 }
