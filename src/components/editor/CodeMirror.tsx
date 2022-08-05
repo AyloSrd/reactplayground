@@ -53,6 +53,14 @@ function CodeMirror(props: Props) {
 
     useEffect(() => {
         setHasMounted(true)
+        const guttersWidth = document.querySelector('div.CodeMirror-gutters')
+            ?.getBoundingClientRect()
+            ?.width
+        const guttersWidthPx = typeof guttersWidth === 'number' ? `${Math.round(guttersWidth)}px` : null
+        const sizer = (document.querySelector('div.CodeMirror-sizer') as HTMLDivElement)
+        
+        if (typeof guttersWidthPx === 'string' && sizer?.style?.marginLeft?.includes('px')) sizer.style.marginLeft = guttersWidthPx
+
         editorRef?.current?.editor?.focus()
     }, [])
 
