@@ -23,6 +23,7 @@ interface IFrameErrorMessage {
 export type IframeMessage = IFrameConsoleMessage | IFrameErrorMessage
 
 interface Props {
+    onLoad: (evt: CustomEvent<Window>) => void,
     onPageRefresh: () => void,
     output: OutputType,
     onMessage: (e: CustomEvent<IframeMessage>) => void,
@@ -37,8 +38,13 @@ const Iframe = (props: Props) => {
     const evento = useCreateEvento(props)
 
     const handleIframeLoad= useCallback(() => {
-        iframeRef?.current?.contentWindow?.postMessage(output, '*')
-    }, [output])
+        const iframeWindow = iframeRef?.current?.contentWindow
+
+        if (iframeWindow) {
+            iframeWindow.postMessage(output, '*')
+            evento('load', iframeWindow)
+        }
+    }, [output, props])
 
 
     const handleIframeMessage = useCallback(e => {

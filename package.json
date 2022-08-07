@@ -12,6 +12,7 @@
     "axios": "^0.26.1",
     "code-mirror-themes": "^1.0.0",
     "codemirror": "^5.65.2",
+    "console-feed": "^3.4.0",
     "dedent": "^0.7.0",
     "esbuild-wasm": "^0.14.41",
     "evento-react": "^0.2.1",

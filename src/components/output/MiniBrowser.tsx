@@ -1,9 +1,10 @@
 import Button from '@/components/esthetic/Button'
 import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
-import Console, { ConsoleMessage } from '@/components/output/Console'
+// import Console, { ConsoleMessage } from '@/components/output/Console'
 import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
+import { Hook, Console, Decode } from 'console-feed'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -14,29 +15,40 @@ interface Props {
 const MiniBrowser = (props: Props) => {
     const { output } = props
 
-    const [consoleMessages, setConsoleMessages] = useState<ConsoleMessage[]>([])
+    const [logs, setLogs] = useState([])
+    // const [consoleMessages, setConsoleMessages] = useState<ConsoleMessage[]>([])
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false)
 
+    const handleLoad = useCallback((evt: CustomEvent<Window>) => {
+        Hook(
+            // @ts-ignore
+            evt.detail.console,
+            log => setLogs(currLogs => [...currLogs, Decode(log)]),
+            true,
+            100,
+        )
+    }, [])
+
     const handleClearConsole = useCallback(() => {
-        setConsoleMessages([])
+        //setConsoleMessages([])
     }, [])
 
     const handleIframeMessage = useCallback((e) => {
         const iframeMessage = e.detail
 
-        if (iframeMessage.type === IFrameMessageTypes.CONSOLE) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: iframeMessage.level, message: iframeMessage.consoleArgs }
-            ])
-        }
+        // if (iframeMessage.type === IFrameMessageTypes.CONSOLE) {
+        //     // setConsoleMessages(prevConsoleMessages => [
+        //     //     ...prevConsoleMessages,
+        //     //     { level: iframeMessage.level, message: iframeMessage.consoleArgs }
+        //     ])
+        // }
 
-        if (iframeMessage.type === IFrameMessageTypes.ERROR) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: 'error', message: iframeMessage.err.message }
-            ])
-        }
+        // if (iframeMessage.type === IFrameMessageTypes.ERROR) {
+        //     setConsoleMessages(prevConsoleMessages => [
+        //         ...prevConsoleMessages,
+        //         { level: 'error', message: iframeMessage.err.message }
+        //     ])
+        // }
     }, [])
 
     const handlePageRefresh = useCallback(() => {
@@ -50,10 +62,10 @@ const MiniBrowser = (props: Props) => {
 
     useEffect(() => {
         if (output.error) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: 'error', message: output.error }
-            ])
+            // setConsoleMessages(prevConsoleMessages => [
+            //     ...prevConsoleMessages,
+            //     { level: 'error', message: output.error }
+            // ])
         }
     }, [output.error])
 
@@ -67,15 +79,22 @@ const MiniBrowser = (props: Props) => {
                 </Button>
             </Nav>
             <Iframe
+                onLoad={handleLoad}
                 onMessage={handleIframeMessage}
                 onPageRefresh={handlePageRefresh}
                 output={output}
                 shouldRefresh={shouldRefresh}
             />
-            <Console
+            <div style={{ backgroundColor: 'black', heught: '200px'}}>
+                <Console
+                    logs={logs}
+                    variant={"dark"}
+                />
+            </div>
+            {/* <Console
                 messages={consoleMessages}
                 onClear={handleClearConsole}
-            />
+            /> */}
         </Container>
     )
 }
