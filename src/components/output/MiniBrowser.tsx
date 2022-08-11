@@ -1,7 +1,6 @@
 import Button from '@/components/esthetic/Button'
 import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
-// import Console, { ConsoleMessage } from '@/components/output/Console'
-import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
+import Iframe from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { Hook, Console, Decode } from 'console-feed'
@@ -16,7 +15,6 @@ const MiniBrowser = (props: Props) => {
     const { output } = props
 
     const [logs, setLogs] = useState([])
-    // const [consoleMessages, setConsoleMessages] = useState<ConsoleMessage[]>([])
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false)
 
     const handleLoad = useCallback((evt: CustomEvent<Window>) => {
@@ -85,16 +83,14 @@ const MiniBrowser = (props: Props) => {
                 output={output}
                 shouldRefresh={shouldRefresh}
             />
-            <div style={{ backgroundColor: 'black', heught: '200px'}}>
+            <div style={{ backgroundColor: 'black', height: '200px'}}>
                 <Console
+                    filter={['log','debug', 'info', 'warn', 'error', 'table', 'time', 'timeEnd' ,'count' ,'assert']}
                     logs={logs}
+                    styles={{ BASE_FONT_FAMILY: "'Ubuntu Mono', 'Courier New', monospace;", LOG_BACKGROUND: colors.$bg, LOG_BORDER: colors.$silver300 }}
                     variant={"dark"}
                 />
             </div>
-            {/* <Console
-                messages={consoleMessages}
-                onClear={handleClearConsole}
-            /> */}
         </Container>
     )
 }
