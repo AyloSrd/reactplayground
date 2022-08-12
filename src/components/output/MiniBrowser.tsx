@@ -1,9 +1,11 @@
 import Button from '@/components/esthetic/Button'
 import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
-import Console, { ConsoleMessage } from '@/components/output/Console'
-import Iframe, { IFrameMessageTypes } from '@/components/output/Iframe'
+import Iframe from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
+import Console from '@/components/output/Console'
+import { Hook, Decode } from 'console-feed'
+import { Message } from 'console-feed/lib/definitions/Component'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -14,29 +16,31 @@ interface Props {
 const MiniBrowser = (props: Props) => {
     const { output } = props
 
-    const [consoleMessages, setConsoleMessages] = useState<ConsoleMessage[]>([])
+    const [logs, setLogs] = useState<Message[]>([])
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false)
 
-    const handleClearConsole = useCallback(() => {
-        setConsoleMessages([])
+    const handleConsoleMessage = useCallback((log: Message[]) => {
+
+        setLogs(
+            log[0].method === 'clear'
+                ? []
+                : (currLogs: Message[]) => ([...currLogs, Decode(log)] as Message[])
+        )
+    }, [Decode])
+
+    const handleLoad = useCallback((evt: CustomEvent<Window>) => {
+        Hook(
+            // @ts-ignore : Window type soens't have console
+            evt.detail.console,
+            // @ts-ignore : cannot make make ts work with this callback
+            handleConsoleMessage,
+            true,
+            100,
+        )
     }, [])
 
-    const handleIframeMessage = useCallback((e) => {
-        const iframeMessage = e.detail
-
-        if (iframeMessage.type === IFrameMessageTypes.CONSOLE) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: iframeMessage.level, message: iframeMessage.consoleArgs }
-            ])
-        }
-
-        if (iframeMessage.type === IFrameMessageTypes.ERROR) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: 'error', message: iframeMessage.err.message }
-            ])
-        }
+    const handleClearConsole = useCallback(() => {
+        setLogs([])
     }, [])
 
     const handlePageRefresh = useCallback(() => {
@@ -49,13 +53,8 @@ const MiniBrowser = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (output.error) {
-            setConsoleMessages(prevConsoleMessages => [
-                ...prevConsoleMessages,
-                { level: 'error', message: output.error }
-            ])
-        }
-    }, [output.error])
+        handleClearConsole()
+    }, [output])
 
     return (
         <Container>
@@ -67,13 +66,13 @@ const MiniBrowser = (props: Props) => {
                 </Button>
             </Nav>
             <Iframe
-                onMessage={handleIframeMessage}
+                onLoad={handleLoad}
                 onPageRefresh={handlePageRefresh}
                 output={output}
                 shouldRefresh={shouldRefresh}
             />
             <Console
-                messages={consoleMessages}
+                logs={logs}
                 onClear={handleClearConsole}
             />
         </Container>

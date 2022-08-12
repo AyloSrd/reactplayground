@@ -4,28 +4,10 @@ import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
-export enum IFrameMessageTypes {
-    CONSOLE = 'console',
-    ERROR = 'error'
-}
-
-interface IFrameConsoleMessage {
-    consoleArgs: string,
-    level: 'error' | 'log' | 'warn',
-    type: 'console',
-}
-
-interface IFrameErrorMessage {
-    err: Error,
-    type: 'error',
-}
-
-export type IframeMessage = IFrameConsoleMessage | IFrameErrorMessage
-
 interface Props {
+    onLoad: (evt: CustomEvent<Window>) => void,
     onPageRefresh: () => void,
     output: OutputType,
-    onMessage: (e: CustomEvent<IframeMessage>) => void,
     shouldRefresh: boolean,
 }
 
@@ -37,15 +19,13 @@ const Iframe = (props: Props) => {
     const evento = useCreateEvento(props)
 
     const handleIframeLoad= useCallback(() => {
-        iframeRef?.current?.contentWindow?.postMessage(output, '*')
-    }, [output])
+        const iframeWindow = iframeRef?.current?.contentWindow
 
-
-    const handleIframeMessage = useCallback(e => {
-        if (e.source === iframeRef?.current?.contentWindow) {
-            evento('message', e.data as IframeMessage)
+        if (iframeWindow) {
+            iframeWindow.postMessage(output, '*')
+            evento('load', iframeWindow)
         }
-    }, [])
+    }, [output, props])
 
     useEffect(() => {
         if (shouldRefresh && iframeRef && iframeRef.current) {
@@ -54,11 +34,6 @@ const Iframe = (props: Props) => {
         }
         iframeRef?.current?.contentWindow?.postMessage(output, '*')
     }, [output, shouldRefresh])
-
-    useEffect(() => {
-        window.addEventListener('message', handleIframeMessage)
-        return  window.removeEventListener('message', handleIframeLoad)
-    }, [])
 
     return (
         <StyledIframe

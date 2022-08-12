@@ -1,22 +1,20 @@
 import Button from '@/components/esthetic/Button'
 import ExpandSVG from '@/components/esthetic/icons/ExpandSVG'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
+import { consoleStyles } from '@/tools/console-tools'
+import { Console as Logs } from 'console-feed'
+import { Message } from 'console-feed/lib/definitions/Component'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-export interface ConsoleMessage {
-    level: 'error' | 'log' | 'warning',
-    message: string
-}
-
 interface Props {
-    messages: ConsoleMessage[],
+    logs: Message[],
     onClear: () => any,
 }
 
 const Console = (props: Props) => {
-    const { messages } = props
+    const { logs } = props
 
     const [isConsoleOpen, setIsConsoleOpen] = useState<boolean>(false)
 
@@ -38,7 +36,7 @@ const Console = (props: Props) => {
                 behavior: 'smooth'
             })
         }
-    }, [messages])
+    }, [logs])
 
     return (
         <Section>
@@ -55,7 +53,7 @@ const Console = (props: Props) => {
                         height={"20px"}
                         width={"20px"}
                     />
-                    Console ({messages.length})
+                    Console ({logs.length})
                 </Label>
                 <Button onClick={handleClearClick}>
                     <BtnContent>Clear</BtnContent>
@@ -64,20 +62,11 @@ const Console = (props: Props) => {
             <ConsoleBody
                 className={ isConsoleOpen ? 'open' : 'closed'}
             >
-                <UnorderedList>
-                    {
-                        messages.map(({ level, message }, i) => (
-
-                            <Message
-                                key={i}
-                                className={level}
-                            >
-                                <pre>{message}</pre>
-                            </Message>
-
-                        ))
-                    }
-                </UnorderedList>
+                <Logs
+                    logs={logs}
+                    styles={consoleStyles}
+                    variant={"dark"}
+                />
                 <div ref={scrollRef}/>
             </ConsoleBody>
         </Section>
@@ -125,35 +114,6 @@ const Nav = styled.nav`
     display: flex;
     justify-content: space-between;
     padding: 0 10px;
-`
-
-const UnorderedList = styled.ul`
-    display: block;
-    list-style-type: inside;
-    padding: 0;
-    /* overflow: auto; */
-    min-width: 0;
-`
-
-const Message = styled.li`
-    display: block;
-    min-width: 100%;
-    width: fit-content;
-    padding: 0 0 0 30px;
-
-    &.error {
-        background-color: ${colors.$redConsole};
-    }
-
-    &.warn {
-        background-color: ${colors.$yellowConsole};
-    }
-
-    & pre {
-        margin: 0;
-        padding: 10px 0;
-        /* white-space: pre-wrap; */
-    }
 `
 
 const Label = styled.label`
