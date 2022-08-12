@@ -2,7 +2,6 @@ import { VFS } from '@/hooks/playground/useVFS'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { compressToBase64 } from 'lz-string'
 import dedent from 'dedent'
-import JSZip from 'jszip'
 
 interface CodeSanboxFile {
     content: string,
