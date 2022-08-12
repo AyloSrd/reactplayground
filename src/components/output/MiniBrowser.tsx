@@ -3,7 +3,8 @@ import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
 import Iframe from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
-import { Hook, Console, Decode } from 'console-feed'
+import Console from '@/components/output/Console'
+import { Hook, Decode } from 'console-feed'
 import { Message } from 'console-feed/lib/definitions/Component'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -39,25 +40,7 @@ const MiniBrowser = (props: Props) => {
     }, [])
 
     const handleClearConsole = useCallback(() => {
-        //setConsoleMessages([])
-    }, [])
-
-    const handleIframeMessage = useCallback((e) => {
-        const iframeMessage = e.detail
-
-        // if (iframeMessage.type === IFrameMessageTypes.CONSOLE) {
-        //     // setConsoleMessages(prevConsoleMessages => [
-        //     //     ...prevConsoleMessages,
-        //     //     { level: iframeMessage.level, message: iframeMessage.consoleArgs }
-        //     ])
-        // }
-
-        // if (iframeMessage.type === IFrameMessageTypes.ERROR) {
-        //     setConsoleMessages(prevConsoleMessages => [
-        //         ...prevConsoleMessages,
-        //         { level: 'error', message: iframeMessage.err.message }
-        //     ])
-        // }
+        setLogs([])
     }, [])
 
     const handlePageRefresh = useCallback(() => {
@@ -70,13 +53,8 @@ const MiniBrowser = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (output.error) {
-            // setConsoleMessages(prevConsoleMessages => [
-            //     ...prevConsoleMessages,
-            //     { level: 'error', message: output.error }
-            // ])
-        }
-    }, [output.error])
+        handleClearConsole()
+    }, [output])
 
     return (
         <Container>
@@ -89,18 +67,14 @@ const MiniBrowser = (props: Props) => {
             </Nav>
             <Iframe
                 onLoad={handleLoad}
-                onMessage={handleIframeMessage}
                 onPageRefresh={handlePageRefresh}
                 output={output}
                 shouldRefresh={shouldRefresh}
             />
-            <div style={{ backgroundColor: 'black', height: '200px'}}>
-                <Console
-                    logs={logs}
-                    styles={{ BASE_FONT_FAMILY: "'Ubuntu Mono', 'Courier New', monospace;", LOG_BACKGROUND: colors.$bg, LOG_BORDER: colors.$silver300 }}
-                    variant={"dark"}
-                />
-            </div>
+            <Console
+                logs={logs}
+                onClear={handleClearConsole}
+            />
         </Container>
     )
 }
