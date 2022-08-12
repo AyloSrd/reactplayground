@@ -4,6 +4,7 @@ import Iframe from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { Hook, Console, Decode } from 'console-feed'
+import { Message } from 'console-feed/lib/definitions/Component'
 import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -14,14 +15,24 @@ interface Props {
 const MiniBrowser = (props: Props) => {
     const { output } = props
 
-    const [logs, setLogs] = useState([])
+    const [logs, setLogs] = useState<Message[]>([])
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false)
+
+    const handleConsoleMessage = useCallback((log: Message[]) => {
+
+        setLogs(
+            log[0].method === 'clear'
+                ? []
+                : (currLogs: Message[]) => ([...currLogs, Decode(log)] as Message[])
+        )
+    }, [Decode])
 
     const handleLoad = useCallback((evt: CustomEvent<Window>) => {
         Hook(
-            // @ts-ignore
+            // @ts-ignore : Window type soens't have console
             evt.detail.console,
-            log => setLogs(currLogs => [...currLogs, Decode(log)]),
+            // @ts-ignore : cannot make make ts work with this callback
+            handleConsoleMessage,
             true,
             100,
         )
@@ -85,7 +96,6 @@ const MiniBrowser = (props: Props) => {
             />
             <div style={{ backgroundColor: 'black', height: '200px'}}>
                 <Console
-                    filter={['log','debug', 'info', 'warn', 'error', 'table', 'time', 'timeEnd' ,'count' ,'assert']}
                     logs={logs}
                     styles={{ BASE_FONT_FAMILY: "'Ubuntu Mono', 'Courier New', monospace;", LOG_BACKGROUND: colors.$bg, LOG_BORDER: colors.$silver300 }}
                     variant={"dark"}
