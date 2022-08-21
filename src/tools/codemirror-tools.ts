@@ -1,5 +1,5 @@
 export const defaultOptions = {
-    autoCloseBrackets: true,
+    autoCloseBrackets: false,
     autoCloseTags: true,
     autofocus: true,
     foldGutter: true,
