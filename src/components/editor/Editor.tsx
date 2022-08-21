@@ -1,11 +1,13 @@
-import CodeMirror from '@/components/editor/CodeMirror'
 import TabsContainer from '@/components/editor/TabsContainer'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
 import { useCreateEvento } from 'evento-react'
 import { memo, useState, useCallback, useEffect } from 'react'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
+import '@codemirror/autocomplete'
 
 interface Props {
     files: {
@@ -26,8 +28,8 @@ function Editor(props: Props) {
 
     const evento = useCreateEvento(props)
 
-    const handleTextChange = useCallback((e: CustomEvent<string>) => {
-        evento('textEditorChange', { file: currentFile, text: e.detail })
+    const handleTextChange = useCallback((text: string) => {
+        evento('textEditorChange', { file: currentFile, text })
     }, [currentFile])
 
     const handleTabCreate = useCallback((e: CustomEvent<string>) => {
@@ -70,11 +72,13 @@ function Editor(props: Props) {
             />
             <Scroller>
                 <CodeMirror
-                    language='jsx'
-                    onTextChange={handleTextChange}
-                    text={filesById[currentFile]}
+                    value={filesById[currentFile]}
+                    height="200px"
+                    theme="dark"
+                    extensions={[javascript({ jsx: true })]}
+                    onChange={handleTextChange}
                 />
-            </Scroller>
+        </Scroller>
         </Container>
     )
 }

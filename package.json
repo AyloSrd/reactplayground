@@ -8,7 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.1.0",
+    "@codemirror/lang-javascript": "^6.0.2",
     "@stackblitz/sdk": "^1.8.0",
+    "@uiw/react-codemirror": "^4.11.4",
     "axios": "^0.26.1",
     "code-mirror-themes": "^1.0.0",
     "codemirror": "^5.65.2",
@@ -19,8 +22,8 @@
     "jszip": "^3.10.0",
     "localforage": "^1.10.0",
     "lz-string": "^1.4.4",
-    "react-codemirror2": "^7.2.1",
     "react": "^18.2.0",
+    "react-codemirror2": "^7.2.1",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "styled-components": "^5.3.5"
@@ -34,8 +37,8 @@
     "@types/node": "^18.6.4",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@vitejs/plugin-react": "^2.0.1",
     "@types/styled-components": "^5.1.25",
+    "@vitejs/plugin-react": "^2.0.1",
     "typescript": "^4.5.4",
     "vite": "^3.0.7"
   }
