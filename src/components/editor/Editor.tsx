@@ -71,13 +71,14 @@ function Editor(props: Props) {
                 tabs={tabs}
             />
             <Scroller>
-                <CodeMirror
-                    value={filesById[currentFile]}
-                    height="200px"
-                    theme="dark"
-                    extensions={[javascript({ jsx: true })]}
-                    onChange={handleTextChange}
-                />
+                <CodeMirroContainer>
+                    <CodeMirror
+                        value={filesById[currentFile]}
+                        theme="dark"
+                        extensions={[javascript({ jsx: true })]}
+                        onChange={handleTextChange}
+                    />
+                </CodeMirroContainer>
         </Scroller>
         </Container>
     )
@@ -94,6 +95,42 @@ const Container = styled.section`
 const Scroller = styled.div`
     overflow-y: auto;
     background-color: ${colors.$bg};
+`
+
+const CodeMirroContainer = styled.div`
+    height: 100%;
+
+    .CodeMirror {
+        height: 100%;
+        font-family: 'Ubuntu Mono', 'Courier New', monospace;
+    }
+
+    .CodeMirror-foldmarker {
+        visibility: hidden;
+        width: 1rem;
+        text-shadow: none;
+    }
+
+    .CodeMirror-foldmarker::after {
+        visibility: visible;
+        width: 1rem;
+        color: ${colors.$silver100};
+        content: ' . . . ';
+        margin-left: -1rem;
+    }
+
+    .cm-s-rdark .cm-tag:not(.cm-bracket) {
+        color: ${colors.$blue};
+    }
+
+    .cm-s-rdark .cm-string {
+        color: ${colors.$yellow};
+    }
+
+    .cm-s-rdark .CodeMirror-gutters {
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
 `
 
 export default memo(Editor)
