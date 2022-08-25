@@ -4,9 +4,11 @@ import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { useCreateEvento } from 'evento-react'
-import { memo, useState, useCallback, useEffect } from 'react'
+import { defaultOptions, sublimish } from '@/tools/codemirror-tools';
+import { memo, useState, useCallback, useEffect, useRef } from 'react'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
+import { EditorView } from '@codemirror/view'
 import '@codemirror/autocomplete'
 
 interface Props {
@@ -24,12 +26,15 @@ function Editor(props: Props) {
     const { files: { fileList: tabs, filesById } } = props
     const [currentFile, setCurrentFile] = useState<string>(filesById['App.jsx'] ? 'App.jsx' : ENTRY_POINT_JSX)
 
+    const editorRef = useRef(null)
+
     const prevTabsLength = usePreviousValue(tabs.length)
 
     const evento = useCreateEvento(props)
 
     const handleTextChange = useCallback((text: string) => {
         evento('textEditorChange', { file: currentFile, text })
+        console.log(editorRef)
     }, [currentFile])
 
     const handleTabCreate = useCallback((e: CustomEvent<string>) => {
@@ -73,13 +78,14 @@ function Editor(props: Props) {
             <Scroller>
                 <CodeMirroContainer>
                     <CodeMirror
+                        ref={editorRef}
                         value={filesById[currentFile]}
-                        theme="dark"
-                        extensions={[javascript({ jsx: true })]}
+                        theme={sublimish}
+                        extensions={[javascript({ jsx: true }), EditorView.lineWrapping]}
                         onChange={handleTextChange}
                     />
                 </CodeMirroContainer>
-        </Scroller>
+            </Scroller>
         </Container>
     )
 }
@@ -93,6 +99,8 @@ const Container = styled.section`
 `
 
 const Scroller = styled.div`
+    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
     background-color: ${colors.$bg};
 `
