@@ -30,4 +30,4 @@ export const sublimish = createTheme({
       { tag: [t.definition(t.tagName), t.className, t.definition(t.variableName)], color: colors.$blue },
       { tag: [t.atom, t.bool, t.special(t.variableName)], color: colors.$silver100 },
     ],
-  });
+  })
