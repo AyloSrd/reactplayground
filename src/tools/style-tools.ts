@@ -6,17 +6,19 @@ export const colors = {
     $bg: '#1b2426',
     $bgNav: '#2e3d51',
     $blue: '#5ba1cf',
+    $brown: '#ce966f',
+    $teal: '#5ab0b0',
     $javascript: '#f7df1e',
     $scrollbarThumb:'#2e4b52',
     $silver100: '#fff',
     $silver200: '#b9bdb6',
     $silver300: '#8c8e8a',
+    $orange: '#ffaa3e',
     $purple: '#ce61fb',
+    $purple200: '#a06cb6',
     $react: '#61dafb',
     $red: '#e24a4a',
-    $redConsole: '#3c0303',
     $yellow: '#e6d238',
-    $yellowConsole: '#524104',
 }
 
 // CE61FB => viola

@@ -1,11 +1,15 @@
-import CodeMirror from '@/components/editor/CodeMirror'
 import TabsContainer from '@/components/editor/TabsContainer'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
+import CodeMirror from '@uiw/react-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
 import { useCreateEvento } from 'evento-react'
+import { sublimish } from '@/tools/codemirror-tools'
 import { memo, useState, useCallback, useEffect } from 'react'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
+import { EditorView } from '@codemirror/view'
+import '@codemirror/autocomplete'
 
 interface Props {
     files: {
@@ -26,8 +30,8 @@ function Editor(props: Props) {
 
     const evento = useCreateEvento(props)
 
-    const handleTextChange = useCallback((e: CustomEvent<string>) => {
-        evento('textEditorChange', { file: currentFile, text: e.detail })
+    const handleTextChange = useCallback((text: string) => {
+        evento('textEditorChange', { file: currentFile, text })
     }, [currentFile])
 
     const handleTabCreate = useCallback((e: CustomEvent<string>) => {
@@ -38,7 +42,9 @@ function Editor(props: Props) {
         evento('deleteFile', e.detail)
     }, [])
 
-    const hadleTabEdit = useCallback((e: CustomEvent<{ current: string, next: string }>) => {
+    const hadleTabEdit = useCallback((
+        e: CustomEvent<{ current: string, next: string }>
+    ) => {
         evento('editFileName', e.detail)
     }, [])
 
@@ -69,11 +75,17 @@ function Editor(props: Props) {
                 tabs={tabs}
             />
             <Scroller>
-                <CodeMirror
-                    language='jsx'
-                    onTextChange={handleTextChange}
-                    text={filesById[currentFile]}
-                />
+                <CodeMirroContainer>
+                    <CodeMirror
+                        value={filesById[currentFile]}
+                        theme={sublimish}
+                        extensions={[
+                            javascript({ jsx: true }),
+                            EditorView.lineWrapping,
+                        ]}
+                        onChange={handleTextChange}
+                    />
+                </CodeMirroContainer>
             </Scroller>
         </Container>
     )
@@ -88,8 +100,28 @@ const Container = styled.section`
 `
 
 const Scroller = styled.div`
+    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
     background-color: ${colors.$bg};
+`
+
+const CodeMirroContainer = styled.div`
+    height: 100%;
+
+    .cm-theme {
+        font-family: 'Ubuntu Mono', 'Courier New', monospace !important;
+    }
+
+    .cm-scroller > div.cm-content.cm-lineWrapping {
+        font-family: 'Ubuntu Mono', 'Courier New', monospace !important;
+        font-size: 15px;
+    }
+
+    div.cm-scroller > div.cm-gutters {
+        font-family: 'Ubuntu Mono', 'Courier New', monospace !important;
+        font-size: 15px;
+    }
 `
 
 export default memo(Editor)
