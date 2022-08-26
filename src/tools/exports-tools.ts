@@ -1,6 +1,7 @@
 import { VFS } from '@/hooks/playground/useVFS'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { compressToBase64 } from 'lz-string'
+import { CDN, make_CDN_URL } from '@/hooks/playground/useEsbuild'
 import dedent from 'dedent'
 
 interface CodeSanboxFile {
@@ -27,13 +28,13 @@ export interface RawImports {
 }
 
 function extractNameAndVersionFromRawImport(rawImport: string): string[] {
-    const unpkgLess = rawImport.split('https://unpkg.com/')[1]
-    const unpkgLessSplitted = unpkgLess.split('/')
+    const esmshLess = rawImport.split(`${CDN}/`)[1].split('?')[0]
+    const esmshLessSplitted = esmshLess.split('/')
     const rawName =
-        unpkgLess.startsWith('@') ?
-            `${unpkgLessSplitted[0]}/${unpkgLessSplitted[1]}`
+        esmshLess.startsWith('@') ?
+            `${esmshLessSplitted[0]}/${esmshLessSplitted[1]}`
         :
-            unpkgLessSplitted[0]
+            esmshLessSplitted[0]
     const rawNameSplitted = rawName.split('@')
     const name =
         rawName.startsWith('@') ?
@@ -49,7 +50,7 @@ function extractNameAndVersionFromRawImport(rawImport: string): string[] {
 }
 
 function getLatestVersion(name: string): Promise<string[]> {
-    return fetch(`https://unpkg.com/${name}`)
+    return fetch(make_CDN_URL(name))
         .then(res =>
                 extractNameAndVersionFromRawImport(res.url)[1].length ?
                     extractNameAndVersionFromRawImport(res.url)
@@ -136,7 +137,7 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
 
 async function getDependencies(rawImports: RawImports): Promise<{ [key: string]: string }> {
     const rawImportersFromVFS: string[] = []
-    const rawImportersFromUNPKG: string[] = []
+    const rawImportersFromESMSH: string[] = []
 
     for (const rawImporter in rawImports) {
         if (rawImporter.startsWith('a:')) {
@@ -144,7 +145,7 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
         }
 
         if (rawImporter.startsWith('b:')) {
-            rawImportersFromUNPKG.push(rawImporter)
+            rawImportersFromESMSH.push(rawImporter)
         }
     }
 
@@ -165,9 +166,9 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
 
                 let [name, version] = extractNameAndVersionFromRawImport(imprt)
 
-                for (const rawImporterFromUNPKG of rawImportersFromUNPKG) {
-                    if (rawImporterFromUNPKG.startsWith(`b:https://unpkg.com/${name}@`)) {
-                        version = extractNameAndVersionFromRawImport(rawImporterFromUNPKG)[1]
+                for (const rawImporterFromESMSH of rawImportersFromESMSH) {
+                    if (rawImporterFromESMSH.startsWith(`b:${CDN}/${name}@`)) {
+                        version = extractNameAndVersionFromRawImport(rawImporterFromESMSH)[1]
                         break
                     }
                 }
