@@ -24,10 +24,10 @@ export const sublimish = createTheme({
       { tag: t.operator, color: colors.$red },
       { tag: t.moduleKeyword, color: colors.$purple200 },
       { tag: [t.propertyName, t.typeName], color: colors.$blue },
-      { tag: [t.modifier, t.keyword], color: colors.$blue },
+      { tag: [t.modifier, t.keyword], color: colors.$purple200 },
       { tag: [t.tagName], color: colors.$teal },
       { tag: [t.number], color: colors.$orange },
-      { tag: [t.definition(t.tagName), t.className, t.definition(t.variableName)], color: colors.$react },
+      { tag: [t.definition(t.tagName), t.className, t.definition(t.variableName)], color: colors.$blue },
       { tag: [t.atom, t.bool, t.special(t.variableName)], color: colors.$silver100 },
     ],
   });
