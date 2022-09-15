@@ -22,6 +22,6 @@ Here you can :
 - [*esbuild wasm*](https://www.npmjs.com/package/esbuild-wasm), to quickly transpile and bundle on the browser
 
 ## Credits
-React Playground is inspired by [SvelteJS](https://svelte.dev/repl/hello-world) REPL](https://svelte.dev/repl/hello-world), [SolidJS Playground](https://playground.solidjs.com/), and [VueJS Playground](https://sfc.vuejs.org/)](https://sfc.vuejs.org/).
+React Playground is inspired by [SvelteJS REPL](https://svelte.dev/repl/hello-world), [SolidJS Playground](https://playground.solidjs.com/), and [VueJS Playground](https://sfc.vuejs.org/).
 
 [This Udemy course](https://www.udemy.com/course/react-and-typescript-build-a-portfolio-project/) by Stephen Grider was essential to learn how to work with bundlers in the browser.
