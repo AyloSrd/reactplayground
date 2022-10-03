@@ -63,7 +63,7 @@ function Playground(props: Props) {
     }, [rawImports, files])
 
     const handleReloadPlayground = useCallback(() => {
-        if(!confirm(`If you remoad this playground, all of your current changes will be lost.
+        if(!confirm(`If you reload this playground, all of your current changes will be lost.
         Do you want to proceed ?`)) {
             return
         }
