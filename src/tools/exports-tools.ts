@@ -149,10 +149,31 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
         }
     }
 
+    const rawImportsFromEMSSH: string[] =
+        Object.keys(rawImports)
+        .filter(
+            rawImport =>
+                rawImport.startsWith('b:')
+                && rawImport.includes('@')
+        )
+
+    const deps = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
+        let withoutCDN = rawImport.replace(`b:${CDN}/`, '')
+
+        if (withoutCDN.startsWith('stable')) {
+            withoutCDN = withoutCDN.replace('stable/', '')
+        }
+
+        if (withoutCDN.startsWith('v')) {
+            withoutCDN = withoutCDN.replace(/\/v\d+\//, '')
+        }
+        return dependenciesObj
+    }, {})
     const versionRequests: Array<Promise<string[]>> = []
 
     const rawImportees =
         rawImportersFromVFS.reduce((acc: { [key: string]: string }, rawImporter: string) => {
+            console.log('rawImporter', rawImporter)
             const importsURLs = rawImports[rawImporter].imports.map(imprt => {
                 if (imprt.path.startsWith('b:')) {
                     return imprt.path.substring(2)
@@ -278,7 +299,7 @@ export async function exportToStackblitz(fileList: string[], rawImports: RawImpo
     const { default: StackblitzSDK } = await import('@stackblitz/sdk')
     const projectPayload = await getStackblitzProjectPayload(fileList, rawImports, vfs)
     // @ts-ignore, pkg imported dinamically
-    StackblitzSDK.openProject(projectPayload)
+    // StackblitzSDK.openProject(projectPayload)
 }
 
 export async function exportToZip(fileList: string[], rawImports: RawImports, vfs: VFS) {
