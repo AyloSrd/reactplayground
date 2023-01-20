@@ -19,7 +19,15 @@ export default function useURLStorage() {
         const url = new URL(location.href)
         const { hash } = url
         const vfsString = decompress(hash.slice(1))
-        const vfs = typeof vfsString === 'string' ? JSON.parse(vfsString) : {}
+        let vfs: VFS = {}
+
+        if (typeof vfsString === 'string') {
+            try {
+                vfs = JSON.parse(vfsString)
+            } catch {
+                console.error('There is a problem with the URL, we will generate a new project from scratch.')
+            }
+        }
 
         setInitialVFS(vfs[ENTRY_POINT_JSX] ? vfs : null)
     }, [])
