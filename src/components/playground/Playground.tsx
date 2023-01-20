@@ -1,7 +1,7 @@
 import Editor from '@/components/editor/Editor'
 import Navbar from '@/components/playground/Navbar'
 import MiniBrowser from '@/components/output/MiniBrowser'
-import VerticalSplitPane from '@/components/esthetic/VerticalSplitPane'
+import VerticalSplitPane from '@/components/ui-elements/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
 import { VFS } from '@/hooks/playground/useVFS'
 import { colors, fixedSizes } from '@/tools/style-tools'

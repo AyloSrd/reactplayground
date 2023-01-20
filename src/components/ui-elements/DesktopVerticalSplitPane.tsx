@@ -1,4 +1,4 @@
-import ThreeVerticalDotsSVG from '@/components/esthetic/icons/ThreeVerticalDotsSVG'
+import ThreeVerticalDotsSVG from '@/components/ui-elements/icons/ThreeVerticalDotsSVG'
 import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import useWindowSize from '@/hooks/playground/useWindowSize'
 import { colors, generalBorderStyle } from '@/tools/style-tools'

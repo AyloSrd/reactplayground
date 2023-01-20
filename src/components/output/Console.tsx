@@ -1,5 +1,5 @@
-import Button from '@/components/esthetic/Button'
-import ExpandSVG from '@/components/esthetic/icons/ExpandSVG'
+import Button from '@/components/ui-elements/Button'
+import ExpandSVG from '@/components/ui-elements/icons/ExpandSVG'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'
 import { consoleStyles } from '@/tools/console-tools'
 import { Console as Logs } from 'console-feed'

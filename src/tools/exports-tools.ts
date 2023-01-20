@@ -27,39 +27,6 @@ export interface RawImports {
     [key: string] : RawImport,
 }
 
-function extractNameAndVersionFromRawImport(rawImport: string): string[] {
-    const esmshLess = rawImport.split(`${CDN}/`)[1].split('?')[0]
-    const esmshLessSplitted = esmshLess.split('/')
-    const rawName =
-        esmshLess.startsWith('@') ?
-            `${esmshLessSplitted[0]}/${esmshLessSplitted[1]}`
-        :
-            esmshLessSplitted[0]
-    const rawNameSplitted = rawName.split('@')
-    const name =
-        rawName.startsWith('@') ?
-            `@${rawNameSplitted[1]}`
-        :
-            rawNameSplitted[0]
-    const version =
-        name.startsWith('@') ?
-            (rawNameSplitted[2] ?? '')
-        :
-            (rawNameSplitted[1] ?? '')
-    return [name, version]
-}
-
-function getLatestVersion(name: string): Promise<string[]> {
-    return fetch(make_CDN_URL(name))
-        .then(res =>
-                extractNameAndVersionFromRawImport(res.url)[1].length ?
-                    extractNameAndVersionFromRawImport(res.url)
-                :
-                    [name, 'latest']
-        )
-        .catch(() => [name, 'latest'])
-}
-
 const htmlFileCodeSandBox = dedent`
 <!DOCTYPE html>
 <html lang="en">
@@ -136,59 +103,41 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
 }
 
 async function getDependencies(rawImports: RawImports): Promise<{ [key: string]: string }> {
-    const rawImportersFromVFS: string[] = []
-    const rawImportersFromESMSH: string[] = []
+    const rawImportsFromEMSSH: string[] =
+        Object.keys(rawImports)
+        .filter(
+            rawImport =>
+                rawImport.startsWith('b:')
+                && rawImport.includes('@')
+                && !rawImport.includes('?pin=v92')
+        )
 
-    for (const rawImporter in rawImports) {
-        if (rawImporter.startsWith('a:')) {
-            rawImportersFromVFS.push(rawImporter)
+    const dependencies = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
+        let withoutCDN = rawImport.replace(`b:${CDN}/`, '')
+
+        if (withoutCDN.startsWith('stable')) {
+            withoutCDN = withoutCDN.replace('stable/', '')
         }
 
-        if (rawImporter.startsWith('b:')) {
-            rawImportersFromESMSH.push(rawImporter)
+        if (withoutCDN.startsWith('v92')) {
+            withoutCDN = withoutCDN.replace('v92/', '')
         }
-    }
 
-    const versionRequests: Array<Promise<string[]>> = []
+        const isPrivatePkg = withoutCDN.startsWith('@')
+        const splittedAtAddressSign = withoutCDN.split('@')
+        const pkgName = isPrivatePkg
+            ? `@${splittedAtAddressSign[1]}`
+            : splittedAtAddressSign[0]
+        const version = isPrivatePkg
+            ? splittedAtAddressSign[2].split('/')[0]
+            : splittedAtAddressSign[1].split('/')[0]
 
-    const rawImportees =
-        rawImportersFromVFS.reduce((acc: { [key: string]: string }, rawImporter: string) => {
-            const importsURLs = rawImports[rawImporter].imports.map(imprt => {
-                if (imprt.path.startsWith('b:')) {
-                    return imprt.path.substring(2)
-                }
-            }).filter(importURL => typeof importURL === 'string' && importURL !== undefined)
+        if (!dependenciesObj[pkgName]) {
+            dependenciesObj[pkgName] = version
+        }
 
-            importsURLs.forEach(imprt => {
-                if (!imprt) {
-                    return
-                }
-
-                let [name, version] = extractNameAndVersionFromRawImport(imprt)
-
-                for (const rawImporterFromESMSH of rawImportersFromESMSH) {
-                    if (rawImporterFromESMSH.startsWith(`b:${CDN}/${name}@`)) {
-                        version = extractNameAndVersionFromRawImport(rawImporterFromESMSH)[1]
-                        break
-                    }
-                }
-
-                if (!version.length && !acc[name]) {
-                    versionRequests.push(getLatestVersion(name))
-                }
-
-                acc[name] = version ? "^" + version : ''
-            })
-
-            return acc
-        }, {})
-
-    const dependencies = await Promise.all(versionRequests).then(values => {
-        return values.reduce((acc, val) => {
-            acc[val[0]] = val[1] === 'latest' ? val[1] : "^" + val[1]
-            return acc
-        }, rawImportees)
-    })
+        return dependenciesObj
+    }, {})
 
     return dependencies
 }

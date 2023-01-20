@@ -22,7 +22,7 @@ export type OutputType = OutputTypeSuccess | OutputTypeFail
 
 export const CDN = 'https://esm.sh'
 
-export const make_CDN_URL = (pkg: string) => `${CDN}/${pkg}?dev?pin=v92`
+export const make_CDN_URL = (pkg: string) => `${CDN}/${pkg}?pin=v92`
 
 const fileCache = localforage.createInstance({
     name: 'filecache',
@@ -126,7 +126,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
 
                     const { data, request } = await axios.get(args.path)
-
                     const result: esbuild.OnLoadResult = {
                         loader: 'jsx',
                         contents: data,

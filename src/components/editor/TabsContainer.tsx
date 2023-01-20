@@ -1,4 +1,4 @@
-import AddButton from '@/components/esthetic/AddButton'
+import AddButton from '@/components/ui-elements/AddButton'
 import Tab from '@/components/editor/Tab'
 import TabInput from '@/components/editor/TabInput'
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
