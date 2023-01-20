@@ -27,39 +27,6 @@ export interface RawImports {
     [key: string] : RawImport,
 }
 
-function extractNameAndVersionFromRawImport(rawImport: string): string[] {
-    const esmshLess = rawImport.split(`${CDN}/`)[1].split('?')[0]
-    const esmshLessSplitted = esmshLess.split('/')
-    const rawName =
-        esmshLess.startsWith('@') ?
-            `${esmshLessSplitted[0]}/${esmshLessSplitted[1]}`
-        :
-            esmshLessSplitted[0]
-    const rawNameSplitted = rawName.split('@')
-    const name =
-        rawName.startsWith('@') ?
-            `@${rawNameSplitted[1]}`
-        :
-            rawNameSplitted[0]
-    const version =
-        name.startsWith('@') ?
-            (rawNameSplitted[2] ?? '')
-        :
-            (rawNameSplitted[1] ?? '')
-    return [name, version]
-}
-
-function getLatestVersion(name: string): Promise<string[]> {
-    return fetch(make_CDN_URL(name))
-        .then(res =>
-                extractNameAndVersionFromRawImport(res.url)[1].length ?
-                    extractNameAndVersionFromRawImport(res.url)
-                :
-                    [name, 'latest']
-        )
-        .catch(() => [name, 'latest'])
-}
-
 const htmlFileCodeSandBox = dedent`
 <!DOCTYPE html>
 <html lang="en">
@@ -142,13 +109,10 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
             rawImport =>
                 rawImport.startsWith('b:')
                 && rawImport.includes('@')
+                && !rawImport.includes('?pin=v92')
         )
 
     const dependencies = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
-        if (rawImport.includes('?pin=v92')) {
-            return dependenciesObj
-        }
-
         let withoutCDN = rawImport.replace(`b:${CDN}/`, '')
 
         if (withoutCDN.startsWith('stable')) {
