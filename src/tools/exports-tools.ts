@@ -136,19 +136,6 @@ async function getCodeSandboxParameters(fileList: string[], rawImports: RawImpor
 }
 
 async function getDependencies(rawImports: RawImports): Promise<{ [key: string]: string }> {
-    const rawImportersFromVFS: string[] = []
-    const rawImportersFromESMSH: string[] = []
-
-    for (const rawImporter in rawImports) {
-        if (rawImporter.startsWith('a:')) {
-            rawImportersFromVFS.push(rawImporter)
-        }
-
-        if (rawImporter.startsWith('b:')) {
-            rawImportersFromESMSH.push(rawImporter)
-        }
-    }
-
     const rawImportsFromEMSSH: string[] =
         Object.keys(rawImports)
         .filter(
@@ -157,59 +144,36 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
                 && rawImport.includes('@')
         )
 
-    const deps = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
+    const dependencies = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
+        if (rawImport.includes('?pin=v92')) {
+            return dependenciesObj
+        }
+
         let withoutCDN = rawImport.replace(`b:${CDN}/`, '')
 
         if (withoutCDN.startsWith('stable')) {
             withoutCDN = withoutCDN.replace('stable/', '')
         }
 
-        if (withoutCDN.startsWith('v')) {
-            withoutCDN = withoutCDN.replace(/\/v\d+\//, '')
+        if (withoutCDN.startsWith('v92')) {
+            withoutCDN = withoutCDN.replace('v92/', '')
         }
+
+        const isPrivatePkg = withoutCDN.startsWith('@')
+        const splittedAtAddressSign = withoutCDN.split('@')
+        const pkgName = isPrivatePkg
+            ? `@${splittedAtAddressSign[1]}`
+            : splittedAtAddressSign[0]
+        const version = isPrivatePkg
+            ? splittedAtAddressSign[2].split('/')[0]
+            : splittedAtAddressSign[1].split('/')[0]
+
+        if (!dependenciesObj[pkgName]) {
+            dependenciesObj[pkgName] = version
+        }
+
         return dependenciesObj
     }, {})
-    const versionRequests: Array<Promise<string[]>> = []
-
-    const rawImportees =
-        rawImportersFromVFS.reduce((acc: { [key: string]: string }, rawImporter: string) => {
-            console.log('rawImporter', rawImporter)
-            const importsURLs = rawImports[rawImporter].imports.map(imprt => {
-                if (imprt.path.startsWith('b:')) {
-                    return imprt.path.substring(2)
-                }
-            }).filter(importURL => typeof importURL === 'string' && importURL !== undefined)
-
-            importsURLs.forEach(imprt => {
-                if (!imprt) {
-                    return
-                }
-
-                let [name, version] = extractNameAndVersionFromRawImport(imprt)
-
-                for (const rawImporterFromESMSH of rawImportersFromESMSH) {
-                    if (rawImporterFromESMSH.startsWith(`b:${CDN}/${name}@`)) {
-                        version = extractNameAndVersionFromRawImport(rawImporterFromESMSH)[1]
-                        break
-                    }
-                }
-
-                if (!version.length && !acc[name]) {
-                    versionRequests.push(getLatestVersion(name))
-                }
-
-                acc[name] = version ? "^" + version : ''
-            })
-
-            return acc
-        }, {})
-
-    const dependencies = await Promise.all(versionRequests).then(values => {
-        return values.reduce((acc, val) => {
-            acc[val[0]] = val[1] === 'latest' ? val[1] : "^" + val[1]
-            return acc
-        }, rawImportees)
-    })
 
     return dependencies
 }
@@ -299,7 +263,7 @@ export async function exportToStackblitz(fileList: string[], rawImports: RawImpo
     const { default: StackblitzSDK } = await import('@stackblitz/sdk')
     const projectPayload = await getStackblitzProjectPayload(fileList, rawImports, vfs)
     // @ts-ignore, pkg imported dinamically
-    // StackblitzSDK.openProject(projectPayload)
+    StackblitzSDK.openProject(projectPayload)
 }
 
 export async function exportToZip(fileList: string[], rawImports: RawImports, vfs: VFS) {

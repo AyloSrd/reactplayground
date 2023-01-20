@@ -1,5 +1,5 @@
-import Button from '@/components/esthetic/Button'
-import CloseSVG from '@/components/esthetic/icons/CloseSVG'
+import Button from '@/components/ui-elements/Button'
+import CloseSVG from '@/components/ui-elements/icons/CloseSVG'
 import { colors } from '@/tools/style-tools'
 import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback } from 'react'

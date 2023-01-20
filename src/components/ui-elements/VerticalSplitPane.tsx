@@ -1,8 +1,8 @@
 import { responsiveBreakpoint } from '@/tools/style-tools'
 import useWindowSize from '@/hooks/playground/useWindowSize'
 import React, { memo } from 'react'
-import MobileVerticalSplitPane from '@/components/esthetic/MobileVerticalSplitPane'
-import DesktopVerticalSplitPane from '@/components/esthetic/DesktopVerticalSplitPane'
+import MobileVerticalSplitPane from '@/components/ui-elements/MobileVerticalSplitPane'
+import DesktopVerticalSplitPane from '@/components/ui-elements/DesktopVerticalSplitPane'
 
 interface Props {
     leftPaneChild?: React.ReactChild,

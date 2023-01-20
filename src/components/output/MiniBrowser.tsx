@@ -1,5 +1,5 @@
-import Button from '@/components/esthetic/Button'
-import RefreshSVG from '@/components/esthetic/icons/RefreshSVG'
+import Button from '@/components/ui-elements/Button'
+import RefreshSVG from '@/components/ui-elements/icons/RefreshSVG'
 import Iframe from '@/components/output/Iframe'
 import { OutputType } from '@/hooks/playground/useEsbuild'
 import { colors, fixedSizes, generalBorderStyle, transitionDuration } from '@/tools/style-tools'

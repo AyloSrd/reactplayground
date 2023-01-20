@@ -1,4 +1,4 @@
-import Loader from '@/components/esthetic/Loader'
+import Loader from '@/components/ui-elements/Loader'
 import Playground from '@/components/playground/Playground'
 import useURLStorage from '@/hooks/playground/useURLStorage'
 import { VFS } from '@/hooks/playground/useVFS'
