@@ -126,7 +126,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
 
                     const { data, request } = await axios.get(args.path)
-console.log('r', request.responseURL)
                     const result: esbuild.OnLoadResult = {
                         loader: 'jsx',
                         contents: data,
@@ -161,11 +160,9 @@ console.log('r', request.responseURL)
             })
             const bundleJSX = bundle?.outputFiles?.[0]?.text
             const _imports = bundle?.metafile?.inputs
-            console.log('_imports', _imports)
             if (prevVersion < versionRef.current) {
                 return
             }
-            console.log(_imports)
             setBundleJSXText(bundleJSX)
             setBundleErr(null)
             setRawImports(_imports)
