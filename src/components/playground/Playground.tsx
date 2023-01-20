@@ -1,5 +1,5 @@
-import Editor from '@/components/editor/Editor'
 import Navbar from '@/components/playground/Navbar'
+import EditorFallback from '@/components/editor/EditorFallback'
 import MiniBrowser from '@/components/output/MiniBrowser'
 import VerticalSplitPane from '@/components/ui-elements/VerticalSplitPane'
 import useEsbuild from '@/hooks/playground/useEsbuild'
@@ -8,8 +8,11 @@ import { colors, fixedSizes } from '@/tools/style-tools'
 import { generatePayload } from '@/tools/editor.tools'
 import { exportToCodeSandbox, exportToStackblitz, exportToZip } from '@/tools/exports-tools'
 import { useCreateEvento } from 'evento-react'
-import { useCallback, useEffect } from 'react'
+import { lazy, Suspense, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
+
+const Editor = lazy(() => import('@/components/editor/Editor'))
+
 
 interface Props {
     initialVFS: VFS | null,
@@ -101,13 +104,15 @@ function Playground(props: Props) {
             />
             <VerticalSplitPane
                 leftPaneChild={
-                    <Editor
-                        onAddFile={handleAddFile}
-                        onDeleteFile={handleDeleteFile}
-                        onEditFileName={handleEditFileName}
-                        files={files}
-                        onTextEditorChange={handleTextEditorChange}
-                    />
+                    <Suspense fallback={<EditorFallback />}>
+                        <Editor
+                            onAddFile={handleAddFile}
+                            onDeleteFile={handleDeleteFile}
+                            onEditFileName={handleEditFileName}
+                            files={files}
+                            onTextEditorChange={handleTextEditorChange}
+                        />
+                    </Suspense>
                 }
                 rightPaneChild={
                     <MiniBrowser

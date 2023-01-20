@@ -77,6 +77,7 @@ function Editor(props: Props) {
             <Scroller>
                 <CodeMirroContainer>
                     <CodeMirror
+                        key={currentFile}
                         value={filesById[currentFile]}
                         theme={sublimish}
                         extensions={[
