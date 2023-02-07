@@ -4,13 +4,19 @@ export const sandboxAttributes = 'allow-popups-to-escape-sandbox allow-scripts a
 
 export const srcDoc = /*html*/`
 <html>
-<head></head>
+<head>
+    <style id="1cfb7daf280bf1032de2669b673c918d9c398674">
+        html{box-sizing:border-box;font-size:16px}*,:after,:before{box-sizing:inherit}body,h1,h2,h3,h4,h5,h6,ol,p,ul{margin:0;padding:0;font-weight:400}img{max-width:100%;height:auto}
+    </style>
+</head>
     <body>
         <div id="root"></div>
         <script type="module" id="395F50EBA2B1015DD2A0471C7B09295A8AD7E612E8CC104F311709BE22EEE6AA">
             let prevOutput = {}
-            const unremovableScriptTagsIdsList =
-                ['395F50EBA2B1015DD2A0471C7B09295A8AD7E612E8CC104F311709BE22EEE6AA']
+            const unremovableElementsIdsList = [
+                '395F50EBA2B1015DD2A0471C7B09295A8AD7E612E8CC104F311709BE22EEE6AA',
+                '1cfb7daf280bf1032de2669b673c918d9c398674'
+            ]
 
             window.addEventListener('message', e => {
                 const { data } = e
@@ -50,7 +56,7 @@ export const srcDoc = /*html*/`
             function cleanDocWithoutReload() {
                 document.querySelectorAll('head script, head link, head style, body *')
                     .forEach(el => {
-                        if (unremovableScriptTagsIdsList.includes(el.id)) {
+                        if (unremovableElementsIdsList.includes(el.id)) {
                             return
                         }
                         el.remove()
