@@ -13,9 +13,8 @@ interface Props {
 
 function TabInput(props: Props) {
     const { existingTabNames, tab } = props
-    const [ name, type ] = tab.split('.')
 
-    const [tempName, setTempName] = useState<string>(name)
+    const [tempName, setTempName] = useState<string>(tab)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -27,21 +26,41 @@ function TabInput(props: Props) {
 
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
-        const suffixedTabName = `${tempName}.${type}`
 
-        if (
-            suffixedTabName === ENTRY_POINT_JSX
-            || !tempName.length
-            || !validateTabName(tempName)
-            || (
-                suffixedTabName !== `${tab}.${type}`
-                && existingTabNames.includes(suffixedTabName)
-            )
-        ) {
+        if (!tempName.length) {
+            alert('You have to chose a name!')
+            inputRef.current?.focus()
             return
         }
 
-        evento('newNameSubmit', { current: tab, next: `${tempName}.${type}` })
+        if (
+            tempName === ENTRY_POINT_JSX
+            || (
+                tempName !== tab
+                && existingTabNames.includes(tempName)
+            )
+        ) {
+            alert(`A file named ${tempName} already exists. Please be creative, find another one.`)
+            inputRef.current?.select()
+            return
+        }
+
+        if (!validateTabName(tempName)) {
+            alert('You can only use letters and digits in the file name.')
+            inputRef.current?.select()
+            return
+        }
+
+
+        const format= tempName.split('.')[1]
+
+        if (!format || !['js', 'jsx', 'css'].includes(format)) {
+            alert('Please chose one of the following file formats: js, jsx or css')
+            inputRef.current?.select()
+            return
+        }
+
+        evento('newNameSubmit', { current: tab, next: tempName })
     }, [existingTabNames, tab, tempName])
 
     const handleBlur = useCallback(() => {
@@ -66,9 +85,6 @@ function TabInput(props: Props) {
                         value={tempName}
                     />
                 </form>
-                <span>
-                    .{type}
-                </span>
             </Flex>
         </Container>
     )
@@ -91,7 +107,7 @@ const Flex = styled.div`
 const Input = styled.input`
     padding: 0;
     height: 30px;
-    width: 80px;
+    width: 100px;
     border: none;
     box-shadow: inset 0px -1px 0px 0px ${colors.$silver100};
     color: ${colors.$silver100};
