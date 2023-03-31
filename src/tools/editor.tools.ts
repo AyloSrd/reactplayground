@@ -21,43 +21,34 @@ export function generatePayload(target: string, content?: string) {
     })
 }
 
-export function validateTabName2(tabName: string) {
-    return /^[A-Za-z0-9.]*$/.test(tabName)
-}
-
-export function validateTabName() {
+export function validateTabName(tabName: string, prevTabName: string,tabNames: Array<string>): Array<string> {
+    let errors = []
     if (!tabName.length) {
-        alert('You have to chose a name!')
-        inputRef.current?.focus()
-        return
+        errors.push('You have to chose a name!')
     }
 
     if (
         tabName === ENTRY_POINT_JSX
         || (
-            tabName !== tab
-            && existingTabNames.includes(tabName)
+            tabName !== prevTabName
+            && tabNames.includes(tabName)
         )
     ) {
-        alert(`A file named ${tabName} already exists. Please be creative, find another one.`)
-        inputRef.current?.select()
-        return
+        errors.push(`A file named ${tabName} already exists. Please be creative, find another one.`)
     }
 
-    if (!validateTabName(tabName)) {
-        alert('You can only use letters and digits in the file name.')
-        inputRef.current?.select()
-        return
+    if (!/^[A-Za-z0-9.]*$/.test(tabName)) {
+        errors.push('You can only use letters and digits in the file name.')
     }
 
 
-    const format= tabName.split('.')[1]
+    const format= tabName.split('.').at(-1)
 
     if (!format || !['js', 'jsx', 'css'].includes(format)) {
-        alert('Please chose one of the following file formats: js, jsx or css')
-        inputRef.current?.select()
-        return
+        errors.push('Please chose one of the following file formats: js, jsx or css')
     }
+
+    return errors
 }
 
 export function* countGen(initialCount: number = -1): Generator<number> {

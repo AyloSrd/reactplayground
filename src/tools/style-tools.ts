@@ -8,7 +8,6 @@ export const colors = {
     $blue: '#5ba1cf',
     $brown: '#ce966f',
     $teal: '#5ab0b0',
-    $javascript: '#f7df1e',
     $scrollbarThumb:'#2e4b52',
     $silver100: '#fff',
     $silver200: '#b9bdb6',
@@ -16,10 +15,13 @@ export const colors = {
     $orange: '#ffaa3e',
     $purple: '#ce61fb',
     $purple200: '#a06cb6',
-    $react: '#61dafb',
     $red: '#e24a4a',
     $yellow: '#e6d238',
-}
+    // file format colors
+    $css: '#264de4',
+    $react: '#61dafb',
+    $javascript: '#f7df1e',
+} as const
 
 // CE61FB => viola
 // FB8161 => coomplementare react
@@ -39,6 +41,7 @@ export const transitionDuration = {
 }
 
 export const languageToColor: Record<string,string> = {
+    css: colors.$css,
     js: colors.$javascript,
     jsx: colors.$react,
 }

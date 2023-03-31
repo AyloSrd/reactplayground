@@ -28,6 +28,21 @@ const fileCache = localforage.createInstance({
     name: 'filecache',
 })
 
+const make_css_contents = (originalCSS: string) => {
+    const escapedCSS = originalCSS
+    .replace(/\n/g, '')
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+
+    const CSSContents = `
+const styleTag = document.createElement('style')
+styleTag.innerText = '${escapedCSS}'
+document.head.appendChild(styleTag)
+    `.trim()
+
+    return CSSContents
+}
+
 export default function useEsbuild(vfsFromUrl: VFS | null) {
     const [bundleJSXText, setBundleJSXText] = useState<null | string>(initialLoader)
     const [bundleErr, setBundleErr] = useState<null | string>(null)
@@ -104,12 +119,24 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     }
                 })
 
+                build.onLoad({ filter: /.css$/ }, async (args: any) => {
+                    console.log(args.path.substring(2))
+                    const contents = make_css_contents(vfs[args.path] ? vfs[args.path] : '')
+
+                    const result: esbuild.OnLoadResult = {
+                        loader: 'jsx',
+                        contents,
+                    }
+
+                    return result
+                })
+
                 build.onLoad({ filter: /.*/ }, async (args: any) => {
                     if (args.path === ENTRY_POINT_JSX) {
-                        return {
-                        loader: 'jsx',
-                        contents: vfs[ENTRY_POINT_JSX],
-                        }
+                        return ({
+                            loader: 'jsx',
+                            contents: vfs[ENTRY_POINT_JSX],
+                        })
                     }
 
                     if (vfs[args.path]) {

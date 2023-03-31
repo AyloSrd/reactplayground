@@ -27,40 +27,15 @@ function TabInput(props: Props) {
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
 
-        if (!tempName.length) {
-            alert('You have to chose a name!')
-            inputRef.current?.focus()
+        const errors = validateTabName(tempName, tab, existingTabNames)
+
+        if (!errors.length) {
+            evento('newNameSubmit', { current: tab, next: tempName })
             return
         }
 
-        if (
-            tempName === ENTRY_POINT_JSX
-            || (
-                tempName !== tab
-                && existingTabNames.includes(tempName)
-            )
-        ) {
-            alert(`A file named ${tempName} already exists. Please be creative, find another one.`)
-            inputRef.current?.select()
-            return
-        }
-
-        if (!validateTabName(tempName)) {
-            alert('You can only use letters and digits in the file name.')
-            inputRef.current?.select()
-            return
-        }
-
-
-        const format= tempName.split('.')[1]
-
-        if (!format || !['js', 'jsx', 'css'].includes(format)) {
-            alert('Please chose one of the following file formats: js, jsx or css')
-            inputRef.current?.select()
-            return
-        }
-
-        evento('newNameSubmit', { current: tab, next: tempName })
+        alert(errors[0])
+        inputRef.current?.select()
     }, [existingTabNames, tab, tempName])
 
     const handleBlur = useCallback(() => {
