@@ -24,7 +24,7 @@ specifiers:
   codemirror: ^5.65.2
   console-feed: ^3.4.0
   dedent: ^0.7.0
-  esbuild-wasm: ^0.14.41
+  esbuild-wasm: 0.14.54
   evento-react: '*'
   jszip: ^3.10.0
   localforage: ^1.10.0
