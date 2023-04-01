@@ -15,6 +15,7 @@ function TabInput(props: Props) {
     const { existingTabNames, tab } = props
 
     const [tempName, setTempName] = useState<string>(tab)
+
     const inputRef = useRef<HTMLInputElement>(null)
     const errorsRef = useRef<Array<string>>([])
     const evento = useCreateEvento(props)
