@@ -1,6 +1,7 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import JavaScripLogoSVG from '@/components/ui-elements/icons/JavaScripLogoSVG'
 import ReactLogoSVG from '@/components/ui-elements/icons/ReactLogoSVG'
+import CSSLogoSVG from '@/components/ui-elements/icons/CSSLogoSVG'
 import DeleteButton from '@/components/ui-elements/DeleteButton'
 import { useCreateEvento } from 'evento-react'
 import { memo, useCallback } from 'react'
@@ -57,6 +58,8 @@ function Tab(props: Props) {
                             <StyledJavaScriptLogoSVG height="12px" width='12px' />
                         : fileFormat === 'jsx' ?
                             <ReactLogoSVG height="22px" width='25px' />
+                        : fileFormat === 'css' ?
+                            <StyledCSSLogoSVG height="12px" width='12px' />
                         :
                             null
                     }
@@ -92,6 +95,10 @@ export const TabContainer = styled.li<{ underliningColor: string }>`
 `
 
 const StyledJavaScriptLogoSVG = styled(JavaScripLogoSVG)`
+    margin-right: 5px;
+`
+
+const StyledCSSLogoSVG = styled(CSSLogoSVG)`
     margin-right: 5px;
 `
 

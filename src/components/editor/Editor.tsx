@@ -3,9 +3,10 @@ import usePreviousValue from '@/hooks/playground/usePreviosValue'
 import { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
+import { css } from '@codemirror/lang-css'
 import { useCreateEvento } from 'evento-react'
 import { sublimish } from '@/tools/codemirror-tools'
-import { memo, useState, useCallback, useEffect } from 'react'
+import { memo, useState, useMemo, useCallback, useEffect } from 'react'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
 import { EditorView } from '@codemirror/view'
@@ -29,6 +30,13 @@ function Editor(props: Props) {
     const prevTabsLength = usePreviousValue(tabs.length)
 
     const evento = useCreateEvento(props)
+
+    const fileFormat = currentFile.split('.').at(-1)
+
+    const extensions = [
+        ...(fileFormat === 'css' ? [css()] : [javascript({ jsx: true })]),
+        EditorView.lineWrapping,
+    ]
 
     const handleTextChange = useCallback((text: string) => {
         evento('textEditorChange', { file: currentFile, text })
@@ -80,10 +88,7 @@ function Editor(props: Props) {
                         key={currentFile}
                         value={filesById[currentFile]}
                         theme={sublimish}
-                        extensions={[
-                            javascript({ jsx: true }),
-                            EditorView.lineWrapping,
-                        ]}
+                        extensions={extensions}
                         onChange={handleTextChange}
                     />
                 </CodeMirroContainer>

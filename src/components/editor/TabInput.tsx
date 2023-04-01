@@ -13,9 +13,8 @@ interface Props {
 
 function TabInput(props: Props) {
     const { existingTabNames, tab } = props
-    const [ name, type ] = tab.split('.')
 
-    const [tempName, setTempName] = useState<string>(name)
+    const [tempName, setTempName] = useState<string>(tab)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -27,21 +26,16 @@ function TabInput(props: Props) {
 
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
-        const suffixedTabName = `${tempName}.${type}`
 
-        if (
-            suffixedTabName === ENTRY_POINT_JSX
-            || !tempName.length
-            || !validateTabName(tempName)
-            || (
-                suffixedTabName !== `${tab}.${type}`
-                && existingTabNames.includes(suffixedTabName)
-            )
-        ) {
+        const errors = validateTabName(tempName, tab, existingTabNames)
+
+        if (!errors.length) {
+            evento('newNameSubmit', { current: tab, next: tempName })
             return
         }
 
-        evento('newNameSubmit', { current: tab, next: `${tempName}.${type}` })
+        alert(errors[0])
+        inputRef.current?.select()
     }, [existingTabNames, tab, tempName])
 
     const handleBlur = useCallback(() => {
@@ -66,9 +60,6 @@ function TabInput(props: Props) {
                         value={tempName}
                     />
                 </form>
-                <span>
-                    .{type}
-                </span>
             </Flex>
         </Container>
     )
@@ -91,7 +82,7 @@ const Flex = styled.div`
 const Input = styled.input`
     padding: 0;
     height: 30px;
-    width: 80px;
+    width: 100px;
     border: none;
     box-shadow: inset 0px -1px 0px 0px ${colors.$silver100};
     color: ${colors.$silver100};
