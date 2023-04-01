@@ -15,30 +15,31 @@ function TabInput(props: Props) {
     const { existingTabNames, tab } = props
 
     const [tempName, setTempName] = useState<string>(tab)
-
     const inputRef = useRef<HTMLInputElement>(null)
-
+    const errorsRef = useRef<Array<string>>([])
     const evento = useCreateEvento(props)
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setTempName(e.target.value)
-    }, [])
+        errorsRef.current = validateTabName(e.target.value, tab, existingTabNames)
+    }, [tab, existingTabNames])
 
     const handleSubmit = useCallback((e?: React.FormEvent<HTMLFormElement>): void => {
         e?.preventDefault()
 
-        const errors = validateTabName(tempName, tab, existingTabNames)
-
-        if (!errors.length) {
-            evento('newNameSubmit', { current: tab, next: tempName })
+        if (errorsRef.current.length > 0) {
+            alert(errorsRef.current[0])
             return
         }
 
-        alert(errors[0])
-        inputRef.current?.select()
-    }, [existingTabNames, tab, tempName])
+        evento('newNameSubmit', { current: tab, next: tempName })
+    }, [tempName])
 
     const handleBlur = useCallback(() => {
+        if (errorsRef.current.length > 0) {
+            inputRef.current?.select()
+            return
+        }
         handleSubmit()
     }, [handleSubmit])
 
