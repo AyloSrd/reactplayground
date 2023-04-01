@@ -3,14 +3,14 @@ With React Playground, you create, test, export, and share your ReactJS Componen
 
 Here you can :
 1. 🔗 Share your project. You can get at any moment a shareable link without any registration or login. The page's URL is constantly updated at any keystroke, and you can directly copy it, or use the designed button.
-2. ⚛️ Open several tabs, and import/export components and hooks from them.
+2. ⚛️ Open several tabs (in JS, JSX and CSS file format), and import/export components and hooks from them.
 3. 📦 Import third parties packages, as you would do it in your text editor (e.g. `import styled from 'styled-components'`). React Playground will import them using internally [*esm.sh*]('https://esm.sh). you can select a version by adding `@` + version. (e.g. `import React from 'react@18.0.0'`).
-4. 🔲 Export your code to CodeSandbox with a click.
+4. 🔲 Export your code to Stackblitz and CodeSandbox with a click.
 
 ## Known bugs and limitations
 - The bundler will automatically import from *esm.sh*, and is therefore subject to any limitations coming from the CDN (e.g. some dependencies cannot be imported)
 - You can only open .jsx tabs. However, you can style your components with CSS in js libraries, such as styled-components
-- Only JS/JSX third-party libraries can be imported (no CSS). However, libraries like styled-components work.
+- Only JS/JSX third-party libraries can be imported (no CSS @import). However, most CSS-in-JS libraries, like styled-components workwork normally.
 
 ## Technologies used
 - [ReactJS](https://reactjs.org/)
