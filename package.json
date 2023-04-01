@@ -11,6 +11,8 @@
     "@codemirror/autocomplete": "^6.1.0",
     "@codemirror/lang-css": "^6.1.1",
     "@codemirror/lang-javascript": "^6.0.2",
+    "@codemirror/view": "^6.9.3",
+    "@lezer/highlight": "^1.1.4",
     "@stackblitz/sdk": "^1.8.0",
     "@uiw/codemirror-themes": "^4.11.5",
     "@uiw/react-codemirror": "^4.19.11",
