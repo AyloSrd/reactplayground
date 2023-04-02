@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { colors } from '@/tools/style-tools'
 import { validateTabName } from '@/tools/editor.tools'
+import { type } from 'os'
 
 interface Props {
     existingTabNames: string[],
@@ -14,14 +15,11 @@ interface Props {
 function TabInput(props: Props) {
     const { existingTabNames, tab } = props
 
-    const [tempName, setTempName] = useState<string>(tab)
-
     const inputRef = useRef<HTMLInputElement>(null)
     const errorsRef = useRef<Array<string>>([])
     const evento = useCreateEvento(props)
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setTempName(e.target.value)
         errorsRef.current = validateTabName(e.target.value, tab, existingTabNames)
     }, [tab, existingTabNames])
 
@@ -33,8 +31,12 @@ function TabInput(props: Props) {
             return
         }
 
-        evento('newNameSubmit', { current: tab, next: tempName })
-    }, [tempName])
+        const nextTabName = inputRef.current?.value
+
+        if (typeof nextTabName !== 'string') return
+
+        evento('newNameSubmit', { current: tab, next: nextTabName })
+    }, [tab])
 
     const handleBlur = useCallback(() => {
         if (errorsRef.current.length > 0) {
@@ -59,7 +61,7 @@ function TabInput(props: Props) {
                         onChange={handleChange}
                         ref={inputRef}
                         type="text"
-                        value={tempName}
+                        defaultValue={tab}
                     />
                 </form>
             </Flex>
