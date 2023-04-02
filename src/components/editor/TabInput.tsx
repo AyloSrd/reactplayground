@@ -4,7 +4,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { colors } from '@/tools/style-tools'
 import { validateTabName } from '@/tools/editor.tools'
-import { type } from 'os'
 
 interface Props {
     existingTabNames: string[],
