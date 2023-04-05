@@ -127,7 +127,6 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                 })
 
                 build.onLoad({ filter: /.css$/ }, async (args: any) => {
-                    console.log(args.path.substring(2))
                     const contents = make_css_contents(vfs[args.path] ? vfs[args.path] : '')
 
                     const result: esbuild.OnLoadResult = {
