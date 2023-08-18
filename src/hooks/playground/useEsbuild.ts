@@ -22,7 +22,7 @@ export type OutputType = OutputTypeSuccess | OutputTypeFail
 
 export const CDN = 'https://esm.sh'
 
-export const make_CDN_URL = (pkg: string) => `${CDN}/${pkg}?pin=v92`
+export const make_CDN_URL = (pkg: string) => `${CDN}/${pkg}`
 
 const fileCache = localforage.createInstance({
     name: 'filecache',
