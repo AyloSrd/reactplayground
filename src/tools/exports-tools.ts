@@ -27,6 +27,10 @@ export interface RawImports {
     [key: string] : RawImport,
 }
 
+const PIN_REGEX = /\?pin=v\d+/g;
+const VERSION_REGEX = /v\d+\//;
+const STARTS_WITH_VERSION_REGEX = /^v\d+\//
+
 const htmlFileCodeSandBox = dedent`
 <!DOCTYPE html>
 <html lang="en">
@@ -109,7 +113,7 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
             rawImport =>
                 rawImport.startsWith('b:')
                 && rawImport.includes('@')
-                && !rawImport.includes('?pin=v92')
+                && !PIN_REGEX.test(rawImport)
         )
 
     const dependencies = rawImportsFromEMSSH.reduce((dependenciesObj: { [key: string]: string }, rawImport: string) => {
@@ -119,8 +123,8 @@ async function getDependencies(rawImports: RawImports): Promise<{ [key: string]:
             withoutCDN = withoutCDN.replace('stable/', '')
         }
 
-        if (withoutCDN.startsWith('v92')) {
-            withoutCDN = withoutCDN.replace('v92/', '')
+        if (STARTS_WITH_VERSION_REGEX.test(withoutCDN)) {
+            withoutCDN = withoutCDN.replace(VERSION_REGEX, '')
         }
 
         const isPrivatePkg = withoutCDN.startsWith('@')
