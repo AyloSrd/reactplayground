@@ -130,7 +130,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                     const contents = make_css_contents(vfs[args.path] ? vfs[args.path] : '')
 
                     const result: esbuild.OnLoadResult = {
-                        loader: 'jsx',
+                        loader: 'tsx',
                         contents,
                     }
 
@@ -140,14 +140,14 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
                 build.onLoad({ filter: /.*/ }, async (args: any) => {
                     if (args.path === ENTRY_POINT_JSX) {
                         return ({
-                            loader: 'jsx',
+                            loader: 'tsx',
                             contents: vfs[ENTRY_POINT_JSX],
                         })
                     }
 
                     if (vfs[args.path]) {
                         return {
-                            loader: 'jsx',
+                            loader: 'tsx',
                             contents: vfs[args.path],
                         }
                     }
@@ -160,7 +160,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
 
                     const { data, request } = await axios.get(args.path)
                     const result: esbuild.OnLoadResult = {
-                        loader: 'jsx',
+                        loader: 'tsx',
                         contents: data,
                         resolveDir: new URL('./', request.responseURL).pathname,
                     }

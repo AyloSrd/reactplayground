@@ -16,6 +16,7 @@ import {
   acceptedFileTypes,
   type AcceptedFileType,
 } from "@/tools/esbuild-tools";
+import { useTSServer } from '@/hooks/editor/useTSServer'
 
 interface Props {
   files: {
@@ -29,12 +30,9 @@ interface Props {
 }
 
 function Editor(props: Props) {
-  const {
-    files: { fileList: tabs, filesById },
-  } = props;
-  const [currentFile, setCurrentFile] = useState<string>(
-    filesById["App.jsx"] ? "App.jsx" : ENTRY_POINT_JSX
-  );
+    useTSServer()
+    const { files: { fileList: tabs, filesById } } = props
+    const [currentFile, setCurrentFile] = useState<string>(filesById['App.jsx'] ? 'App.jsx' : ENTRY_POINT_JSX)
 
   const prevTabsLength = usePreviousValue(tabs.length);
 
@@ -42,10 +40,10 @@ function Editor(props: Props) {
 
   const fileFormat = currentFile.split(".").at(-1);
 
-  const extensions = [
-    ...(fileFormat === "css" ? [css()] : [javascript({ jsx: true })]),
-    EditorView.lineWrapping,
-  ];
+    const extensions = [
+        ...(fileFormat === 'css' ? [css()] : [javascript({ jsx: true, typescript: true })]),
+        EditorView.lineWrapping,
+    ]
 
   const handleTextChange = useCallback(
     (text: string) => {
