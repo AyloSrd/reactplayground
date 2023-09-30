@@ -1,3 +1,4 @@
+// Code form Typescript ATA packege, small changes operated to allow multiple file input
 import {
     getDTSFileForModuleWithVersion,
     getFiletreeForModuleWithVersion,
