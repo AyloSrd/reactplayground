@@ -64,9 +64,11 @@ import {
     }
   
     async function resolveDeps(initialSourceFiles: string[], depth: number) {
+      console.log("🚀 ~ file: index.ts:71 ~ depsToGet ~ resolveDeps:", initialSourceFiles)
       const depsToGet = initialSourceFiles.reduce((_depsToGet: { module: string, version: string | undefined }[], initialSourceFile: string) => {
         return _depsToGet.concat(getNewDependencies(config, moduleMap, initialSourceFile, processedModules))
       }, [])
+      console.log("🚀 ~ file: index.ts:71 ~ depsToGet ~ resolveDeps:", depsToGet)
         
       // Make it so it won't get re-downloaded
       depsToGet.forEach(dep => moduleMap.set(dep.module, { state: "loading" }))
@@ -165,6 +167,7 @@ import {
    */
   export const getReferencesForModule = (ts: typeof import("typescript"), code: string, processedModules: Set<string> ) => {
     const meta = ts.preProcessFile(code)
+    console.log("meta", meta)
   
     // Ensure we don't try download TypeScript lib references
     // @ts-ignore - private but likely to never change
@@ -177,6 +180,8 @@ import {
       .concat(meta.libReferenceDirectives)
       .filter(f => !f.fileName.endsWith(".d.ts"))
       .filter(d => !libMap.has(d.fileName))
+
+    console.log("referencesRaw", referencesRaw)
   
     let references: { module: string, version: string | undefined }[] = []
     
@@ -213,7 +218,7 @@ import {
         version,
       }
     })
-
+    console.log("references", references)
     return references
   }
   

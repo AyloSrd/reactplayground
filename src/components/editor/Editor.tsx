@@ -30,8 +30,8 @@ interface Props {
 }
 
 function Editor(props: Props) {
-    useTSServer()
     const { files: { fileList: tabs, filesById } } = props
+    useTSServer({ files: tabs, vfs: filesById })
     const [currentFile, setCurrentFile] = useState<string>(filesById['App.jsx'] ? 'App.jsx' : ENTRY_POINT_JSX)
 
   const prevTabsLength = usePreviousValue(tabs.length);

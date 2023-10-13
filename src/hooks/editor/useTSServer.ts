@@ -6,7 +6,7 @@ import lzstring from "lz-string";
 import { getLatestTS, getTSAccessoryLibs } from "@/tools/tsserver-tools";
 import { setupTypeAcquisition } from "@/hooks/editor/ata";
 
-export async function init() {
+export async function init(originalVFS: Record<string, string>) {
     const ts = await getLatestTS();
     const compilerOptions = {
         target: ts.ScriptTarget.ES2021,
@@ -26,24 +26,17 @@ export async function init() {
         _ts,
         lzstring
     );
-    fsMap.set(
-        "/index.ts",
-        "import React from 'react'; export const a: string = React.useState();"
-    );
-    fsMap.set(
-        "/a.ts",
-        "import { b } from './index.ts'; import { c } from 'react'; const f: string = c()"
-    );
-    fsMap.set(
-        "/b.ts",
-        "import { useCreateEvento } from 'evento-react'; const f: string = useCreateEvento(1); export default f"
-    );
 
+    Object.entries(originalVFS).forEach(([key, value]) => {
+        fsMap.set(key, value);
+    })
     // fsMap.set("/is-odd.ts", "const a: string = 'a'; export default a");
     const TSLibs = await getTSAccessoryLibs();
     for (const lib of TSLibs) {
         fsMap.set(lib.name, lib.content);
     }
+
+    // console.log(TSLibs)
 
     const fn = setupTypeAcquisition({
         delegate: {
@@ -56,8 +49,13 @@ export async function init() {
         typescript: _ts,
     });
 
-    await fn(Object.values(Object.fromEntries(fsMap.entries())));
+    try {
 
+        await fn(Object.values(Object.fromEntries(fsMap.entries())));
+    } catch (e) {
+        console.error(e);
+    }
+    // console.log("fsMap", fsMap);
     const system = tsvfs.createSystem(fsMap);
     const env = tsvfs.createVirtualTypeScriptEnvironment(
         system,
@@ -66,14 +64,23 @@ export async function init() {
         compilerOptions
     );
 
-    const errors = env.languageService.getSemanticDiagnostics("b.ts");
+    const errors = env.languageService.getSemanticDiagnostics("index.ts");
 
     console.log("ts errors", errors, env.getSourceFile("a.ts"));
 }
 
-export function useTSServer() {
+interface Props {
+    files: string[],
+    vfs: Record<string, string>;
+}
+export function useTSServer({ files, vfs }: Props) {
+    console.log("vfs", vfs);
     useEffect(() => {
-        init();
+        init(files.reduce((tsVFS: Record<string, string>, jsFile: string) => {
+            const tsFile = jsFile.replace(".js", ".ts");
+            tsVFS[tsFile] = '/' + vfs[jsFile];
+            return tsVFS;
+        }, {}));
     }, []);
     return null;
 }
