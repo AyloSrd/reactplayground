@@ -3,14 +3,13 @@ import * as tsvfs from '@typescript/vfs';
 import _ts, { CompilerOptions } from 'typescript';
 import lzstring from 'lz-string';
 
-self.importScripts("https://unpkg.com/@typescript/vfs@1.3.5/dist/vfs.globals.js");
+importScripts("https://unpkg.com/@typescript/vfs@1.3.5/dist/vfs.globals.js");
 importScripts(
   "https://cdnjs.cloudflare.com/ajax/libs/typescript/4.4.3/typescript.min.js"
 );
 importScripts("https://unpkg.com/@okikio/emitter@2.1.7/lib/api.js");
 
 export type VFS = typeof import("@typescript/vfs");
-export type EVENT_EMITTER = import("@okikio/emitter").EventEmitter;
 export type Diagnostic = import("@codemirror/lint").Diagnostic;
 
 var {
