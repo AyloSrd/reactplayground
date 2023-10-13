@@ -5,7 +5,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import { css } from '@codemirror/lang-css'
 import { useCreateEvento } from 'evento-react'
-import { sublimish } from '@/tools/codemirror-tools'
+import { vsCodish } from '@/tools/codemirror-tools'
 import { memo, useState, useMemo, useCallback, useEffect } from 'react'
 import { colors, fixedSizes } from '@/tools/style-tools'
 import styled from 'styled-components'
@@ -87,7 +87,7 @@ function Editor(props: Props) {
                     <CodeMirror
                         key={currentFile}
                         value={filesById[currentFile]}
-                        theme={sublimish}
+                        theme={vsCodish}
                         extensions={extensions}
                         onChange={handleTextChange}
                     />

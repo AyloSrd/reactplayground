@@ -3,7 +3,7 @@ export function makeClassName(classNames: string[]): string {
 }
 
 export const colors = {
-    $bg: '#1b2426',
+    $bg: '#1e1e1e',
     $bgNav: '#2e3d51',
     $blue: '#5ba1cf',
     $brown: '#ce966f',
