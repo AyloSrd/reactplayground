@@ -7,7 +7,7 @@ import { useCreateEvento } from 'evento-react'
 import { memo, useCallback, useState } from "react"
 import { generalBorderStyle } from '@/tools/style-tools'
 import styled from 'styled-components'
-
+import Worker from "@/workers/prettify.worker?worker";
 interface Props {
     currentTab: string,
     onTabCreate: (e: CustomEvent<string>) => void,
@@ -17,6 +17,16 @@ interface Props {
     tabs: string[]
 }
 
+const prettierWorker = new Worker()
+prettierWorker.postMessage({
+    content: 'your code to format',
+    fileType: 'js', // or 'ts', 'jsx', 'tsx', 'html', 'css'
+  });
+
+  prettierWorker.onmessage = (e) => {
+    const formattedContent = e.data;
+    console.log('yo', formattedContent);
+  };
 function TabsContainer(props: Props) {
     const { currentTab, tabs } = props
 
@@ -66,9 +76,9 @@ function TabsContainer(props: Props) {
         evento('tabSelect', e.detail)
     }, [])
 
-    return (
+    return (<Container>
         <Nav>
-            <Container>
+            <Tabs>
                 {
                     tabs.map(tab => (
                         tab === editedTab ?
@@ -99,9 +109,10 @@ function TabsContainer(props: Props) {
                     )
                 }
                 <AddButton onClick={handleAddClick} />
-            </Container>
+            </Tabs>
         </Nav>
-    )
+        <AddButton onClick={() => console.log('add button clicked')} />
+    </Container>)
 }
 
 const Nav = styled.nav`
@@ -111,14 +122,13 @@ const Nav = styled.nav`
     overflow-x: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    border-bottom: ${generalBorderStyle};
-
+    
     &::-webkit-scrollbar {
         display: none;
     }
-`
+    `
 
-const Container = styled.ul`
+const Tabs = styled.ul`
     width: 100%;
     list-style-type: none;
     height: 100%;
@@ -126,6 +136,13 @@ const Container = styled.ul`
     padding: 0;
     display: flex;
     align-items: center;
+    `
+
+const Container = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border-bottom: ${generalBorderStyle};
 `
 
 export default memo(TabsContainer)
