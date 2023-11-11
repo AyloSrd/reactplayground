@@ -25,7 +25,6 @@ function TabsContainer(props: Props) {
   const {
     containerRef,
     tabsRef,
-    isScrollable,
     isOverflowedLeft,
     isOverflowedRight,
     handleScroll,
