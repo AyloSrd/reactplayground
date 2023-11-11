@@ -1,4 +1,6 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
+import { acceptedFileTypes, type AcceptedFileType } from '@/tools/esbuild-tools'
+import { type BuiltInParserName } from 'prettier'
 
 const componentCount = countGen()
 
@@ -44,7 +46,7 @@ export function validateTabName(tabName: string, prevTabName: string,tabNames: A
 
     const format= tabName.split('.').at(-1)
 
-    if (!format || !['js', 'jsx', 'css'].includes(format)) {
+    if (!format || !acceptedFileTypes.includes(format as AcceptedFileType)) {
         errors.push('Please chose one of the following file formats: js, jsx or css')
     }
 

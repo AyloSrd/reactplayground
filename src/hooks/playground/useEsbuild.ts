@@ -1,6 +1,6 @@
 import useVFS, { ENTRY_POINT_JSX, VFS } from '@/hooks/playground/useVFS'
 import { BundleError, createErrorString } from '@/tools/esbuild-tools'
-import { countGen } from '@/tools/editor.tools'
+import { countGen } from '@/tools/editor-tools'
 import { initialLoader } from '@/tools/iframe-tools'
 import { RawImports } from '@/tools/exports-tools'
 import * as esbuild from 'esbuild-wasm'
