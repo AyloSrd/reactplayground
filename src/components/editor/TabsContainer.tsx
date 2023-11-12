@@ -25,7 +25,6 @@ function TabsContainer(props: Props) {
   const {
     containerRef,
     tabsRef,
-    isScrollable,
     isOverflowedLeft,
     isOverflowedRight,
     handleScroll,
@@ -93,7 +92,9 @@ function TabsContainer(props: Props) {
   return (
     <Container hasBefore={isOverflowedLeft} ref={containerRef}>
       <Nav onScroll={handleScroll} ref={tabsRef}>
-        <Tabs>
+        <Tabs
+          hasRightPadding={isOverflowedRight}
+        >
           {tabs.map((tab) =>
             tab === editedTab ? (
               <TabInput
@@ -134,28 +135,6 @@ function TabsContainer(props: Props) {
   );
 }
 
-/*
-
-   .scrollable-container::before,
-   .scrollable-container::after {
-     content: "";
-     position: absolute;
-     top: 0;
-     bottom: 0;
-     width: 50px;
-     pointer-events: none;
-   }
-
-   .scrollable-container::before {
-     left: 0;
-     background-image: linear-gradient(to right, white, transparent);
-   }
-
-   .scrollable-container::after {
-     right: 0;
-     background-image: linear-gradient(to left, white, transparent);
-*/
-
 const Nav = styled.nav`
   position: relative;
   width: 100%;
@@ -170,12 +149,14 @@ const Nav = styled.nav`
   }
 `;
 
-const Tabs = styled.ul`
+const Tabs = styled.ul<{
+  hasRightPadding: boolean
+}>`
   width: 100%;
   list-style-type: none;
   height: 100%;
   margin: 0;
-  padding: 0;
+  padding: ${hasRightPadding => (hasRightPadding ? "0 50px 0 0" : "0")};
   display: flex;
   align-items: center;
 `;

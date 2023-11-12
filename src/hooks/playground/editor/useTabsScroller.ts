@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useTabsScroller({ tabs }: { tabs: string[] }) {
-  const [isScrollable, setIsScrollable] = useState(false);
   const [isOverflowedLeft, setIsOverflowedLeft] = useState(false);
   const [isOverflowedRight, setIsOverflowedRight] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
@@ -12,11 +11,10 @@ export function useTabsScroller({ tabs }: { tabs: string[] }) {
 
     if (ul) {
       const { scrollWidth, clientWidth, scrollLeft } = ul;
-      setIsScrollable(scrollWidth > clientWidth);
       setIsOverflowedLeft(scrollLeft > 0);
       setIsOverflowedRight(scrollLeft < scrollWidth - clientWidth);
     }
-  }, [setIsScrollable, setIsOverflowedLeft, setIsOverflowedRight, tabsRef]);
+  }, [setIsOverflowedLeft, setIsOverflowedRight, tabsRef]);
 
   useEffect(() => {
     calculateFaders();
@@ -27,18 +25,15 @@ export function useTabsScroller({ tabs }: { tabs: string[] }) {
       }
     });
     if (container) observer.observe(container);
-    //window.addEventListener("resize", calculateFaders);
 
     return () => {
       if (container) observer.unobserve(container);
-      //window.removeEventListener("resize", calculateFaders);
     };
   }, [calculateFaders, tabs, tabsRef, containerRef]);
 
   return {
     containerRef,
     tabsRef,
-    isScrollable,
     isOverflowedLeft,
     isOverflowedRight,
     handleScroll: calculateFaders,
