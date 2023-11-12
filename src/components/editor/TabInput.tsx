@@ -3,7 +3,7 @@ import { useCreateEvento } from 'evento-react'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { colors } from '@/tools/style-tools'
-import { validateTabName } from '@/tools/editor.tools'
+import { validateTabName } from '@/tools/editor-tools'
 
 interface Props {
     existingTabNames: string[],

@@ -14,6 +14,10 @@ const Button = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+    &:hover {
+        color: ${colors.$silver100};
+    }
 `
 
 export default memo(Button)

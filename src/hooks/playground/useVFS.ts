@@ -1,4 +1,4 @@
-import { generatePayload } from '@/tools/editor.tools'
+import { generatePayload } from '@/tools/editor-tools'
 import { useCallback, useReducer } from 'react'
 
 enum ActionKind {

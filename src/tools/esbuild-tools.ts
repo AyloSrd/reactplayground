@@ -14,6 +14,9 @@ export interface BundleError {
 
 export const libVersionRegex = new RegExp(/@(\d+\.)?(\d+\.)?(\*|\d+)/)
 
+export type AcceptedFileType = 'js' | 'jsx' | 'css'
+export const acceptedFileTypes: AcceptedFileType[] = ['js', 'jsx', 'css']
+
 export function getVersion(urlImport: string): { lib: string, version: string} | null {
     if (!libVersionRegex.test(urlImport)) {
         return null
