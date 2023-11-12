@@ -45,10 +45,12 @@ self.onmessage = (event: { data: FormatRequestData }) => {
   const { code, lang } = data;
 
   prettier
+    // @ts-ignore
     .format(code, {
       parser: fileTypeToParser[lang],
       plugins: fileTypeToPlugins[lang],
     })
+    // @ts-ignore
     .then((data) => {
       self.postMessage({
         type: "code",
@@ -56,6 +58,7 @@ self.onmessage = (event: { data: FormatRequestData }) => {
         error: null,
       });
     })
+    // @ts-ignore
     .catch((error) => {
       self.postMessage({
         type: "error",
