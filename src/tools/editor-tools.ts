@@ -1,6 +1,5 @@
 import { ENTRY_POINT_JSX } from '@/hooks/playground/useVFS'
 import { acceptedFileTypes, type AcceptedFileType } from '@/tools/esbuild-tools'
-import { type BuiltInParserName } from 'prettier'
 
 const componentCount = countGen()
 

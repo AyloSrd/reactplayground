@@ -1,7 +1,7 @@
-import * as prttr from "https://unpkg.com/prettier@3.0.3/standalone.mjs";
-import babelPlugin from "https://unpkg.com/prettier@3.0.3/plugins/babel.mjs";
-import cssPlugin from "https://unpkg.com/prettier@3.0.3/plugins/postcss.mjs";
-import estreePlugin from "https://unpkg.com/prettier@3.0.3/plugins/estree.mjs";
+import * as prttr from "./prettier/standalone";
+import babelPlugin from "./prettier/plugins/babel";
+import cssPlugin from "./prettier/plugins/postcss";
+import estreePlugin from "./prettier/plugins/estree";
 import { type AcceptedFileType } from "@/tools/esbuild-tools";
 
 export type FormatResponseData =
