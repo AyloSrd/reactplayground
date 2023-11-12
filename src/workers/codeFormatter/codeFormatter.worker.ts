@@ -1,4 +1,4 @@
-import * as prettier from "https://unpkg.com/prettier@3.0.3/standalone.mjs";
+import * as prttr from "https://unpkg.com/prettier@3.0.3/standalone.mjs";
 import babelPlugin from "https://unpkg.com/prettier@3.0.3/plugins/babel.mjs";
 import cssPlugin from "https://unpkg.com/prettier@3.0.3/plugins/postcss.mjs";
 import estreePlugin from "https://unpkg.com/prettier@3.0.3/plugins/estree.mjs";
@@ -43,7 +43,7 @@ self.onmessage = (event: { data: FormatRequestData }) => {
 
   const { code, lang } = data;
 
-  prettier
+  prttr
     // @ts-ignore
     .format(code, {
       parser: fileTypeToParser[lang],
