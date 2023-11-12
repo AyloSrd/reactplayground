@@ -3,7 +3,6 @@ import babelPlugin from "https://unpkg.com/prettier@3.0.3/plugins/babel.mjs";
 import cssPlugin from "https://unpkg.com/prettier@3.0.3/plugins/postcss.mjs";
 import estreePlugin from "https://unpkg.com/prettier@3.0.3/plugins/estree.mjs";
 import { type AcceptedFileType } from "@/tools/esbuild-tools";
-import { type Plugin } from "prettier";
 
 export type FormatResponseData =
   | {
@@ -31,7 +30,7 @@ const fileTypeToParser: Record<AcceptedFileType, string> = {
   css: "css",
 };
 
-const fileTypeToPlugins: Record<AcceptedFileType, Plugin[]> = {
+const fileTypeToPlugins: Record<AcceptedFileType, any> = {
   js: [babelPlugin, estreePlugin],
   jsx: [babelPlugin, estreePlugin],
   css: [cssPlugin],
