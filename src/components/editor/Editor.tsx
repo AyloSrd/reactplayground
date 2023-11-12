@@ -83,6 +83,9 @@ function Editor(props: Props) {
       code: filesById[currentFile],
       lang: fileFormat as AcceptedFileType,
       onComplete: handleTextChange,
+      onError: (err) => {
+        console.warn(`Prettier error: ${err.message}`);
+      },
     });
   }, [currentFile, fileFormat, filesById, handleTextChange]);
 

@@ -32,7 +32,7 @@ const StyledButton = styled(Button)`
     color: ${colors.$silver300};
 
     &:hover {
-        color: ${colors.$red};
+        color: ${colors.$red} !important;
     }
 `
 
