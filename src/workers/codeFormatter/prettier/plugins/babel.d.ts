@@ -1,4 +1,4 @@
-import { Parser } from "../index.js";
+import { Parser } from "../index";
 
 export declare const parsers: {
   babel: Parser;

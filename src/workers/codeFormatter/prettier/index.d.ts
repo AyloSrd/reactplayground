@@ -8,7 +8,7 @@
 // exported module.
 export {};
 
-import { builders, printer, utils } from "./doc.js";
+import { builders, printer, utils } from "./doc";
 
 export namespace doc {
   export { builders, printer, utils };

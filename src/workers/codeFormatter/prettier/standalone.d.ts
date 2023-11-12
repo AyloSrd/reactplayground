@@ -1,4 +1,4 @@
-import { CursorOptions, CursorResult, Options, SupportInfo } from "./index.js";
+import { CursorOptions, CursorResult, Options, SupportInfo } from "./index";
 
 /**
  * formatWithCursor both formats the code, and translates a cursor position from unformatted code to formatted code.
