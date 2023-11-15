@@ -29,7 +29,7 @@ interface State {
 export const ENTRY_POINT_JSX = 'index.js'
 
 const indexDefaultContent = `
-import App from './App.jsx'
+import App from './App'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
@@ -45,14 +45,14 @@ root.render(
 `.trim()
 
 const AppDefaultContent = `
-import React, { useState } from 'react'
+import React, { useState, type FC } from 'react'
 import styled from 'styled-components'
 
-const App = () => {
+const App: FC = () => {
   const [count, setCount] = useState(0)
 
   return (
-    <Button onClick={() => setCount(count + 1)}>
+    <Button onClick={() => setCount(count + 2)}>
       <span role="img" aria-label="react-emoji">⚛️</span> {count}
     </Button>
   )
