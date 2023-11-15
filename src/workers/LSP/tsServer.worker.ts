@@ -3,22 +3,6 @@ import * as tsvfs from '@typescript/vfs';
 import _ts, { CompilerOptions } from 'typescript';
 import lzstring from 'lz-string';
 
-importScripts("https://unpkg.com/@typescript/vfs@1.3.5/dist/vfs.globals.js");
-importScripts(
-  "https://cdnjs.cloudflare.com/ajax/libs/typescript/4.4.3/typescript.min.js"
-);
-importScripts("https://unpkg.com/@okikio/emitter@2.1.7/lib/api.js");
-
-export type VFS = typeof import("@typescript/vfs");
-export type Diagnostic = import("@codemirror/lint").Diagnostic;
-
-var {
-  createDefaultMapFromCDN,
-  createSystem,
-  createVirtualTypeScriptEnvironment,
-} = globalThis.tsvfs as VFS;
-var ts = globalThis.ts; // as TS
-
 const isOddTypes = `
 // Type definitions for is-odd 3.0
 // Project: https://github.com/jonschlinkert/is-odd
@@ -43,7 +27,7 @@ export async function init() {
   const compilerOptions = {
       target: ts.ScriptTarget.ES2021,
       module: ts.ScriptTarget.ES2020,
-      lib: ["es2021", "es2020", "dom", "webworker"],
+      lib: ["es2021", "es2020", "dom"],
       esModuleInterop: true,
     } as unknown as CompilerOptions;
   const fsMap = await tsvfs.createDefaultMapFromCDN(

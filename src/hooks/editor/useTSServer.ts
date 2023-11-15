@@ -11,7 +11,7 @@ export async function init(originalVFS: Record<string, string>) {
     const compilerOptions = {
         target: ts.ScriptTarget.ES2021,
         module: ts.ScriptTarget.ES2020,
-        lib: ["es2021", "es2020", "dom", "webworker"],
+        lib: ["es2021", "es2020", "dom"],
         // the following options
         // esmoduleInterop and resolveJsonModule 
         // are necessary for ATA to work properly
