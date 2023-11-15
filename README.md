@@ -6,6 +6,7 @@ Here you can :
 2. ⚛️ Open several tabs (in JS, JSX and CSS file format), and import/export components and hooks from them.
 3. 📦 Import third parties packages, as you would do it in your text editor (e.g. `import styled from 'styled-components'`). React Playground will import them using internally [*esm.sh*]('https://esm.sh). you can select a version by adding `@` + version. (e.g. `import React from 'react@18.0.0'`).
 4. 🔲 Export your code to Stackblitz and CodeSandbox with a click.
+5. 🖌️ Format your code with prettier.
 
 ## Known bugs and limitations
 - The bundler will automatically import from *esm.sh*, and is therefore subject to any limitations coming from the CDN (e.g. some dependencies cannot be imported)
@@ -20,6 +21,7 @@ Here you can :
 - [Vite](https://vitejs.dev/), for scaffolding
 - [CodeMirror](https://codemirror.net/), for the online editor (in particular [@uiwjs/react-codemirror](https://github.com/uiwjs/react-codemirror))
 - [*esbuild wasm*](https://www.npmjs.com/package/esbuild-wasm), to quickly transpile and bundle on the browser
+- [prettier](https://prettier.io/), for the online code formatting.
 
 ## Credits
 React Playground is inspired by [SvelteJS REPL](https://svelte.dev/repl/hello-world), [SolidJS Playground](https://playground.solidjs.com/), and [VueJS Playground](https://sfc.vuejs.org/).
