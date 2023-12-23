@@ -1,7 +1,6 @@
 import Worker from "@/workers/codeFormatter/codeFormatter.worker?worker";
 import {
   type FormatResponseData,
-  type FormatRequestData,
 } from "@/workers/codeFormatter/codeFormatter.worker";
 import { useCallback, useEffect, useRef } from "react";
 import { AcceptedFileType } from "@/tools/esbuild-tools";

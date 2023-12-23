@@ -9,12 +9,14 @@ enum ActionKind {
     RESET_VFS = 'RESET_VFS'
 }
 
+interface ActionPayload {
+    target: string,
+    content: string
+}
+
 interface Action {
     type: ActionKind,
-    payload: {
-        target: string,
-        content: string
-    },
+    payload: ActionPayload,
 }
 
 export interface VFS {
@@ -174,28 +176,28 @@ function reducer(state: State, action: Action): State {
 export default function useVFS(vfsFromUrl: VFS | null) {
     const [{ vfs, fileList }, dispatch] = useReducer(reducer, vfsFromUrl, init)
 
-    const addFile = useCallback((payload: Action['payload']) => {
+    const addFile = useCallback((payload: ActionPayload) => {
         dispatch({
             type: ActionKind.ADD_FILE,
             payload
         })
     }, [])
 
-    const deleteFile = useCallback((payload: Action['payload']) => {
+    const deleteFile = useCallback((payload: ActionPayload) => {
         dispatch({
             type: ActionKind.DELETE_FILE,
             payload
         })
     }, [])
 
-    const editFileContent = useCallback((payload: Action['payload']) => {
+    const editFileContent = useCallback((payload: ActionPayload) => {
         dispatch({
             type: ActionKind.EDIT_FILE_CONTENT,
             payload
         })
     }, [])
 
-    const editFileName = useCallback((payload: Action['payload']) => {
+    const editFileName = useCallback((payload: ActionPayload) => {
         dispatch({
             type: ActionKind.EDIT_FILE_NAME,
             payload
