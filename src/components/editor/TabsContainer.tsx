@@ -47,14 +47,14 @@ function TabsContainer(props: Props) {
         }
       });
     },
-    [newTab]
+    [newTab],
   );
 
   const handleTabDelete = useCallback(
     (e: CustomEvent<string>) => {
       evento("tabDelete", e.detail);
     },
-    [evento]
+    [evento],
   );
 
   const handleTabEdit = useCallback(
@@ -71,7 +71,7 @@ function TabsContainer(props: Props) {
         }
       });
     },
-    []
+    [],
   );
 
   const handleTabEditRequest = useCallback((e: CustomEvent<string>) => {
@@ -82,7 +82,7 @@ function TabsContainer(props: Props) {
     (e: CustomEvent<string>) => {
       evento("tabSelect", e.detail);
     },
-    [evento]
+    [evento],
   );
 
   const handleFormatClick = useCallback(() => {
@@ -92,9 +92,7 @@ function TabsContainer(props: Props) {
   return (
     <Container hasBefore={isOverflowedLeft} ref={containerRef}>
       <Nav onScroll={handleScroll} ref={tabsRef}>
-        <Tabs
-          hasRightPadding={isOverflowedRight}
-        >
+        <Tabs hasRightPadding={isOverflowedRight}>
           {tabs.map((tab) =>
             tab === editedTab ? (
               <TabInput
@@ -112,7 +110,7 @@ function TabsContainer(props: Props) {
                 onSelect={handleTabSelect}
                 tab={tab}
               />
-            )
+            ),
           )}
           {typeof newTab === "string" && (
             <TabInput
@@ -150,13 +148,13 @@ const Nav = styled.nav`
 `;
 
 const Tabs = styled.ul<{
-  hasRightPadding: boolean
+  hasRightPadding: boolean;
 }>`
   width: 100%;
   list-style-type: none;
   height: 100%;
   margin: 0;
-  padding: ${hasRightPadding => (hasRightPadding ? "0 50px 0 0" : "0")};
+  padding: ${(hasRightPadding) => (hasRightPadding ? "0 50px 0 0" : "0")};
   display: flex;
   align-items: center;
 `;

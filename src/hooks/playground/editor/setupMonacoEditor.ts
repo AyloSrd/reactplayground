@@ -1,7 +1,7 @@
-import { Editor } from '@monaco-editor/react';
-import { JsxEmit } from 'typescript';
-import { useEffect, useState, type ComponentProps } from 'react';
-import { createATA } from '@/tools/editor-tools';
+import { Editor } from "@monaco-editor/react";
+import { JsxEmit } from "typescript";
+import { useEffect, useState, type ComponentProps } from "react";
+import { createATA } from "@/tools/editor-tools";
 
 const defaultContent = `
 
@@ -23,7 +23,7 @@ const res = _.partition([1, 2, 3, 4], n => n % 2);
 
 // 1. hover the cursor on those variables above to see the types.
 // 2. try to import any other library, the types will be automatically loaded.
-`
+`;
 
 export const typeHelper = createATA();
 
@@ -37,28 +37,27 @@ export function useProgress() {
       setProgress(progress);
       setTotal(total);
     };
-    typeHelper.addListener('progress', handleProgress);
+    typeHelper.addListener("progress", handleProgress);
 
     const handleFinished = () => setFinished(true);
-    typeHelper.addListener('finished', handleFinished);
+    typeHelper.addListener("finished", handleFinished);
 
     const handleStarted = () => setFinished(false);
-    typeHelper.addListener('started', handleStarted);
+    typeHelper.addListener("started", handleStarted);
 
     return () => {
-      typeHelper.removeListener('progress', handleProgress);
-      typeHelper.removeListener('finished', handleFinished);
-      typeHelper.removeListener('started', handleStarted);
+      typeHelper.removeListener("progress", handleProgress);
+      typeHelper.removeListener("finished", handleFinished);
+      typeHelper.removeListener("started", handleStarted);
     };
   }, []);
 
   return { progress, total, finished };
 }
 
-export const setupEditor: NonNullable<ComponentProps<typeof Editor>['onMount']> = (
-  editor,
-  monaco
-) => {
+export const setupEditor: NonNullable<
+  ComponentProps<typeof Editor>["onMount"]
+> = (editor, monaco) => {
   // acquireType on initial load
   editor.onDidChangeModelContent(() => {
     typeHelper.acquireType(editor.getValue());
@@ -72,7 +71,7 @@ export const setupEditor: NonNullable<ComponentProps<typeof Editor>['onMount']> 
   });
 
   const addLibraryToRuntime = (code: string, _path: string) => {
-    const path = 'file://' + _path;
+    const path = "file://" + _path;
     defaults.addExtraLib(code, path);
 
     // don't need to open the file in the editor
@@ -82,7 +81,7 @@ export const setupEditor: NonNullable<ComponentProps<typeof Editor>['onMount']> 
     // }
   };
 
-  typeHelper.addListener('receivedFile', addLibraryToRuntime);
+  typeHelper.addListener("receivedFile", addLibraryToRuntime);
 
   typeHelper.acquireType(defaultContent);
 

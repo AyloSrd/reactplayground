@@ -1,7 +1,5 @@
 import Worker from "@/workers/codeFormatter/codeFormatter.worker?worker";
-import {
-  type FormatResponseData,
-} from "@/workers/codeFormatter/codeFormatter.worker";
+import { type FormatResponseData } from "@/workers/codeFormatter/codeFormatter.worker";
 import { useCallback, useEffect, useRef } from "react";
 import { AcceptedFileType } from "@/tools/esbuild-tools";
 
@@ -24,7 +22,7 @@ export function useCodeFormatter() {
         onErrorRef.current = onError;
       }
     },
-    [workerRef, onCompleteRef, onErrorRef]
+    [workerRef, onCompleteRef, onErrorRef],
   );
   useEffect(() => {
     workerRef.current = new Worker();

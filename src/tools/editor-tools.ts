@@ -30,7 +30,7 @@ export function generatePayload(target: string, content?: string) {
 export function validateTabName(
   tabName: string,
   prevTabName: string,
-  tabNames: Array<string>
+  tabNames: Array<string>,
 ): Array<string> {
   let errors = [];
   if (!tabName.length) {
@@ -42,7 +42,7 @@ export function validateTabName(
     (tabName !== prevTabName && tabNames.includes(tabName))
   ) {
     errors.push(
-      `A file named ${tabName} already exists. Please be creative, find another one.`
+      `A file named ${tabName} already exists. Please be creative, find another one.`,
     );
   }
 
@@ -54,7 +54,7 @@ export function validateTabName(
 
   if (!format || !acceptedFileTypes.includes(format as AcceptedFileType)) {
     errors.push(
-      "Please chose one of the following file formats: js, jsx or css"
+      "Please chose one of the following file formats: js, jsx or css",
     );
   }
 
@@ -118,7 +118,7 @@ export function createATA() {
   const acquireType = (code: string) => ata(code);
   const addListener = <T extends keyof DelegateListener>(
     event: T,
-    handler: InferSet<DelegateListener[T]>
+    handler: InferSet<DelegateListener[T]>,
   ) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -127,7 +127,7 @@ export function createATA() {
 
   const removeListener = <T extends keyof DelegateListener>(
     event: T,
-    handler: InferSet<DelegateListener[T]>
+    handler: InferSet<DelegateListener[T]>,
   ) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

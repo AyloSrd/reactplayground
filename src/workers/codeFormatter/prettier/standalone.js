@@ -26,7 +26,7 @@ var Ce = (t, e, r) => (
       e || !t || !t.__esModule
         ? $e(r, "default", { value: t, enumerable: !0 })
         : r,
-      t
+      t,
     )
   ),
   du = (t) => nr($e({}, "__esModule", { value: !0 }), t);
@@ -350,8 +350,8 @@ var mu = (t, e, r, n) => {
       return e.replaceAll
         ? e.replaceAll(r, n)
         : r.global
-        ? e.replace(r, n)
-        : e.split(r).join(n);
+          ? e.replace(r, n)
+          : e.split(r).join(n);
   },
   ee = mu;
 var Wn = Ce(ir(), 1);
@@ -581,7 +581,7 @@ function gr(t) {
     t,
     /\r\n?/g,
     `
-`
+`,
   );
 }
 var yr = () =>
@@ -600,45 +600,45 @@ var xr = {
       n == 12288 || (65281 <= n && n <= 65376) || (65504 <= n && n <= 65510)
         ? "F"
         : (4352 <= n && n <= 4447) ||
-          (4515 <= n && n <= 4519) ||
-          (4602 <= n && n <= 4607) ||
-          (9001 <= n && n <= 9002) ||
-          (11904 <= n && n <= 11929) ||
-          (11931 <= n && n <= 12019) ||
-          (12032 <= n && n <= 12245) ||
-          (12272 <= n && n <= 12283) ||
-          (12289 <= n && n <= 12350) ||
-          (12353 <= n && n <= 12438) ||
-          (12441 <= n && n <= 12543) ||
-          (12549 <= n && n <= 12589) ||
-          (12593 <= n && n <= 12686) ||
-          (12688 <= n && n <= 12730) ||
-          (12736 <= n && n <= 12771) ||
-          (12784 <= n && n <= 12830) ||
-          (12832 <= n && n <= 12871) ||
-          (12880 <= n && n <= 13054) ||
-          (13056 <= n && n <= 19903) ||
-          (19968 <= n && n <= 42124) ||
-          (42128 <= n && n <= 42182) ||
-          (43360 <= n && n <= 43388) ||
-          (44032 <= n && n <= 55203) ||
-          (55216 <= n && n <= 55238) ||
-          (55243 <= n && n <= 55291) ||
-          (63744 <= n && n <= 64255) ||
-          (65040 <= n && n <= 65049) ||
-          (65072 <= n && n <= 65106) ||
-          (65108 <= n && n <= 65126) ||
-          (65128 <= n && n <= 65131) ||
-          (110592 <= n && n <= 110593) ||
-          (127488 <= n && n <= 127490) ||
-          (127504 <= n && n <= 127546) ||
-          (127552 <= n && n <= 127560) ||
-          (127568 <= n && n <= 127569) ||
-          (131072 <= n && n <= 194367) ||
-          (177984 <= n && n <= 196605) ||
-          (196608 <= n && n <= 262141)
-        ? "W"
-        : "N"
+            (4515 <= n && n <= 4519) ||
+            (4602 <= n && n <= 4607) ||
+            (9001 <= n && n <= 9002) ||
+            (11904 <= n && n <= 11929) ||
+            (11931 <= n && n <= 12019) ||
+            (12032 <= n && n <= 12245) ||
+            (12272 <= n && n <= 12283) ||
+            (12289 <= n && n <= 12350) ||
+            (12353 <= n && n <= 12438) ||
+            (12441 <= n && n <= 12543) ||
+            (12549 <= n && n <= 12589) ||
+            (12593 <= n && n <= 12686) ||
+            (12688 <= n && n <= 12730) ||
+            (12736 <= n && n <= 12771) ||
+            (12784 <= n && n <= 12830) ||
+            (12832 <= n && n <= 12871) ||
+            (12880 <= n && n <= 13054) ||
+            (13056 <= n && n <= 19903) ||
+            (19968 <= n && n <= 42124) ||
+            (42128 <= n && n <= 42182) ||
+            (43360 <= n && n <= 43388) ||
+            (44032 <= n && n <= 55203) ||
+            (55216 <= n && n <= 55238) ||
+            (55243 <= n && n <= 55291) ||
+            (63744 <= n && n <= 64255) ||
+            (65040 <= n && n <= 65049) ||
+            (65072 <= n && n <= 65106) ||
+            (65108 <= n && n <= 65126) ||
+            (65128 <= n && n <= 65131) ||
+            (110592 <= n && n <= 110593) ||
+            (127488 <= n && n <= 127490) ||
+            (127504 <= n && n <= 127546) ||
+            (127552 <= n && n <= 127560) ||
+            (127568 <= n && n <= 127569) ||
+            (131072 <= n && n <= 194367) ||
+            (177984 <= n && n <= 196605) ||
+            (196608 <= n && n <= 262141)
+          ? "W"
+          : "N"
     );
   },
 };
@@ -752,8 +752,8 @@ function Nu(t) {
       ? ""
       : " "
     : t.type === B
-    ? t.flatContents
-    : t;
+      ? t.flatContents
+      : t;
 }
 function wr(t) {
   return Ne(t, Nu);
@@ -866,9 +866,9 @@ function Or(t, e = He) {
       ? ke(
           e,
           r.split(`
-`)
+`),
         )
-      : r
+      : r,
   );
 }
 function vu(t) {
@@ -893,16 +893,19 @@ function Lu(t, e, r) {
   return e === Number.NEGATIVE_INFINITY
     ? t.root || Tr()
     : e < 0
-    ? Bt(t, { type: "dedent" }, r)
-    : e
-    ? e.type === "root"
-      ? { ...t, root: t }
-      : Bt(
-          t,
-          { type: typeof e == "string" ? "stringAlign" : "numberAlign", n: e },
-          r
-        )
-    : t;
+      ? Bt(t, { type: "dedent" }, r)
+      : e
+        ? e.type === "root"
+          ? { ...t, root: t }
+          : Bt(
+              t,
+              {
+                type: typeof e == "string" ? "stringAlign" : "numberAlign",
+                n: e,
+              },
+              r,
+            )
+        : t;
 }
 function Bt(t, e, r) {
   let n = e.type === "dedent" ? t.queue.slice(0, -1) : [...t.queue, e],
@@ -1052,7 +1055,7 @@ function fe(t, e) {
                 l,
                 `
 `,
-                o
+                o,
               )
             : l;
         s.push(p), i.length > 0 && (u += we(p));
@@ -1136,8 +1139,8 @@ function fe(t, e) {
         Qe({ ind: f, mode: K, doc: [E, h, rr] }, [], p, D.length > 0, r, !0)
           ? i.push(Q, Z, g)
           : _
-          ? i.push(Q, $, g)
-          : i.push(Q, $, C);
+            ? i.push(Q, $, g)
+            : i.push(Q, $, C);
         break;
       }
       case B:
@@ -1148,8 +1151,8 @@ function fe(t, e) {
             l.type === B
               ? l.breakContents
               : l.negate
-              ? l.contents
-              : ie(l.contents);
+                ? l.contents
+                : ie(l.contents);
           m && i.push({ ind: f, mode: d, doc: m });
         }
         if (p === K) {
@@ -1157,8 +1160,8 @@ function fe(t, e) {
             l.type === B
               ? l.flatContents
               : l.negate
-              ? ie(l.contents)
-              : l.contents;
+                ? ie(l.contents)
+                : l.contents;
           m && i.push({ ind: f, mode: d, doc: m });
         }
         break;
@@ -1235,16 +1238,16 @@ function J(t) {
         flatContents: J(t.flatContents),
       }
     : t.type === A
-    ? {
-        ...t,
-        contents: J(t.contents),
-        expandedStates: (e = t.expandedStates) == null ? void 0 : e.map(J),
-      }
-    : t.type === k
-    ? { type: "fill", parts: t.parts.map(J) }
-    : t.contents
-    ? { ...t, contents: J(t.contents) }
-    : t;
+      ? {
+          ...t,
+          contents: J(t.contents),
+          expandedStates: (e = t.expandedStates) == null ? void 0 : e.map(J),
+        }
+      : t.type === k
+        ? { type: "fill", parts: t.parts.map(J) }
+        : t.contents
+          ? { ...t, contents: J(t.contents) }
+          : t;
 }
 function Sr(t) {
   let e = Object.create(null),
@@ -1265,12 +1268,12 @@ function Sr(t) {
           ? "literalline"
           : "literallineWithoutBreakParent"
         : u.hard
-        ? c
-          ? "hardline"
-          : "hardlineWithoutBreakParent"
-        : u.soft
-        ? "softline"
-        : "line";
+          ? c
+            ? "hardline"
+            : "hardlineWithoutBreakParent"
+          : u.soft
+            ? "softline"
+            : "line";
     }
     if (u.type === b)
       return ((D = s == null ? void 0 : s[i - 1]) == null ? void 0 : D.type) ===
@@ -1283,10 +1286,10 @@ function Sr(t) {
       return u.n === Number.NEGATIVE_INFINITY
         ? "dedentToRoot(" + n(u.contents) + ")"
         : u.n < 0
-        ? "dedent(" + n(u.contents) + ")"
-        : u.n.type === "root"
-        ? "markAsRoot(" + n(u.contents) + ")"
-        : "align(" + JSON.stringify(u.n) + ", " + n(u.contents) + ")";
+          ? "dedent(" + n(u.contents) + ")"
+          : u.n.type === "root"
+            ? "markAsRoot(" + n(u.contents) + ")"
+            : "align(" + JSON.stringify(u.n) + ", " + n(u.contents) + ")";
     if (u.type === B)
       return (
         "ifBreak(" +
@@ -1525,7 +1528,7 @@ function et({ plugins: t = [], showDeprecated: e = !1 } = {}) {
               ((i = u.defaultOptions) == null ? void 0 : i[o.name]) !== void 0
             );
           })
-          .map((u) => [u.name, u.defaultOptions[o.name]])
+          .map((u) => [u.name, u.defaultOptions[o.name]]),
       )),
       n.push(o));
   return { languages: r, options: n };
@@ -1539,7 +1542,7 @@ function* Ru(t, e, r) {
           n.add(u);
           let i = r.find(
               (a) =>
-                a.parsers && Object.prototype.hasOwnProperty.call(a.parsers, u)
+                a.parsers && Object.prototype.hasOwnProperty.call(a.parsers, u),
             ),
             s = o.name;
           i != null && i.name && (s += ` (plugin: ${i.name})`),
@@ -1604,15 +1607,15 @@ var bt = Ce(Pe(), 1),
   Yr = (t, e, { descriptor: r }) => {
     let n = [
       `${bt.default.yellow(
-        typeof t == "string" ? r.key(t) : r.pair(t)
+        typeof t == "string" ? r.key(t) : r.pair(t),
       )} is deprecated`,
     ];
     return (
       e &&
         n.push(
           `we now treat it as ${bt.default.blue(
-            typeof e == "string" ? r.key(e) : r.pair(e)
-          )}`
+            typeof e == "string" ? r.key(e) : r.pair(e),
+          )}`,
         ),
       n.join("; ") + "."
     );
@@ -1623,7 +1626,7 @@ var tt = Symbol.for("vnopts.VALUE_NOT_EXIST"),
 var jr = " ".repeat(2),
   $r = (t, e, r) => {
     let { text: n, list: o } = r.normalizeExpectedResult(
-        r.schemas[t].expected(r)
+        r.schemas[t].expected(r),
       ),
       u = [];
     return (
@@ -1631,9 +1634,9 @@ var jr = " ".repeat(2),
       o &&
         u.push(
           [Vr(t, e, o.title, r.descriptor)].concat(
-            o.values.map((i) => Ur(i, r.loggerPrintWidth))
+            o.values.map((i) => Ur(i, r.loggerPrintWidth)),
           ).join(`
-`)
+`),
         ),
       Mr(u, r.loggerPrintWidth)
     );
@@ -1654,9 +1657,9 @@ function Ur({ text: t, list: e }, r) {
     e &&
       n.push(
         [`- ${se.default.blue(e.title)}:`].concat(
-          e.values.map((o) => Ur(o, r - jr.length).replace(/^|\n/g, `$&${jr}`))
+          e.values.map((o) => Ur(o, r - jr.length).replace(/^|\n/g, `$&${jr}`)),
         ).join(`
-`)
+`),
       ),
     Mr(n, r)
   );
@@ -1669,8 +1672,8 @@ function Mr(t, e) {
         i.split(
           `
 `,
-          1
-        )[0].length
+          1,
+        )[0].length,
     );
   return o > e && o > u ? n : r;
 }
@@ -1704,7 +1707,7 @@ function Ot(t, e) {
 var rt = (t, e, { descriptor: r, logger: n, schemas: o }) => {
   let u = [
       `Ignored unknown option ${Nt.default.yellow(
-        r.pair({ key: t, value: e })
+        r.pair({ key: t, value: e }),
       )}.`,
     ],
     i = Object.keys(o)
@@ -1792,7 +1795,7 @@ var ot = class extends w {
   }
   expected(e) {
     let { text: r, list: n } = e.normalizeExpectedResult(
-      this._valueSchema.expected(e)
+      this._valueSchema.expected(e),
     );
     return {
       text: r && `an array of ${r}`,
@@ -1816,7 +1819,7 @@ var ot = class extends w {
     for (let o of e) {
       let u = r.normalizeDeprecatedResult(
         this._valueSchema.deprecated(o, r),
-        o
+        o,
       );
       u !== !1 && n.push(...u.map(({ value: i }) => ({ value: [i] })));
     }
@@ -1896,8 +1899,8 @@ function Zr(t, e) {
   return r !== n
     ? o.indexOf(r) - o.indexOf(n)
     : r !== "string"
-    ? Number(t) - Number(e)
-    : t.localeCompare(e);
+      ? Number(t) - Number(e)
+      : t.localeCompare(e);
 }
 function Qr(t) {
   return (...e) => {
@@ -1914,7 +1917,7 @@ function St(t) {
   return (
     zu(
       (e || r) !== void 0,
-      "Unexpected `expected` result, there should be at least one field."
+      "Unexpected `expected` result, there should be at least one field.",
     ),
     r
       ? { text: e, list: { title: r.title, values: r.values.map(St) } }
@@ -1928,36 +1931,36 @@ function Pt(t, e, r = !1) {
   return t === !1
     ? !1
     : t === !0
-    ? r
-      ? !0
-      : [{ value: e }]
-    : "value" in t
-    ? [t]
-    : t.length === 0
-    ? !1
-    : t;
+      ? r
+        ? !0
+        : [{ value: e }]
+      : "value" in t
+        ? [t]
+        : t.length === 0
+          ? !1
+          : t;
 }
 function Gr(t, e) {
   return typeof t == "string" || "key" in t
     ? { from: e, to: t }
     : "from" in t
-    ? { from: t.from, to: t.to }
-    : { from: e, to: t.to };
+      ? { from: t.from, to: t.to }
+      : { from: e, to: t.to };
 }
 function st(t, e) {
   return t === void 0
     ? []
     : Array.isArray(t)
-    ? t.map((r) => Gr(r, e))
-    : [Gr(t, e)];
+      ? t.map((r) => Gr(r, e))
+      : [Gr(t, e)];
 }
 function Lt(t, e) {
   let r = st(typeof t == "object" && "redirect" in t ? t.redirect : t, e);
   return r.length === 0
     ? { remain: e, redirect: r }
     : typeof t == "object" && "remain" in t
-    ? { remain: t.remain, redirect: r }
-    : { redirect: r };
+      ? { remain: t.remain, redirect: r }
+      : { redirect: r };
 }
 function zu(t, e) {
   if (!t) throw new Error(e);
@@ -1967,7 +1970,7 @@ var at = class extends w {
     super(e),
       (this._choices = Hr(
         e.choices.map((r) => (r && typeof r == "object" ? r : { value: r })),
-        "value"
+        "value",
       ));
   }
   expected({ descriptor: e }) {
@@ -2110,7 +2113,7 @@ var lt = class {
             if (p === !0)
               this._hasDeprecationWarned(i) ||
                 this._utils.logger.warn(
-                  this._deprecatedHandler(i, l, this._utils)
+                  this._deprecatedHandler(i, l, this._utils),
                 );
             else
               for (let { value: m } of p) {
@@ -2118,7 +2121,7 @@ var lt = class {
                 if (!this._hasDeprecationWarned(E)) {
                   let h = typeof l == "string" ? { key: l, value: m } : l;
                   this._utils.logger.warn(
-                    this._deprecatedHandler(E, h, this._utils)
+                    this._deprecatedHandler(E, h, this._utils),
                   );
                 }
               }
@@ -2147,7 +2150,7 @@ var lt = class {
   _partitionOptionKeys(e) {
     let [r, n] = Jr(
       Object.keys(e).filter((o) => !this._identifyMissing(o, e)),
-      (o) => o in this._utils.schemas
+      (o) => o in this._utils.schemas,
     );
     return { knownKeys: r, unknownKeys: n };
   }
@@ -2170,7 +2173,7 @@ var lt = class {
       if (r.delete) for (let n of r.delete) delete e[n];
       if (r.override) {
         let { knownKeys: n, unknownKeys: o } = this._partitionOptionKeys(
-          r.override
+          r.override,
         );
         for (let u of n) {
           let i = r.override[u];
@@ -2197,7 +2200,7 @@ function Ku(
     passThrough: o = !1,
     FlagSchema: u,
     descriptor: i,
-  } = {}
+  } = {},
 ) {
   if (n) {
     if (!u) throw new Error("'FlagSchema' option is required.");
@@ -2243,7 +2246,7 @@ function qu(t, { isCLI: e, optionInfos: r, FlagSchema: n }) {
         (u.choices = t.choices.map((a) =>
           a != null && a.redirect
             ? { ...a, redirect: { to: { key: t.name, value: a.redirect } } }
-            : a
+            : a,
         ));
       break;
     case "boolean":
@@ -2256,7 +2259,7 @@ function qu(t, { isCLI: e, optionInfos: r, FlagSchema: n }) {
             a.alias,
             a.description && a.name,
             a.oppositeDescription && `no-${a.name}`,
-          ].filter(Boolean)
+          ].filter(Boolean),
         ));
       break;
     case "path":
@@ -2344,13 +2347,13 @@ async function Ju(t, e = {}) {
         throw new ve(`No parser could be inferred for file "${r.filepath}".`);
     } else
       throw new ve(
-        "No parser and no file path given, couldn't infer a parser."
+        "No parser and no file path given, couldn't infer a parser.",
       );
   let n = et({ plugins: t.plugins, showDeprecated: !0 }).options,
     o = {
       ...an,
       ...Object.fromEntries(
-        n.filter((f) => f.default !== void 0).map((f) => [f.name, f.default])
+        n.filter((f) => f.default !== void 0).map((f) => [f.name, f.default]),
       ),
     },
     u = Rt(r.plugins, r.parser),
@@ -2364,7 +2367,7 @@ async function Ju(t, e = {}) {
   r.printer = a;
   let D = s.defaultOptions
       ? Object.fromEntries(
-          Object.entries(s.defaultOptions).filter(([, f]) => f !== void 0)
+          Object.entries(s.defaultOptions).filter(([, f]) => f !== void 0),
         )
       : {},
     c = { ...o, ...D };
@@ -2551,7 +2554,7 @@ var Ie,
           (o, u, i) => {
             n[u] = e(o, u, i);
           },
-          ...r
+          ...r,
         ),
         n
       );
@@ -2699,7 +2702,7 @@ function po(t) {
         (t.key && (typeof t.key == "object" ? t.key.name : t.key)) ||
         (t.value && (typeof t.value == "object" ? "" : String(t.value))) ||
         t.operator ||
-        ""
+        "",
     );
   return (
     r.length > 20 && (r = r.slice(0, 19) + "\u2026"), e + (r ? " " + r : "")
@@ -2972,7 +2975,7 @@ function Tn(t) {
       throw new Error(
         'Comment "' +
           n.value.trim() +
-          '" was not printed. Please report this error!'
+          '" was not printed. Please report this error!',
       );
     delete n.printed;
   }
@@ -2985,7 +2988,7 @@ async function Sn(t, e, r, n, o) {
   if (!i || u !== "auto") return;
   if (i.length > 2)
     throw new Error(
-      "printer.embed has too many parameters. The API changed in Prettier v3. Please update your plugin. See https://prettier.io/docs/en/plugins.html#optional-embed"
+      "printer.embed has too many parameters. The API changed in Prettier v3. Please update your plugin. See https://prettier.io/docs/en/plugins.html#optional-embed",
     );
   let D = H(i.getVisitorKeys ?? a),
     c = [];
@@ -3020,7 +3023,7 @@ async function Sn(t, e, r, n, o) {
 async function yo(t, e, r, n) {
   let o = await re(
       { ...r, ...e, parentParser: r.parser, originalText: t },
-      { passThrough: !0 }
+      { passThrough: !0 },
     ),
     { ast: u } = await ae(t, o),
     i = await n(u, o);
@@ -3058,8 +3061,8 @@ async function je(t, e) {
     return D === void 0 || D === n
       ? a(c)
       : Array.isArray(D)
-      ? n.call(() => a(c), ...D)
-      : n.call(() => a(c), D);
+        ? n.call(() => a(c), ...D)
+        : n.call(() => a(c), D);
   }
   function a(D) {
     o(n);
@@ -3080,8 +3083,8 @@ function Ln(t, e, r, n, o) {
     (a = i.hasPrettierIgnore) != null && a.call(i, t)
       ? (s = Pn(t, e))
       : o.has(u)
-      ? (s = o.get(u))
-      : (s = i.print(t, e, r, n)),
+        ? (s = o.get(u))
+        : (s = i.print(t, e, r, n)),
     u === e.cursorNode && (s = Ze(s, (D) => [Be, D, Be])),
     i.printComment &&
       (!i.willPrintOwnComments || !i.willPrintOwnComments(t, e)) &&
@@ -3298,8 +3301,8 @@ async function No(t, e) {
       n.lastIndexOf(
         `
 `,
-        o
-      ) + 1
+        o,
+      ) + 1,
     ),
     a = n.slice(s, o).match(/^\s*/)[0],
     D = pe(a, e.tabWidth),
@@ -3313,7 +3316,7 @@ async function No(t, e) {
           e.cursorOffset > o && e.cursorOffset <= u ? e.cursorOffset - o : -1,
         endOfLine: "lf",
       },
-      D
+      D,
     ),
     F = c.formatted.trimEnd(),
     { cursorOffset: f } = e;
@@ -3330,14 +3333,14 @@ async function No(t, e) {
       (f += At(
         d.slice(0, f),
         `
-`
+`,
       )),
       (d = ee(
         !1,
         d,
         `
 `,
-        l
+        l,
       ));
   }
   return { formatted: d, cursorOffset: f, comments: c.comments };
@@ -3368,7 +3371,7 @@ function Kn(t, e) {
       At(
         t.slice(0, Math.max(a, 0)),
         `\r
-`
+`,
       );
     (r -= s(r)), (n -= s(n)), (o -= s(o)), (t = gr(t));
   }
@@ -3479,8 +3482,8 @@ function vo(t, e) {
   return e === !1
     ? !1
     : t.charAt(e) === "/" && t.charAt(e + 1) === "/"
-    ? mt(t, e)
-    : e;
+      ? mt(t, e)
+      : e;
 }
 var he = vo;
 function Po(t, e) {
@@ -3541,9 +3544,11 @@ function $o(t, e, r) {
       s === n
         ? s
         : a === e
-        ? "\\" + a
-        : a ||
-          (r && /^[^\n\r"'0-7\\bfnrt-vx\u2028\u2029]$/.test(s) ? s : "\\" + s)
+          ? "\\" + a
+          : a ||
+            (r && /^[^\n\r"'0-7\\bfnrt-vx\u2028\u2029]$/.test(s)
+              ? s
+              : "\\" + s),
     );
   return e + u + e;
 }
