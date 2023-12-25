@@ -4,7 +4,7 @@ import {
   decompressFromEncodedURIComponent as decompress,
 } from "lz-string";
 import { ENTRY_POINT_JSX, VFS } from "@/hooks/playground/useVFS";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 export default function useURLStorage() {
   const initialVFS = useMemo(() => {

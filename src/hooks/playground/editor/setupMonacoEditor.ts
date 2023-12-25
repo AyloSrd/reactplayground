@@ -4,8 +4,7 @@ import { useEffect, useState, type ComponentProps } from "react";
 import { createATA } from "@/tools/editor-tools";
 
 const defaultContent = `
-
-import { useState } from 'react'
+import { useStatus as useState } from './test'
 import { ref } from 'vue'
 import _ from 'lodash'
 
@@ -55,6 +54,16 @@ export function useProgress() {
   return { progress, total, finished };
 }
 
+const testCode =
+`
+import { useState } from 'react'
+export const useStatus = useState
+export function useCounter() {
+  const [count, setCount] = useState(0)
+  return { count, increment: () => setCount(count + 1) }
+}
+`
+
 export const setupEditor: NonNullable<
   ComponentProps<typeof Editor>["onMount"]
 > = (editor, monaco) => {
@@ -69,6 +78,7 @@ export const setupEditor: NonNullable<
     jsx: JsxEmit.React,
     esModuleInterop: true,
   });
+  defaults.addExtraLib(testCode, 'file:///test.tsx');
 
   const addLibraryToRuntime = (code: string, _path: string) => {
     const path = "file://" + _path;
@@ -84,7 +94,7 @@ export const setupEditor: NonNullable<
   typeHelper.addListener("receivedFile", addLibraryToRuntime);
 
   typeHelper.acquireType(defaultContent);
-
+  console.log('defaults, ', defaults)
   // auto adjust the height fits the content
   const element = editor.getDomNode();
   const height = editor.getScrollHeight();

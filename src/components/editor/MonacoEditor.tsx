@@ -2,8 +2,7 @@ import { Editor } from "@monaco-editor/react";
 import { setupEditor } from "@/hooks/playground/editor/setupMonacoEditor";
 
 const defaultContent = `
-
-import { useState } from 'react'
+import { useStatus as useState } from './test'
 import { ref } from 'vue'
 import _ from 'lodash'
 
