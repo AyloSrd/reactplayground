@@ -3,7 +3,7 @@ type VFSKey<Ts> = string &
     ? "index.tsx)" | `${string}.${"css" | "ts" | "tsx"}`
     : "index.js)" | `${string}.${"css" | "js" | "jsx"}`);
 
-export class VFSStateEntity<Ts extends boolean = false> {
+export class VFSStateEntity<Ts extends boolean> {
   ts: Ts;
   filesList: VFSKey<Ts>[];
   vfs: Record<VFSKey<Ts>, string>;

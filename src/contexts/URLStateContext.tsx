@@ -33,9 +33,13 @@ export const URLStateProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export const useURLState = ({
-  selector = (state: URLStateEntity) => state,
-}) => {
+export function useURLState <SelectorOutput>({
+  lazy = false,
+  selector = (state: URLStateEntity) => (state as unknown) as SelectorOutput,
+}: {
+  lazy?: boolean,
+  selector?: (state: URLStateEntity) => SelectorOutput
+}) {
   const store = useContext(URLStateContext);
   if (!store) {
     throw new Error("useURLStateContext must be used within a URLStateContext");
@@ -43,7 +47,7 @@ export const useURLState = ({
 
   const getURLState = useCallback(() => urlStateUseCases.getURLState(), []);
   type UpdateURLStateCb = <Ts extends boolean>(
-    urlState: VFSStateEntity<Ts>
+    urlState: Omit<VFSStateEntity<Ts>, 'filesList'>,
   ) => void;
   const updateURLState = useCallback<UpdateURLStateCb>(
     (urlState) => urlStateUseCases.updateURL(urlState),
@@ -57,5 +61,10 @@ export const useURLState = ({
   const state = useSyncExternalStore(store.subscribe, () =>
     selector(store.get())
   );
-  return [state, { getURLState, updateURLState, copyURLToClipboard }];
+
+  const update = useCallback(() => {
+    store.set(urlStateUseCases.getURLState());
+  }, [])
+
+  return [state, { getURLState, updateURLState, copyURLToClipboard }, update] as const;
 };
