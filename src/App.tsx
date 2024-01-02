@@ -1,15 +1,21 @@
 import Loader from "@/components/ui-elements/Loader";
 import Playground from "@/components/playground/Playground";
-import useURLStorage from "@/hooks/playground/useURLStorage";
 import { VFS } from "@/hooks/playground/useVFS";
 import { useCallback } from "react";
+import { useURLState } from "@/contexts/URLStateContext";
+import { VFSStateEntity } from "@/entities/VFSStateEntity";
 
 function App() {
-  const { initialVFS, updateURL } = useURLStorage();
+  const [{ parsed: URLState }, { updateURLState }] = useURLState();
+  const initialVFS = URLState?.vfs ?? null;
 
-  const handleUpdateVFS = useCallback((e: CustomEvent<VFS>) => {
-    updateURL(e.detail);
-  }, []);
+  const handleUpdateVFS = useCallback(
+    (e: CustomEvent<VFS>) => {
+      const vfs = e.detail as VFSStateEntity<false>["vfs"];
+      updateURLState({ ts: false, vfs });
+    },
+    [updateURLState]
+  );
 
   return (
     <div>

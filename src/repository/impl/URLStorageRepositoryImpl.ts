@@ -12,10 +12,13 @@ export class URLStorageRepositoryImpl implements URLStorageRepository {
     const { hash } = url;
     const urlStateStringified = decompress(hash.slice(1));
 
-    if (typeof urlStateStringified !== "string") throw new Error("Invalid URL");
-    const urlStateParsed = JSON.parse(urlStateStringified);
-
-    return toURLEntity(location.href, urlStateParsed);
+    try {
+      const urlStateParsed = JSON.parse(urlStateStringified);
+      return toURLEntity(location.href, urlStateParsed);
+    } catch (e) {
+      console.error(e);
+      return toURLEntity(location.href, null);
+    }
   }
 
   public updateURL(params: Record<string, unknown>): void {

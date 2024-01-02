@@ -21,7 +21,9 @@ export class URLStateUseCases {
     return this.#urlStorageRepository.getURLCurrentState();
   }
 
-  public updateURL<Ts extends boolean>(vfsState: Omit<VFSStateEntity<Ts>, 'filesList'>) {
+  public updateURL<Ts extends boolean>(
+    vfsState: Omit<VFSStateEntity<Ts>, "filesList">
+  ) {
     this.#urlStorageRepository.updateURL({
       ts: vfsState.ts,
       vfs: vfsState.vfs,
@@ -29,7 +31,13 @@ export class URLStateUseCases {
   }
 
   public copyURLToClipboard(): Promise<void> {
-    const urlString = this.#urlStorageRepository.getURLCurrentState().urlString;
-    return this.#clipboardRepository.copyToClipboard(urlString);
+    try {
+      const { urlString } = this.#urlStorageRepository.getURLCurrentState();
+      if (!urlString) throw new Error("URL is empty");
+      return this.#clipboardRepository.copyToClipboard(urlString);
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    }
   }
 }

@@ -33,13 +33,13 @@ export const URLStateProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export function useURLState <SelectorOutput>({
+export function useURLState<SelectorOutput = URLStateEntity>({
   lazy = false,
-  selector = (state: URLStateEntity) => (state as unknown) as SelectorOutput,
+  selector = state => state as SelectorOutput,
 }: {
   lazy?: boolean,
   selector?: (state: URLStateEntity) => SelectorOutput
-}) {
+} = {}) {
   const store = useContext(URLStateContext);
   if (!store) {
     throw new Error("useURLStateContext must be used within a URLStateContext");

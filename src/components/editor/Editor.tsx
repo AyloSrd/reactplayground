@@ -16,7 +16,7 @@ import {
   acceptedFileTypes,
   type AcceptedFileType,
 } from "@/tools/esbuild-tools";
-import MonacoEditor from "./MonacoEditor";
+// import MonacoEditor from "./MonacoEditor";
 
 interface Props {
   files: {
@@ -115,7 +115,7 @@ function Editor(props: Props) {
       />
       <Scroller>
         <CodeMirroContainer>
-          <MonacoEditor />
+          {/* <MonacoEditor /> */}
           <CodeMirror
             key={currentFile}
             value={filesById[currentFile]}
