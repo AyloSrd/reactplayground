@@ -4,6 +4,7 @@ import { VFS } from "@/hooks/playground/useVFS";
 import { useCallback } from "react";
 import { useURLState } from "@/contexts/URLStateContext";
 import { VFSStateEntity } from "@/entities/VFSStateEntity";
+import { runWhenBrowserIsIdle } from "@/tools/browserDOM-tools";
 
 function App() {
   const [{ parsed: URLState }, { updateURLState }] = useURLState();
@@ -12,7 +13,8 @@ function App() {
   const handleUpdateVFS = useCallback(
     (e: CustomEvent<VFS>) => {
       const vfs = e.detail as VFSStateEntity<false>["vfs"];
-      updateURLState({ ts: false, vfs });
+      // @ts-ignore
+      runWhenBrowserIsIdle(() => updateURLState({ ts: false, vfs }));
     },
     [updateURLState]
   );
