@@ -1,7 +1,7 @@
-import { memo } from 'react'
+import { memo } from "react";
 
 const Loader = () => {
-    return <p>Loading...</p>
-}
+  return <p>Loading...</p>;
+};
 
-export default memo(Loader)
+export default memo(Loader);

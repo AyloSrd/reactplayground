@@ -1,60 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:wght@400;700&display=swap");
 
-*, *::after, *::before {
-	box-sizing: border-box;
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
 }
 
 *:focus {
-    outline: none;
+  outline: none;
 }
 
 html {
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    font-family: 'Ubuntu', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  font-family: "Ubuntu", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: 'Ubuntu Mono', 'Courier New',
-    monospace;
+  font-family: "Ubuntu Mono", "Courier New", monospace;
 }
 
 button {
-    font-size: 1rem;
-    font-family: 'Ubuntu', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-size: 1rem;
+  font-family: "Ubuntu", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 /* ===== Scrollbar CSS ===== */
-  /* Firefox */
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: #1b2426 #2e4b52;
-  }
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #1b2426 #2e4b52;
+}
 
-  /* Chrome, Edge, and Safari */
-  *::-webkit-scrollbar {
-    width: 8px;
-  }
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
 
-  *::-webkit-scrollbar-track {
-    background: #1b2426;
-  }
+*::-webkit-scrollbar-track {
+  background: #1b2426;
+}
 
-  *::-webkit-scrollbar-thumb {
-    background-color: #2e4b52;
-    border-radius: 0px;
-    border: 0px solid #2e4b52;
-  }
+*::-webkit-scrollbar-thumb {
+  background-color: #2e4b52;
+  border-radius: 0px;
+  border: 0px solid #2e4b52;
+}

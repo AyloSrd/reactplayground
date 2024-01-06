@@ -1,62 +1,67 @@
 export interface BundleError {
-    errors: Array<{
-        location: {
-            column: number,
-            file: string,
-            length: number,
-            line: number,
-            lineText: string,
-        },
-        text: string,
-    }>,
-    warnings: Array<any>,
+  errors: Array<{
+    location: {
+      column: number;
+      file: string;
+      length: number;
+      line: number;
+      lineText: string;
+    };
+    text: string;
+  }>;
+  warnings: Array<any>;
 }
 
-export const libVersionRegex = new RegExp(/@(\d+\.)?(\d+\.)?(\*|\d+)/)
+export const libVersionRegex = new RegExp(/@(\d+\.)?(\d+\.)?(\*|\d+)/);
 
-export type AcceptedFileType = 'js' | 'jsx' | 'css'
-export const acceptedFileTypes: AcceptedFileType[] = ['js', 'jsx', 'css']
+export type AcceptedFileType = "js" | "jsx" | "css";
+export const acceptedFileTypes: AcceptedFileType[] = ["js", "jsx", "css"];
 
-export function getVersion(urlImport: string): { lib: string, version: string} | null {
-    if (!libVersionRegex.test(urlImport)) {
-        return null
-    }
+export function getVersion(
+  urlImport: string,
+): { lib: string; version: string } | null {
+  if (!libVersionRegex.test(urlImport)) {
+    return null;
+  }
 
-    const [lib, version] = urlImport.split('/')[0].split('@')
-    return ({
-        lib,
-        version
-    })
+  const [lib, version] = urlImport.split("/")[0].split("@");
+  return {
+    lib,
+    version,
+  };
 }
 
 export function createErrorString(err: BundleError): string {
-    const error = err?.errors?.[0]
-    if (!error || !error.text || !error.location) {
-        return 'Impossible to reproduce, please check your navigator\'s console.'
-    }
+  const error = err?.errors?.[0];
+  if (!error || !error.text || !error.location) {
+    return "Impossible to reproduce, please check your navigator's console.";
+  }
 
-    const { text, location: { column, file, length, line, lineText } } = error
-    let underline = ''
-    let space = ''
-    let gutter = ''
+  const {
+    text,
+    location: { column, file, length, line, lineText },
+  } = error;
+  let underline = "";
+  let space = "";
+  let gutter = "";
 
-    for (let i = 0; i < column; i++) {
-        space = space + ' '
-    }
+  for (let i = 0; i < column; i++) {
+    space = space + " ";
+  }
 
-    for (let i = 0; i < length; i++) {
-        underline = underline + '^'
-    }
+  for (let i = 0; i < length; i++) {
+    underline = underline + "^";
+  }
 
-    for (let i = 0; i < line.toString().length; i++) {
-        gutter = gutter + ' '
-    }
-    return `
+  for (let i = 0; i < line.toString().length; i++) {
+    gutter = gutter + " ";
+  }
+  return `
     ${text}
     In: ${file}:
     ${line} | ${lineText}
     ${gutter}   ${space}${underline}
-    `.trim()
+    `.trim();
 }
 
 /**

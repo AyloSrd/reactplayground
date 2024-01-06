@@ -1,9 +1,9 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Anchor = styled.a`
-    color: inherit;
-    text-decoration: inherit;
-    cursor: inherit;
-`
+  color: inherit;
+  text-decoration: inherit;
+  cursor: inherit;
+`;
 
-export default Anchor
+export default Anchor;

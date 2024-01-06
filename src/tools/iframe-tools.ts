@@ -1,8 +1,9 @@
-import { colors } from "@/tools/style-tools"
+import { colors } from "@/tools/style-tools";
 
-export const sandboxAttributes = 'allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
+export const sandboxAttributes =
+  "allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin";
 
-export const srcDoc = /*html*/`
+export const srcDoc = /*html*/ `
 <html>
 <head>
     <style id="1cfb7daf280bf1032de2669b673c918d9c398674">
@@ -77,8 +78,7 @@ export const srcDoc = /*html*/`
         </script>
     </body>
 </html>
-`.trim()
-
+`.trim();
 
 export const initialLoader = `
 const style = document.createElement('style')
@@ -152,9 +152,9 @@ style.textContent = \`
 document.head.appendChild(style)
 const root = document.getElementById('root')
 root.innerHTML = '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><h2>Creating the bundle</h2>'
-`
+`;
 
-export const srcDocWithInternalConsole = /*html*/`
+export const srcDocWithInternalConsole = /*html*/ `
 <html>
 <head></head>
     <body>
@@ -247,4 +247,4 @@ export const srcDocWithInternalConsole = /*html*/`
         </script>
     </body>
 </html>
-`.trim()
+`.trim();

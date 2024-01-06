@@ -1,8 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import '@/index.css'
-import App from '@/App'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "@/index.css";
+import App from "@/App";
+import { URLStateProvider } from "@/contexts/URLStateContext";
 
-ReactDOM
-  .createRoot(document.getElementById('root') as HTMLElement)
-  .render(<React.StrictMode><App /></React.StrictMode>)
+const root = document.getElementById("root");
+
+if (!root) throw new Error("root not found");
+
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <URLStateProvider>
+      <App />
+    </URLStateProvider>
+  </React.StrictMode>
+);

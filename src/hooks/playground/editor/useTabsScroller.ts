@@ -21,7 +21,7 @@ export function useTabsScroller({ tabs }: { tabs: string[] }) {
     const { current: container } = containerRef;
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        calculateFaders()
+        calculateFaders();
       }
     });
     if (container) observer.observe(container);

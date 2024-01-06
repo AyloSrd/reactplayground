@@ -16,6 +16,7 @@ import {
   acceptedFileTypes,
   type AcceptedFileType,
 } from "@/tools/esbuild-tools";
+// import MonacoEditor from "./MonacoEditor";
 
 interface Props {
   files: {
@@ -33,7 +34,7 @@ function Editor(props: Props) {
     files: { fileList: tabs, filesById },
   } = props;
   const [currentFile, setCurrentFile] = useState<string>(
-    filesById["App.jsx"] ? "App.jsx" : ENTRY_POINT_JSX
+    filesById["App.jsx"] ? "App.jsx" : ENTRY_POINT_JSX,
   );
 
   const prevTabsLength = usePreviousValue(tabs.length);
@@ -51,7 +52,7 @@ function Editor(props: Props) {
     (text: string) => {
       evento("textEditorChange", { file: currentFile, text });
     },
-    [currentFile]
+    [currentFile],
   );
 
   const handleTabCreate = useCallback((e: CustomEvent<string>) => {
@@ -66,7 +67,7 @@ function Editor(props: Props) {
     (e: CustomEvent<{ current: string; next: string }>) => {
       evento("editFileName", e.detail);
     },
-    []
+    [],
   );
 
   const handleTabSelect = useCallback((e: CustomEvent<string>) => {
@@ -99,7 +100,6 @@ function Editor(props: Props) {
     if (tabsLength > prevTabsLength) {
       setCurrentFile(tabs[tabsLength - 1]);
     }
-
   }, [currentFile, prevTabsLength, tabs]);
 
   return (
@@ -115,6 +115,7 @@ function Editor(props: Props) {
       />
       <Scroller>
         <CodeMirroContainer>
+          {/* <MonacoEditor /> */}
           <CodeMirror
             key={currentFile}
             value={filesById[currentFile]}
