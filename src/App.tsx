@@ -2,19 +2,18 @@ import Loader from "@/components/ui-elements/Loader";
 import Playground from "@/components/playground/Playground";
 import { VFS } from "@/hooks/playground/useVFS";
 import { useCallback } from "react";
-import { useURLState } from "@/contexts/URLStateContext";
-import { VFSStateEntity } from "@/entities/VFSStateEntity";
+import { useURLState, vfsFromURLSelector } from "@/contexts/URLStateContext";
 import { runWhenBrowserIsIdle } from "@/tools/browserDOM-tools";
 
 function App() {
-  const [{ parsed: URLState }, { updateURLState }] = useURLState();
-  const initialVFS = URLState?.vfs ?? null;
+  const [initialVFS, { updateURLState }] = useURLState({
+    lazy: true,
+    selector: vfsFromURLSelector,
+  });
 
   const handleUpdateVFS = useCallback(
     (e: CustomEvent<VFS>) => {
-      const vfs = e.detail as VFSStateEntity<false>["vfs"];
-      // @ts-ignore
-      runWhenBrowserIsIdle(() => updateURLState({ ts: false, vfs }));
+      runWhenBrowserIsIdle(() => updateURLState({ ts: false, vfs: e.detail }));
     },
     [updateURLState]
   );

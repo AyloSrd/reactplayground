@@ -8,8 +8,10 @@ import React, {
 } from "react";
 import { URLStateUseCases } from "@/useCases/URLStateUseCases";
 import { URLStorageRepositoryImpl } from "@/repository/impl/URLStorageRepositoryImpl";
-import { URLStateEntity } from "@/entities/URLStateEntity";
-import { VFSStateEntity } from "@/entities/VFSStateEntity";
+import {
+  URLStateEntity,
+  type ParsedV2,
+} from "@/entities/URLStateEntity";
 import { useCreateStore, type Store } from "@/tools/context-tools";
 import { ClipboardRepositoryImpl } from "@/repository/impl/ClipboardRepositoryImpl";
 
@@ -33,11 +35,12 @@ export const URLStateProvider: FC<PropsWithChildren> = ({ children }) => {
 };
 
 export function useURLState<SelectorOutput = URLStateEntity>({
+  // have to figure the lazy part out yet
   lazy = false,
-  selector = state => state as SelectorOutput,
+  selector = (state) => state as SelectorOutput,
 }: {
-  lazy?: boolean,
-  selector?: (state: URLStateEntity) => SelectorOutput
+  lazy?: boolean;
+  selector?: (state: URLStateEntity) => SelectorOutput;
 } = {}) {
   const store = useContext(URLStateContext);
   if (!store) {
@@ -45,13 +48,12 @@ export function useURLState<SelectorOutput = URLStateEntity>({
   }
 
   const getURLState = useCallback(() => urlStateUseCases.getURLState(), []);
-  type UpdateURLStateCb = <Ts extends boolean>(
-    urlState: Omit<VFSStateEntity<Ts>, 'filesList'>,
-  ) => void;
-  const updateURLState = useCallback<UpdateURLStateCb>(
+
+  const updateURLState = useCallback<(urlState: ParsedV2) => void>(
     (urlState) => urlStateUseCases.updateURL(urlState),
     []
   );
+
   const copyURLToClipboard = useCallback(
     () => urlStateUseCases.copyURLToClipboard(),
     []
@@ -63,7 +65,17 @@ export function useURLState<SelectorOutput = URLStateEntity>({
 
   const update = useCallback(() => {
     store.set(urlStateUseCases.getURLState());
-  }, [])
+  }, []);
 
-  return [state, { getURLState, updateURLState, copyURLToClipboard }, update] as const;
-};
+  return [
+    state,
+    { getURLState, updateURLState, copyURLToClipboard },
+    update,
+  ] as const;
+}
+
+export function vfsFromURLSelector(
+  state: URLStateEntity
+): ReturnType<URLStateUseCases["extractVFSFromURL"]> {
+  return urlStateUseCases.extractVFSFromURL(state.parsed);
+}
