@@ -1,5 +1,5 @@
 import { type URLStateEntity } from "@/entities";
-import { type URLStorageRepository } from "@/repository";
+import { type URLStorageRepository } from "@/repositories";
 import {
   compressToEncodedURIComponent as compress,
   decompressFromEncodedURIComponent as decompress,

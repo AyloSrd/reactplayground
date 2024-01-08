@@ -2,8 +2,8 @@ import {
   URLStateEntity,
   type ParsedV2,
 } from "@/entities";
-import { type URLStorageRepository } from "@/repository";
-import { type ClipboardRepository } from "@/repository";
+import { type URLStorageRepository } from "@/repositories";
+import { type ClipboardRepository } from "@/repositories";
 
 type Repositories = {
   clipboardRepository: ClipboardRepository;

@@ -7,13 +7,13 @@ import React, {
   type PropsWithChildren,
 } from "react";
 import { URLStateUseCases } from "@/useCases";
-import { URLStorageRepositoryImpl } from "@/repository";
+import { URLStorageRepositoryImpl } from "@/repositories";
 import {
   URLStateEntity,
   type ParsedV2,
 } from "@/entities";
 import { useCreateStore, type Store } from "@/tools/context-tools";
-import { ClipboardRepositoryImpl } from "@/repository";
+import { ClipboardRepositoryImpl } from "@/repositories";
 
 const urlStorageRepository = new URLStorageRepositoryImpl();
 const clipboardRepository = new ClipboardRepositoryImpl();
