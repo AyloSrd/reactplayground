@@ -1,4 +1,4 @@
-import { URLStateEntity } from "@/entities/URLStateEntity";
+import { URLStateEntity } from "@/entities";
 
 export function repositoryToEntity(
   urlString: string | null,
@@ -6,3 +6,4 @@ export function repositoryToEntity(
 ): URLStateEntity {
   return new URLStateEntity(urlString, parsed);
 }
+

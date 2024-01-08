@@ -1,11 +1,9 @@
 import {
   URLStateEntity,
   type ParsedV2,
-} from "@/entities/URLStateEntity";
-import { VFSStateEntity } from "@/entities/VFSStateEntity";
-import { type URLStorageRepository } from "@/repository/URLStorageRepository";
-import { type ClipboardRepository } from "@/repository/ClipboardRepository";
-import { isStringLiteralOrJsxExpression } from "typescript";
+} from "@/entities";
+import { type URLStorageRepository } from "@/repository";
+import { type ClipboardRepository } from "@/repository";
 
 type Repositories = {
   clipboardRepository: ClipboardRepository;

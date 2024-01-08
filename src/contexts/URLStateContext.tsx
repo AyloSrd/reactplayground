@@ -6,14 +6,14 @@ import React, {
   type FC,
   type PropsWithChildren,
 } from "react";
-import { URLStateUseCases } from "@/useCases/URLStateUseCases";
-import { URLStorageRepositoryImpl } from "@/repository/impl/URLStorageRepositoryImpl";
+import { URLStateUseCases } from "@/useCases";
+import { URLStorageRepositoryImpl } from "@/repository";
 import {
   URLStateEntity,
   type ParsedV2,
-} from "@/entities/URLStateEntity";
+} from "@/entities";
 import { useCreateStore, type Store } from "@/tools/context-tools";
-import { ClipboardRepositoryImpl } from "@/repository/impl/ClipboardRepositoryImpl";
+import { ClipboardRepositoryImpl } from "@/repository";
 
 const urlStorageRepository = new URLStorageRepositoryImpl();
 const clipboardRepository = new ClipboardRepositoryImpl();

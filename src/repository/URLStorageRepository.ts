@@ -1,10 +1,9 @@
-import { type URLStateEntity } from "@/entities/URLStateEntity";
-import { VFSStateEntity } from "@/entities/VFSStateEntity";
+import { type URLStateEntity } from "@/entities";
 
 export type URLStorageRepository = {
   getURLCurrentState: () => URLStateEntity;
-  updateURL: <Ts extends boolean>(params: {
-    ts: Ts;
-    vfs: VFSStateEntity<Ts>[`vfs`];
+  updateURL:(params: {
+    ts: boolean;
+    vfs: Record<string, string>;
   }) => void;
 };
