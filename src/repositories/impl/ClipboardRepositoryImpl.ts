@@ -1,4 +1,4 @@
-import { type ClipboardRepository } from "@/repository/ClipboardRepository";
+import { type ClipboardRepository } from "@/repositories";
 
 export class ClipboardRepositoryImpl implements ClipboardRepository {
   public async copyToClipboard(text: string): Promise<void> {
