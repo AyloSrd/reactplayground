@@ -13,7 +13,7 @@ Here you can :
 ## Known bugs and limitations
 
 - The bundler will automatically import from _esm.sh_, and is therefore subject to any limitations coming from the CDN (e.g. some dependencies cannot be imported)
-- You can only open .jsx tabs. However, you can style your components with CSS in js libraries, such as styled-components
+- You can only open `.jsx`, `.js`, `.css` tabs. Additionally, you can style your components with CSS in js libraries, such as styled-components
 - Only JS/JSX third-party libraries can be imported (no CSS @import). However, most CSS-in-JS libraries, like styled-components workwork normally.
 
 ## Technologies used
