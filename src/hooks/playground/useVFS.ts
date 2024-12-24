@@ -47,24 +47,35 @@ root.render(
 `.trim();
 
 const AppDefaultContent = `
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useRef, useState } from 'react'
+import Confetti from 'js-confetti'
+import './style.css'
+
+const confetti = new Confetti()
 
 const App = () => {
   const [count, setCount] = useState(0)
 
+  const handleClick = () => {
+    confetti.addConfetti()
+    setCount(c => c + 1)
+  }
+  
   return (
-    <Button onClick={() => setCount(count + 1)}>
+    <button className="btn" onClick={handleClick}>
       <span role="img" aria-label="react-emoji">⚛️</span> {count}
-    </Button>
+    </button>
   )
 }
 
-const Button = styled.button\`
-  font-size: 2rem;
-\`
 
 export default App
+`.trim();
+
+const StylesDefaultContent = `
+.btn {
+  font-size: 2rem;
+}
 `.trim();
 
 const defaultState: State = {
@@ -72,6 +83,7 @@ const defaultState: State = {
   vfs: {
     [ENTRY_POINT_JSX]: indexDefaultContent,
     "App.jsx": AppDefaultContent,
+    "style.css": StylesDefaultContent,
   },
 };
 
@@ -123,7 +135,7 @@ function reducer(state: State, action: Action): State {
         return state;
       }
       const deleteList = [...state.fileList].filter(
-        (f) => f !== action.payload.target,
+        (f) => f !== action.payload.target
       );
       const deleteVfs = { ...state.vfs };
       delete deleteVfs[action.payload.target];
