@@ -45,7 +45,7 @@ document.head.appendChild(styleTag)
 
 export default function useEsbuild(vfsFromUrl: VFS | null) {
   const [bundleJSXText, setBundleJSXText] = useState<null | string>(
-    initialLoader,
+    initialLoader
   );
   const [bundleErr, setBundleErr] = useState<null | string>(null);
   const [rawImports, setRawImports] = useState<RawImports>({});
@@ -123,16 +123,40 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
             };
           }
 
+          /**
+           * Trying to solve the issue of "Cannot read properties of null (reading 'use...')".
+           * If this is due to the fact that different instances of react are being used, it could
+           * be prevented by telling the CDN not to use react and react dom into their bundles.
+           *
+           * We will try to isolate the react and react dom imported directly from the IDE, and add
+           * "?external=react,react-dom" to the other imports.
+           */
+          if (
+            // react and react-dom/client are simply imported directly from the IDE
+            ["react", "react-dom/client"].includes(args.path) ||
+            // or they have their version setup from the IDE
+            ["react@", "react-dom@"].some((version) =>
+              args.path.startsWith(version)
+            )
+          ) {
+            return {
+              namespace: "c",
+              path: make_CDN_URL(args.path),
+            };
+          }
+
+          // All other direct imports from the IDE will be fetched from the CDN, and we will add
+          // "?external=react,react-dom" to the other imports.
           return {
             namespace: "b",
             //@ts-ignore: defineHack is defined in index.html
-            path: make_CDN_URL(args.path),
+            path: make_CDN_URL(args.path) + "?external=react,react-dom",
           };
         });
 
         build.onLoad({ filter: /.css$/ }, async (args: any) => {
           const contents = make_css_contents(
-            vfs[args.path] ? vfs[args.path] : "",
+            vfs[args.path] ? vfs[args.path] : ""
           );
 
           const result: esbuild.OnLoadResult = {
@@ -159,7 +183,7 @@ export default function useEsbuild(vfsFromUrl: VFS | null) {
           }
 
           const cached = await fileCache.getItem<esbuild.OnLoadResult>(
-            args.path,
+            args.path
           );
 
           if (cached) {
